@@ -1,9 +1,10 @@
+// Package tprogateway, provide ability to make requests to Transact Pro Gateway API v3.
 package tprogateway
 
 import (
 	"errors"
-	"net/http"
-	"bitbucket.transactpro.lv/tls/gw3-go-client/request"
+
+	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
 )
 
 // Default API settings
@@ -13,24 +14,22 @@ const (
 )
 
 type (
-	// API, Transact PRO gateway endpoint and version
-	API struct {
-		APIUri     string
-		APIVersion string
+	// confAPI, endpoint config to rich Transact Pro system
+	confAPI struct {
+		Uri     string
+		Version string
 	}
 
-	// GatewayClient
-	// Transact Pro Gateway integration client
-	// Tt represents a REST API Client
+	// GatewayClient, represents REST API client
 	GatewayClient struct {
-		client      *http.Client
-		APIConfig   *API
-		AuthData    *request.AuthData
+		API		*confAPI
+		auth		*operations.AuthData
+		operation	*operations.Operation
 	}
 )
 
-// NewGateway, new instance of prepared gateway client
-func NewGateway(AccountID int, SecretKey string) (*GatewayClient, error) {
+// NewGatewayClient, new instance of prepared gateway client structure
+func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 	if AccountID == 0 {
 		return nil, errors.New("Account ID can not be 0, please use the given ID from Transact Pro.")
 	}
@@ -40,12 +39,9 @@ func NewGateway(AccountID int, SecretKey string) (*GatewayClient, error) {
 	}
 
 	return &GatewayClient {
-		client: &http.Client{},
-		// @TODO Add way to change API config: yml, json, env
-		APIConfig: &API{
-			dAPIUri,
-			dAPIVersion,
-		},
-		AuthData: &request.AuthData{AccountID: AccountID, SecretKey:SecretKey},
+		API:  &confAPI{
+			Uri:dAPIUri, Version: dAPIVersion},
+		auth: &operations.AuthData{
+			AccountID: AccountID, SecretKey:SecretKey},
 	}, nil
 }
