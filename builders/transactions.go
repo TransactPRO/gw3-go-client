@@ -1,4 +1,6 @@
-package operations
+package builders
+
+import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
 type OperationType string
 
@@ -11,9 +13,9 @@ const (
 type OperationBuilder struct {}
 
 type SMSPayload struct {
-	PaymentMethod 	PaymentMethodData		`json:"payment-method-data"`
-	Money 		MoneyData			`json:"money-data"`
-	System 		SystemData			`json:"system"`
+	PaymentMethod 	structures.PaymentMethodData		`json:"payment-method-data"`
+	Money 		structures.MoneyData			`json:"money-data"`
+	System 		structures.SystemData			`json:"system"`
 }
 
 // NewSMS, returns bundled structure of transaction SMS

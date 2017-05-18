@@ -2,7 +2,7 @@ package tprogateway
 
 import (
 	"testing"
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/builders"
 )
 
 // ma, Merchant authorization configuration
@@ -84,7 +84,7 @@ func TestNewRequest(t *testing.T) {
 	sms.Money.Amount = 300
 	sms.Money.Currency = "EUR"
 
-	newReq, err := gc.NewRequest(operations.SMS, sms)
+	newReq, err := gc.NewRequest(builders.SMS, sms)
 	if err != nil {
 		t.Error(err)
 	}
@@ -103,7 +103,7 @@ func TestSendRequest(t *testing.T)  {
 	sms.Money.Amount = 300
 	sms.Money.Currency = "EUR"
 
-	newReq, err := gc.NewRequest(operations.SMS, sms)
+	newReq, err := gc.NewRequest(builders.SMS, sms)
 	if err != nil {
 		t.Error(err)
 	}

@@ -8,7 +8,8 @@ import (
 	"net/http"
 	"fmt"
 
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/builders"
 )
 
 // Default API settings
@@ -27,7 +28,7 @@ type (
 	// GatewayClient, represents REST API client
 	GatewayClient struct {
 		API		*confAPI
-		auth		*operations.AuthData
+		auth		*structures.AuthData
 		httpClient	http.Client
 	}
 )
@@ -45,18 +46,18 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 	return &GatewayClient {
 		API:  &confAPI{
 			Uri:dAPIBaseUri, Version: dAPIVersion},
-		auth: &operations.AuthData{
+		auth: &structures.AuthData{
 			AccountID: AccountID, SecretKey:SecretKey},
 	}, nil
 }
 
 // NewOp method, returns builder for needed operation, like SMS, Reversal, even exploring transaction such as Refund History
-func (gc *GatewayClient) NewOp() *operations.OperationBuilder {
-	return &operations.OperationBuilder{}
+func (gc *GatewayClient) NewOp() *builders.OperationBuilder {
+	return &builders.OperationBuilder{}
 }
 
 // NewRequest method, prepares whole HTTP request for Transact Pro API
-func (gc *GatewayClient) NewRequest(opType operations.OperationType, opData interface{}) (*http.Request, error) {
+func (gc *GatewayClient) NewRequest(opType builders.OperationType, opData interface{}) (*http.Request, error) {
 	bufPayload, bufErr := prepareJsonPayload(*gc.auth, opData)
 	if bufErr != nil {
 		return nil, bufErr
@@ -88,9 +89,9 @@ func (gc *GatewayClient) SendRequest(req *http.Request) (*http.Response, error) 
 }
 
 // prepareJsonPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
-func prepareJsonPayload(pAuth operations.AuthData, pData interface{}) (*bytes.Buffer, error) {
+func prepareJsonPayload(pAuth structures.AuthData, pData interface{}) (*bytes.Buffer, error) {
 	// Build whole payload structure with nested data bundles
-	reqData := &operations.RequestData{}
+	reqData := &builders.RequestData{}
 	reqData.Auth = pAuth
 	reqData.Data = pData
 	if reqData == nil {
@@ -110,7 +111,7 @@ func prepareJsonPayload(pAuth operations.AuthData, pData interface{}) (*bytes.Bu
 }
 
 // determineAPIAction, determiners needed HTTP action for request and builds destination URL path
-func determineAPIAction(baseUri, version string, opType operations.OperationType) (string, string, error) {
+func determineAPIAction(baseUri, version string, opType builders.OperationType) (string, string, error) {
 	var httpMethod, apiEndpoint string
 
 	// Validate API config, base URL and version of API
@@ -125,8 +126,8 @@ func determineAPIAction(baseUri, version string, opType operations.OperationType
 	apiEndpoint = fmt.Sprintf("%s/v%s/%s", baseUri, version, opType)
 
 	switch opType {
-	case operations.SMS:
-	case operations.DMS_HOLD:
+	case builders.SMS:
+	case builders.DMS_HOLD:
 		httpMethod = "POST"
 	default:
 		return httpMethod, apiEndpoint, errors.New("Unknow operation type, can't determinets HTTP action.")

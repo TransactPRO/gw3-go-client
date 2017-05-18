@@ -1,4 +1,4 @@
-package operations
+package structures
 
 // The list of all Transact Pro Gateway's structures
 type (
