@@ -2,10 +2,17 @@ package tprogateway
 
 import (
 	"testing"
+	"fmt"
 )
 
 // ma, Merchant authorization configuration
-var ma *testCorrectMerchantAuth
+var (
+	// Merchant auth structure
+	ma *testCorrectMerchantAuth
+	// Correct instance of GatewayClient
+	gc *GatewayClient
+)
+
 type testCorrectMerchantAuth struct {
 	AccID  int
 	SecKey string
@@ -13,7 +20,7 @@ type testCorrectMerchantAuth struct {
 
 func init()  {
 	ma = &testCorrectMerchantAuth{AccID:22, SecKey:"rg342QZSUaWzKHoCc5slyMGdAITk9LfR"}
-
+	gc, _ = NewGatewayClient(ma.AccID, ma.SecKey)
 }
 
 func TestNewGatewayClient(t *testing.T) {
@@ -36,9 +43,6 @@ func TestNewGatewayClientIncorrectSecretKey(t *testing.T) {
 }
 
 func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
-	gc, err := NewGatewayClient(ma.AccID, ma.SecKey)
-	ifErrHandleAsDefault(err, t)
-
 	gc.API.Uri = "https://proxy.payment-tpro.co.uk"
 	if gc.API.Uri == dAPIUri {
 		t.Error("API uri not changed")
@@ -50,21 +54,33 @@ func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
 	}
 }
 
-func TestNewGatewayClientOperation(t *testing.T)  {
-	gc, err := NewGatewayClient(ma.AccID, ma.SecKey)
-	ifErrHandleAsDefault(err, t)
+func TestNewOperation(t *testing.T) {
+	sms := gc.NewOp().SMS()
+	sms.PaymentMethod.Pan = "2379183712983"
+	sms.PaymentMethod.ExpMmYy = "12/20"
+	sms.PaymentMethod.Cvv = "123"
+	sms.Money.Amount = 300
+	sms.Money.Currency = "EUR"
 
-	sms := gc.operation.NewSMS()
+	sms.System.UserIP = "xxx.0.0.1"
+	sms.System.XForwardedFor = "xxx.66.33.12"
 
-	sms.Data.PaymentMethod.Pan = "2379183712983"
-	sms.Data.PaymentMethod.ExpMmYy = "12/20"
-	sms.Data.PaymentMethod.Cvv = "123"
-
-	sms.Data.System.UserIP = "xxx.0.0.1"
-	sms.Data.System.XForwardedFor = "xxx.66.33.12"
-
-	if sms.Data.System.UserIP != "xxx.0.0.1" && sms.Data.System.XForwardedFor != "xxx.66.33.12" {
+	if sms.System.UserIP != "xxx.0.0.1" && sms.System.XForwardedFor != "xxx.66.33.12" {
 		t.Error("System structure not changed")
+	}
+}
+
+func TestNewRequest(t *testing.T) {
+	sms := gc.NewOp().SMS()
+	sms.PaymentMethod.Pan = "5262482284416445"
+	sms.PaymentMethod.ExpMmYy = "12/20"
+	sms.PaymentMethod.Cvv = "403"
+	sms.Money.Amount = 300
+	sms.Money.Currency = "EUR"
+
+	_, err := gc.NewRequest(sms)
+	if err != nil {
+		t.Error(err)
 	}
 }
 
