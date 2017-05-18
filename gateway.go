@@ -3,26 +3,24 @@ package tprogateway
 
 import (
 	"errors"
-	"io"
 	"encoding/json"
 	"bytes"
 	"net/http"
 	"fmt"
 
 	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
-	"log"
 )
 
 // Default API settings
 const (
-	dAPIUri = "http://uriel.sk.fpngw3.env"
+	dAPIBaseUri = "http://uriel.sk.fpngw3.env"
 	dAPIVersion = "3.0"
 )
 
 type (
 	// confAPI, endpoint config to rich Transact Pro system
 	confAPI struct {
-		Uri     string
+		Uri 	string
 		Version string
 	}
 
@@ -46,23 +44,10 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 
 	return &GatewayClient {
 		API:  &confAPI{
-			Uri:dAPIUri, Version: dAPIVersion},
+			Uri:dAPIBaseUri, Version: dAPIVersion},
 		auth: &operations.AuthData{
 			AccountID: AccountID, SecretKey:SecretKey},
 	}, nil
-}
-
-// buildAPIUrlPath, returns full URL path for request
-func buildAPIUrlPath(gc *GatewayClient) (string, error) {
-	if gc.API.Uri == "" {
-		return "", errors.New("Gateway client's URL is empty in, API settings.")
-	}
-
-	if gc.API.Version == "" {
-		return "", errors.New("Gateway client's Version is empty in, API settings.")
-	}
-
-	return fmt.Sprintf("%s/v%s/sms", gc.API.Uri, gc.API.Version), nil
 }
 
 // NewOp method, returns builder for needed operation, like SMS, Reversal, even exploring transaction such as Refund History
@@ -71,51 +56,97 @@ func (gc *GatewayClient) NewOp() *operations.OperationBuilder {
 }
 
 // NewRequest method, prepares whole HTTP request for Transact Pro API
-func (gc *GatewayClient) NewRequest(operationData interface{}) (*http.Response, error) {
+func (gc *GatewayClient) NewRequest(opType operations.OperationType, opData interface{}) (*http.Request, error) {
+	bufPayload, bufErr := prepareJsonPayload(*gc.auth, opData)
+	if bufErr != nil {
+		return nil, bufErr
+	}
+
+	// Get prepared URL path for API request
+	httpMethod, urlPath, errUrlPath := determineAPIAction(gc.API.Uri, gc.API.Version, opType)
+	if errUrlPath != nil {
+		return nil, errUrlPath
+	}
+
+	newReq, reqErr := buildHTTPRequest(httpMethod, urlPath, bufPayload)
+	if reqErr != nil {
+		return nil, reqErr
+	}
+
+	return newReq, nil
+}
+
+// SendRequest method, sends prepared HTTP request to destination point and returns response from Transact Pro system
+func (gc *GatewayClient) SendRequest(req *http.Request) (*http.Response, error) {
+	resp, respErr := gc.httpClient.Do(req)
+	if respErr != nil {
+		return nil, respErr
+	}
+
+	// @TODO Return structure of response
+	return resp, nil
+}
+
+// prepareJsonPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
+func prepareJsonPayload(pAuth operations.AuthData, pData interface{}) (*bytes.Buffer, error) {
 	// Build whole payload structure with nested data bundles
 	reqData := &operations.RequestData{}
-	reqData.Auth = *gc.auth
-	reqData.Data = operationData
+	reqData.Auth = pAuth
+	reqData.Data = pData
 	if reqData == nil {
 		return nil, errors.New("Payload data of request is empty.")
 	}
 
 	// When payload ready, convert it to Json format
-	var buffer io.Reader
-	var bReqData []byte
-
 	bReqData, err := json.Marshal(&reqData)
 	if err != nil {
 		return nil, err
 	}
 
 	// Write json object to buffer
-	buffer = bytes.NewBuffer(bReqData)
+	buffer := bytes.NewBuffer(bReqData)
 
-	// Get prepared URL path for API request
-	urlPath, err := buildAPIUrlPath(gc)
-	if err != nil {
-		return nil, err
+	return buffer, nil
+}
+
+// determineAPIAction, determiners needed HTTP action for request and builds destination URL path
+func determineAPIAction(baseUri, version string, opType operations.OperationType) (string, string, error) {
+	var httpMethod, apiEndpoint string
+
+	// Validate API config, base URL and version of API
+	if baseUri == "" {
+		return httpMethod, apiEndpoint, errors.New("Gateway client's URL is empty in, API settings.")
 	}
 
+	if version == "" {
+		return httpMethod, apiEndpoint, errors.New("Gateway client's Version is empty in, API settings.")
+	}
+
+	apiEndpoint = fmt.Sprintf("%s/v%s/%s", baseUri, version, opType)
+
+	switch opType {
+	case operations.SMS:
+	case operations.DMS_HOLD:
+		httpMethod = "POST"
+	default:
+		return httpMethod, apiEndpoint, errors.New("Unknow operation type, can't determinets HTTP action.")
+	}
+
+	return httpMethod, apiEndpoint, nil
+}
+
+// buildHTTPRequest, accepts prepared body for HTTP
+// Builds NewRequest from http package
+func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request, error) {
 	// Build whole HTTP request with payload data
-	newReq, err := http.NewRequest("POST", urlPath, buffer)
+	newReq, err := http.NewRequest(method, url, payload)
 	if err != nil {
 		return nil, err
 	}
 
-	// Set default headers
+	// Set default headers for new request
 	newReq.Header.Set("Accept", "application/json")
-	// Default values for headers
 	newReq.Header.Set("Content-type", "application/json")
 
-	log.Println(newReq.Method, ": ", newReq.URL)
-
-	// Send HTTP request to server
-	resp, respErr := gc.httpClient.Do(newReq)
-	if respErr != nil {
-		return nil, respErr
-	}
-
-	return resp, nil
+	return newReq, nil
 }
