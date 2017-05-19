@@ -11,13 +11,13 @@ const (
 
 type OperationBuilder struct {}
 
-type SMSPayload struct {
+type SMSDataSet struct {
 	PaymentMethod 	structures.PaymentMethodData		`json:"payment-method-data"`
 	Money 		structures.MoneyData			`json:"money-data"`
 	System 		structures.SystemData			`json:"system"`
 }
 
 // NewSMS, returns bundled structure of transaction SMS
-func (ob *OperationBuilder) SMS() SMSPayload {
-	return SMSPayload{}
+func (ob *OperationBuilder) SMS() SMSDataSet {
+	return SMSDataSet{}
 }
