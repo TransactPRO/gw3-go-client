@@ -1,8 +1,7 @@
 package structures
 
-// The list of all Transact Pro Gateway's structures
+// Transact Pro Gateway's request parameters data structures
 type (
-	// Request Parameters data sets
 	AuthData struct {
 		// Transact Pro Account ID
 		AccountID int 		`json:"account-id"`

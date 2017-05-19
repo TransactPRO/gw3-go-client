@@ -2,7 +2,7 @@ package tprogateway
 
 import (
 	"testing"
-	"bitbucket.transactpro.lv/tls/gw3-go-client/builders"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
 )
 
 // ma, Merchant authorization configuration
@@ -84,13 +84,53 @@ func TestNewRequest(t *testing.T) {
 	sms.Money.Amount = 300
 	sms.Money.Currency = "EUR"
 
-	newReq, err := gc.NewRequest(builders.SMS, sms)
+	newReq, err := gc.NewRequest(builder.SMS, sms)
 	if err != nil {
 		t.Error(err)
 	}
 
 	if newReq == nil {
 		t.Error("HTTP NewRequest structure is empty.")
+	}
+}
+
+func TestDetermineAPIActionUriError(t *testing.T) {
+	apiGC, errGC := NewGatewayClient(ma.AccID, ma.SecKey)
+	if errGC != nil {
+		t.Error(errGC)
+	}
+
+	apiGC.API.Uri = ""
+	_, _, err := determineAPIAction(apiGC.API.Uri, apiGC.API.Version, builder.SMS)
+	if err == nil {
+		t.Error(err)
+	}
+}
+
+func TestDetermineAPIActionVersionError(t *testing.T) {
+	apiGC, errGC := NewGatewayClient(ma.AccID, ma.SecKey)
+	if errGC != nil {
+		t.Error(errGC)
+	}
+
+	apiGC.API.Version = ""
+	_, _, err := determineAPIAction(apiGC.API.Uri, apiGC.API.Version, builder.SMS)
+	if err == nil {
+		t.Error(err)
+	}
+}
+
+func TestDetermineAPIActionHttpMethodError(t *testing.T) {
+	apiGC, errGC := NewGatewayClient(ma.AccID, ma.SecKey)
+	if errGC != nil {
+		t.Error(errGC)
+	}
+
+	var WRONG_OP builder.OperationType = "WRONG_OP"
+
+	_, _, err := determineAPIAction(apiGC.API.Uri, apiGC.API.Version, WRONG_OP)
+	if err == nil {
+		t.Error(err)
 	}
 }
 
@@ -103,7 +143,7 @@ func TestSendRequest(t *testing.T)  {
 	sms.Money.Amount = 300
 	sms.Money.Currency = "EUR"
 
-	newReq, err := gc.NewRequest(builders.SMS, sms)
+	newReq, err := gc.NewRequest(builder.SMS, sms)
 	if err != nil {
 		t.Error(err)
 	}

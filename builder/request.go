@@ -1,4 +1,4 @@
-package builders
+package builder
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
