@@ -136,6 +136,7 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 
 func TestSendRequest(t *testing.T)  {
 	gc, err := NewGatewayClient(ma.AccID, ma.SecKey)
+
 	sms := gc.NewOp().SMS()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
@@ -148,8 +149,13 @@ func TestSendRequest(t *testing.T)  {
 		t.Error(err)
 	}
 
-	_, respErr := gc.SendRequest(newReq)
+	resp, respErr := gc.SendRequest(newReq)
 	if respErr != nil {
 		t.Error(respErr)
 	}
+
+	if resp == nil {
+		t.Error("Parsed response is empty")
+	}
+
 }

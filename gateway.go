@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"bytes"
 	"net/http"
+	"io/ioutil"
 	"fmt"
 
 	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
@@ -78,14 +79,18 @@ func (gc *GatewayClient) NewRequest(opType builder.OperationType, opData interfa
 }
 
 // SendRequest method, sends prepared HTTP request to destination point and returns response from Transact Pro system
-func (gc *GatewayClient) SendRequest(req *http.Request) (*http.Response, error) {
+func (gc *GatewayClient) SendRequest(req *http.Request) (interface{}, error) {
 	resp, respErr := gc.httpClient.Do(req)
 	if respErr != nil {
 		return nil, respErr
 	}
 
-	// @TODO Return structure of response
-	return resp, nil
+	parsedResp, parseErr := parseResponse(resp)
+	if parseErr != nil {
+		return nil, parseErr
+	}
+
+	return parsedResp, nil
 }
 
 // prepareJsonPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
@@ -124,8 +129,7 @@ func determineAPIAction(baseUri, version string, opType builder.OperationType) (
 	apiEndpoint = fmt.Sprintf("%s/v%s/%s", baseUri, version, opType)
 
 	switch opType {
-	case builder.SMS:
-	case builder.DMS_HOLD:
+	case builder.SMS, builder.DMS_HOLD:
 		httpMethod = "POST"
 	default:
 		return httpMethod, apiEndpoint, errors.New("Unknow operation type, can't determinets HTTP action.")
@@ -148,4 +152,24 @@ func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request,
 	newReq.Header.Set("Content-type", "application/json")
 
 	return newReq, nil
+}
+
+// parseResponse, parsing response to structure
+func parseResponse(resp *http.Response) (interface{}, error){
+	body, bodyErr := ioutil.ReadAll(resp.Body)
+	if bodyErr != nil {
+		return nil, errors.New(fmt.Sprintf("failed to read received body: %s ", bodyErr.Error()))
+	}
+
+	resp.Body.Close()
+
+	// @TODO Refactor to dynamic structure determine
+	var gwResp structures.ResponseSMS
+	parseErr := json.Unmarshal(body, &gwResp)
+
+	if parseErr != nil {
+		return nil, errors.New(fmt.Sprintf("failed to read received body: %s ", bodyErr.Error()))
+	}
+
+	return gwResp, nil
 }

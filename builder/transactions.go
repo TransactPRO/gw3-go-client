@@ -9,7 +9,6 @@ const (
 	DMS_HOLD		= "hold-dms"
 )
 
-
 type OperationBuilder struct {}
 
 type SMSPayload struct {
