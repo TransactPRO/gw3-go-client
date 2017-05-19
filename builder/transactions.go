@@ -6,7 +6,7 @@ type OperationType string
 
 const (
 	SMS OperationType 	= "sms"
-	DMS_HOLD		= "dms-hold"
+	DMS_HOLD		= "hold-dms"
 )
 
 
