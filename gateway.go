@@ -96,9 +96,9 @@ func (gc *GatewayClient) SendRequest(req *http.Request) (interface{}, error) {
 // prepareJsonPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
 func prepareJsonPayload(pAuth structures.AuthData, pData interface{}) (*bytes.Buffer, error) {
 	// Build whole payload structure with nested data bundles
-	reqData := &builder.RequestData{}
-	reqData.Auth = pAuth
-	reqData.Data = pData
+	reqData := &builder.RequestBuilder{}
+	reqData.SetMerchantAuthData(pAuth)
+	reqData.SetPayloadData(pData)
 
 	// When payload ready, convert it to Json format
 	bReqData, err := json.Marshal(&reqData)
@@ -166,7 +166,6 @@ func parseResponse(resp *http.Response) (interface{}, error){
 	// @TODO Refactor to dynamic structure determine
 	var gwResp structures.ResponseSMS
 	parseErr := json.Unmarshal(body, &gwResp)
-
 	if parseErr != nil {
 		return nil, errors.New(fmt.Sprintf("failed to read received body: %s ", bodyErr.Error()))
 	}

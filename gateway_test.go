@@ -143,6 +143,8 @@ func TestSendRequest(t *testing.T)  {
 	sms.PaymentMethod.Cvv = "403"
 	sms.Money.Amount = 300
 	sms.Money.Currency = "EUR"
+	sms.System.UserIP = "127.0.0.1"
+	sms.System.XForwardedFor = "127.0.0.1"
 
 	newReq, err := gc.NewRequest(builder.SMS, sms)
 	if err != nil {

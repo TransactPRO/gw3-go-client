@@ -20,7 +20,7 @@ type (
 
 	// Acquirer response translated via Transact Pro system
 	AcquirerDetails struct{
-		EciSLi 			string `json:"eci-sli,omitempty"`
+		EciSLi 			int `json:"eci-sli,omitempty"`
 		TerminalID 		string `json:"terminal-mid,omitempty"`
 		TransactionID 		string `json:"transaction-id,omitempty"`
 		ResultCode 		string `json:"result-code,omitempty"`
