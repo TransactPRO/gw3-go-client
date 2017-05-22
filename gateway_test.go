@@ -3,6 +3,9 @@ package tprogateway
 import (
 	"testing"
 	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
+	"fmt"
+	"math/rand"
+	"time"
 )
 
 // ma, Merchant authorization configuration
@@ -49,13 +52,13 @@ func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
 	if err != nil {
 		t.Error(err)
 	}
-	apiGC.API.Uri = "https://proxy.payment-tpro.co.uk"
-	if apiGC.API.Uri == dAPIBaseUri {
+	apiGC.API.BaseUri = "https://proxy.payment-tpro.co.uk"
+	if apiGC.API.BaseUri == dAPIBaseUri {
 		t.Error("API uri not changed")
 	}
 
 	apiGC.API.Version = "1.0"
-	if apiGC.API.Uri == dAPIVersion {
+	if apiGC.API.BaseUri == dAPIVersion {
 		t.Error("API Version not changed")
 	}
 }
@@ -100,8 +103,8 @@ func TestDetermineAPIActionUriError(t *testing.T) {
 		t.Error(errGC)
 	}
 
-	apiGC.API.Uri = ""
-	_, _, err := determineAPIAction(apiGC.API.Uri, apiGC.API.Version, builder.SMS)
+	apiGC.API.BaseUri = ""
+	_, _, err := determineAPIAction(apiGC.API.BaseUri, apiGC.API.Version, builder.SMS)
 	if err == nil {
 		t.Error(err)
 	}
@@ -114,7 +117,7 @@ func TestDetermineAPIActionVersionError(t *testing.T) {
 	}
 
 	apiGC.API.Version = ""
-	_, _, err := determineAPIAction(apiGC.API.Uri, apiGC.API.Version, builder.SMS)
+	_, _, err := determineAPIAction(apiGC.API.BaseUri, apiGC.API.Version, builder.SMS)
 	if err == nil {
 		t.Error(err)
 	}
@@ -128,16 +131,26 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 
 	var WRONG_OP builder.OperationType = "WRONG_OP"
 
-	_, _, err := determineAPIAction(apiGC.API.Uri, apiGC.API.Version, WRONG_OP)
+	_, _, err := determineAPIAction(apiGC.API.BaseUri, apiGC.API.Version, WRONG_OP)
 	if err == nil {
 		t.Error(err)
 	}
 }
 
 func TestSendRequest(t *testing.T)  {
-	gc, err := NewGatewayClient(ma.AccID, ma.SecKey)
+	correctGc, errGc := NewGatewayClient(ma.AccID, ma.SecKey)
+	if errGc != nil {
+		t.Error(errGc)
+	}
 
-	sms := gc.NewOp().SMS()
+	sms := correctGc.NewOp().SMS()
+	newSource := rand.NewSource(time.Now().UnixNano())
+	newRand := rand.New(newSource)
+	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
+	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer ordering goods"
+	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID%d", newRand.Intn(rand.Int()))
+	sms.GeneralData.CustomerData.Email = "some@email.com"
+	sms.GeneralData.CustomerData.BillingAddress.City = "Riga"
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
@@ -146,12 +159,12 @@ func TestSendRequest(t *testing.T)  {
 	sms.System.UserIP = "127.0.0.1"
 	sms.System.XForwardedFor = "127.0.0.1"
 
-	newReq, err := gc.NewRequest(builder.SMS, sms)
-	if err != nil {
-		t.Error(err)
+	req, reqErr := correctGc.NewRequest(builder.SMS, sms)
+	if reqErr != nil {
+		t.Error(reqErr)
 	}
 
-	resp, respErr := gc.SendRequest(newReq)
+	resp, respErr := correctGc.SendRequest(req)
 	if respErr != nil {
 		t.Error(respErr)
 	}

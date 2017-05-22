@@ -3,8 +3,8 @@ package builder
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
 type RequestData struct {
-	auth structures.AuthData 	`json:"auth-data"`
-	data interface{} 		`json:"data"`
+	Auth structures.AuthData 	`json:"auth-data"`
+	Data interface{} 		`json:"data"`
 }
 
 type RequestBuilder struct {
@@ -17,9 +17,9 @@ type RequestDataBuilder interface {
 }
 
 func (rb *RequestBuilder) SetMerchantAuthData(auth structures.AuthData) {
-	rb.auth = auth
+	rb.Auth = auth
 }
 
 func (rb *RequestBuilder) SetPayloadData(data interface{}) {
-	rb.data = data
+	rb.Data = data
 }

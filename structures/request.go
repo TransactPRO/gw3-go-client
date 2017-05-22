@@ -10,12 +10,51 @@ type (
 	}
 
 	CommandData struct {
-		// Previously created Transaction ID
-		GWTranID 	string 		`json:"gateway-transaction-id"`
+		// Previously created Transaction in Transact Pro system
+		GWTransactionID string 		`json:"gateway-transaction-id"`
 		// Inside form ID when selecting non-default form manually
 		FormID 		string		`json:"form-id"`
 		// Terminal MID when selecting terminal manually
 		TerminalMID	string		`json:"terminal-mid"`
+	}
+
+	CustomerData struct {
+		// Customer (cardholder) email
+		Email 		string  `json:"email,omitempty"`
+		// Customer (cardholder) physical location
+		BillingAddress 	Address `json:"billing-address,omitempty"`
+		// Customer (cardholder) address where he want to receive orders
+		ShippingAddress Address `json:"shipping-address,omitempty"`
+	}
+
+	OrderData struct {
+		// Merchant-side transaction ID
+		MerchantTransactionID 	string `json:"merchant-transaction-id,omitempty"`
+		// Merchant-side user ID
+		MerchantID 		string `json:"merchant-user-id,omitempty"`
+		// Merchant-side order ID
+		OrderID 		string `json:"order-id,omitempty"`
+		// Merchant-side order short sms, dms-hold, moto description
+		OrderDescription 	string `json:"order-description,omitempty"`
+		// Merchant-side Key-Value order data
+		OrderMeta		interface{} `json:"order-meta,omitempty"`
+	}
+
+	Address struct {
+		// Billing\Shipping country
+		Country string `json:"Country,omitempty"`
+		// Billing\Shipping state
+		State 	string `json:"State,omitempty"`
+		// Billing\Shipping city
+		City 	string `json:"city,omitempty"`
+		// Billing\Shipping street
+		Street 	string `json:"street,omitempty"`
+		// Billing\Shipping house number
+		House 	string `json:"house,omitempty"`
+		// Billing\Shipping flat number
+		Flat 	string `json:"flat,omitempty"`
+		// Billing\Shipping zip number
+		ZIP 	string `json:"zip,omitempty"`
 	}
 
 	PaymentMethodData struct {

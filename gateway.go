@@ -22,7 +22,7 @@ const (
 type (
 	// confAPI, endpoint config to rich Transact Pro system
 	confAPI struct {
-		Uri 	string
+		BaseUri string
 		Version string
 	}
 
@@ -46,7 +46,7 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 
 	return &GatewayClient {
 		API:  &confAPI{
-			Uri:dAPIBaseUri, Version: dAPIVersion},
+			BaseUri: dAPIBaseUri, Version: dAPIVersion},
 		auth: &structures.AuthData{
 			AccountID: AccountID, SecretKey:SecretKey},
 	}, nil
@@ -65,7 +65,7 @@ func (gc *GatewayClient) NewRequest(opType builder.OperationType, opData interfa
 	}
 
 	// Get prepared URL path for API request
-	httpMethod, urlPath, errUrlPath := determineAPIAction(gc.API.Uri, gc.API.Version, opType)
+	httpMethod, urlPath, errUrlPath := determineAPIAction(gc.API.BaseUri, gc.API.Version, opType)
 	if errUrlPath != nil {
 		return nil, errUrlPath
 	}

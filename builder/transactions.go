@@ -11,10 +11,18 @@ const (
 
 type OperationBuilder struct {}
 
+// Combined general data structure
+type generalData struct{
+	CustomerData 	structures.CustomerData		`json:"customer-data,omitempty"`
+	OrderData	structures.OrderData 		`json:"order-data,omitempty"`
+}
+
+// SMS bundle
 type SMSDataSet struct {
-	PaymentMethod 	structures.PaymentMethodData		`json:"payment-method-data"`
-	Money 		structures.MoneyData			`json:"money-data"`
-	System 		structures.SystemData			`json:"system"`
+	GeneralData 	generalData			`json:"general-data,omitempty"`
+	PaymentMethod 	structures.PaymentMethodData	`json:"payment-method-data"`
+	Money 		structures.MoneyData		`json:"money-data"`
+	System 		structures.SystemData		`json:"system"`
 }
 
 // NewSMS, returns bundled structure of transaction SMS
