@@ -2,23 +2,22 @@ package tprogateway
 
 import (
 	"testing"
-	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
 	"fmt"
-	"math/rand"
 	"time"
-	"net/http"
 	"io"
+	"math/rand"
+	"net/http"
 	"net/http/httptest"
+
+	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
 )
 
 // caa, Merchant authorization configuration
 var (
 	// Merchant auth structure
 	caa *testCorrectAccAuth
-	// Accouunt config
+	// Account config
 	cac *testCorrectAccConfig
-	// Correct instance of GatewayClient
-	gc *GatewayClient
 )
 
 type testCorrectAccAuth struct {
@@ -35,7 +34,6 @@ func init()  {
 		AccID:22, SecKey:"rg342QZSUaWzKHoCc5slyMGdAITk9LfR"}
 	cac = &testCorrectAccConfig{
 		TerminalMID: "590c699593ac4"}
-	gc, _ = NewGatewayClient(caa.AccID, caa.SecKey)
 }
 
 func TestNewGatewayClient(t *testing.T) {
@@ -64,6 +62,7 @@ func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
 	if err != nil {
 		t.Error(err)
 	}
+
 	apiGC.API.BaseUri = "https://proxy.payment-tpro.co.uk"
 	if apiGC.API.BaseUri == dAPIBaseUri {
 		t.Error("API uri not changed")
@@ -76,6 +75,11 @@ func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
 }
 
 func TestNewOperation(t *testing.T) {
+	gc, err := NewGatewayClient(caa.AccID, caa.SecKey)
+	if err != nil {
+		t.Error(err)
+	}
+
 	sms := gc.NewOp().SMS()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
@@ -92,6 +96,11 @@ func TestNewOperation(t *testing.T) {
 }
 
 func TestNewRequest(t *testing.T) {
+	gc, err := NewGatewayClient(caa.AccID, caa.SecKey)
+	if err != nil {
+		t.Error(err)
+	}
+
 	sms := gc.NewOp().SMS()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
@@ -209,9 +218,11 @@ func TestSendRequest(t *testing.T)  {
 		t.Error(errGc)
 	}
 
-	sms := correctGc.NewOp().SMS()
+	// Create some random values for our request
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
+
+	sms := correctGc.NewOp().SMS()
 	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
 	sms.CommandData.TerminalMID = cac.TerminalMID
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))

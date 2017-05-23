@@ -181,6 +181,7 @@ func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
 	switch gc.lastReqData.operation {
 	case builder.SMS:
 		var gwResp structures.ResponseSMS
+
 		parseErr := json.Unmarshal(body, &gwResp)
 		if parseErr != nil {
 			if bodyErr != nil {
@@ -190,6 +191,7 @@ func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
 			return nil, errors.New("Failed to unmarshal received body, body error unkown")
 		}
 
+		// Asian parsed response structure to response
 		responseBody = gwResp
 	default:
 		return nil, errors.New(fmt.Sprintf("Can't define response structure for operation type(%s)", gc.lastReqData.operation))
