@@ -1,13 +1,13 @@
 package tprogateway
 
 import (
-	"testing"
 	"fmt"
-	"time"
 	"io"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
+	"testing"
+	"time"
 
 	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
 )
@@ -29,9 +29,9 @@ type testCorrectAccConfig struct {
 	TerminalMID string
 }
 
-func init()  {
+func init() {
 	caa = &testCorrectAccAuth{
-		AccID:22, SecKey:"rg342QZSUaWzKHoCc5slyMGdAITk9LfR"}
+		AccID: 22, SecKey: "rg342QZSUaWzKHoCc5slyMGdAITk9LfR"}
 	cac = &testCorrectAccConfig{
 		TerminalMID: "590c699593ac4"}
 }
@@ -57,19 +57,19 @@ func TestNewGatewayClientIncorrectSecretKey(t *testing.T) {
 	}
 }
 
-func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
+func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T) {
 	apiGC, err := NewGatewayClient(caa.AccID, caa.SecKey)
 	if err != nil {
 		t.Error(err)
 	}
 
-	apiGC.API.BaseUri = "https://proxy.payment-tpro.co.uk"
-	if apiGC.API.BaseUri == dAPIBaseUri {
+	apiGC.API.BaseURI = "https://proxy.payment-tpro.co.uk"
+	if apiGC.API.BaseURI == dAPIBaseURI {
 		t.Error("API uri not changed")
 	}
 
 	apiGC.API.Version = "1.0"
-	if apiGC.API.BaseUri == dAPIVersion {
+	if apiGC.API.BaseURI == dAPIVersion {
 		t.Error("API Version not changed")
 	}
 }
@@ -124,7 +124,7 @@ func TestDetermineAPIActionUriError(t *testing.T) {
 		t.Error(errGC)
 	}
 
-	apiGC.API.BaseUri = ""
+	apiGC.API.BaseURI = ""
 	apiGC.lastReqData.operation = builder.SMS
 	err := determineAPIAction(apiGC)
 	if err == nil {
@@ -152,8 +152,8 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 		t.Error(errGC)
 	}
 
-	var WRONG_OP builder.OperationType = "WRONG_OP"
-	apiGC.lastReqData.operation = WRONG_OP
+	var WrongOP builder.OperationType = "WRONG_OP"
+	apiGC.lastReqData.operation = WrongOP
 
 	err := determineAPIAction(apiGC)
 	if err == nil {
@@ -161,7 +161,7 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 	}
 }
 
-func TestParseResponseError(t *testing.T)  {
+func TestParseResponseError(t *testing.T) {
 	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGC != nil {
 		t.Error(errGC)
@@ -212,7 +212,7 @@ func TestParseResponseSMS(t *testing.T) {
 	}
 }
 
-func TestSendRequest(t *testing.T)  {
+func TestSendRequest(t *testing.T) {
 	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGc != nil {
 		t.Error(errGc)

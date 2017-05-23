@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestBuildSmsDataSet(t *testing.T)  {
+func TestBuildSmsDataSet(t *testing.T) {
 	var ob *OperationBuilder
 	var smsDataSet SMSAssembly
 

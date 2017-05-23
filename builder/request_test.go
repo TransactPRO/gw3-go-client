@@ -1,8 +1,8 @@
 package builder
 
 import (
-	"testing"
 	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+	"testing"
 )
 
 func TestGetRequestBuilder(t *testing.T) {
@@ -21,7 +21,7 @@ func TestGetRequestBuilder(t *testing.T) {
 
 func TestSetMerchantAuthData(t *testing.T) {
 	var rd RequestBuilder
-	tAuth := structures.AuthData{AccountID:42, SecretKey:"Secret"}
+	tAuth := structures.AuthData{AccountID: 42, SecretKey: "Secret"}
 
 	rd.SetMerchantAuthData(tAuth)
 	if rd.Auth.AccountID == 0 && rd.Auth.SecretKey == "" {
@@ -33,8 +33,7 @@ func TestSetPayloadData(t *testing.T) {
 	var rd RequestBuilder
 	data := struct {
 		SomeTransactionData string
-	}{SomeTransactionData:"Transaction data"}
-
+	}{SomeTransactionData: "Transaction data"}
 
 	rd.SetPayloadData(data)
 	if rd.Data != data {

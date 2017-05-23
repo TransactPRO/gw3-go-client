@@ -1,63 +1,64 @@
-// Package tprogateway, provide ability to make requests to Transact Pro Gateway API v3.
+// Package tprogateway provide ability to make requests to Transact Pro Gateway API v3.
 package tprogateway
 
 import (
-	"errors"
-	"encoding/json"
 	"bytes"
-	"net/http"
-	"io/ioutil"
+	"encoding/json"
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 
-	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 )
+
 // @TODO Add logger with mode enabled\disabled, debug
 
 // Default API settings
 const (
-	dAPIBaseUri = "http://uriel.sk.fpngw3.env"
+	dAPIBaseURI = "http://uriel.sk.fpngw3.env"
 	dAPIVersion = "3.0"
 )
 
 type (
 	// confAPI, endpoint config to rich Transact Pro system
 	confAPI struct {
-		BaseUri string
+		BaseURI string
 		Version string
 	}
 
 	// lastRequestData, base structure for Transact Pro API requesting
 	lastRequestData struct {
-		httpMethod 	string
-		httpEndpoint 	string
-		operation	builder.OperationType
+		httpMethod   string
+		httpEndpoint string
+		operation    builder.OperationType
 	}
 
-	// GatewayClient, represents REST API client
+	// GatewayClient represents REST API client
 	GatewayClient struct {
-		API		*confAPI
-		auth		*structures.AuthData
-		httpClient	http.Client
-		lastReqData 	lastRequestData
+		API         *confAPI
+		auth        *structures.AuthData
+		httpClient  http.Client
+		lastReqData lastRequestData
 	}
 )
 
-// NewGatewayClient, new instance of prepared gateway client structure
+// NewGatewayClient new instance of prepared gateway client structure
 func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 	if AccountID == 0 {
-		return nil, errors.New("Account ID can not be 0, please use the given ID from Transact Pro.")
+		return nil, errors.New("Account ID can not be 0, please use the given ID from Transact Pro")
 	}
 
 	if SecretKey == "" {
-		return nil, errors.New("Secret key can't be empty. It's needed for merchant authorization.")
+		return nil, errors.New("Secret key can't be empty. It's needed for merchant authorization")
 	}
 
-	return &GatewayClient {
-		API:  &confAPI{
-			BaseUri: dAPIBaseUri, Version: dAPIVersion},
+	return &GatewayClient{
+		API: &confAPI{
+			BaseURI: dAPIBaseURI, Version: dAPIVersion},
 		auth: &structures.AuthData{
-			AccountID: AccountID, SecretKey:SecretKey},
+			AccountID: AccountID, SecretKey: SecretKey},
 	}, nil
 }
 
@@ -68,7 +69,7 @@ func (gc *GatewayClient) NewOp() *builder.OperationBuilder {
 
 // NewRequest method, prepares whole HTTP request for Transact Pro API
 func (gc *GatewayClient) NewRequest(opType builder.OperationType, opData interface{}) (*http.Request, error) {
-	bufPayload, bufErr := prepareJsonPayload(*gc.auth, opData)
+	bufPayload, bufErr := prepareJSONPayload(*gc.auth, opData)
 	if bufErr != nil {
 		return nil, bufErr
 	}
@@ -77,9 +78,9 @@ func (gc *GatewayClient) NewRequest(opType builder.OperationType, opData interfa
 	gc.lastReqData.operation = opType
 
 	// Get prepared URL path for API request
-	errUrlPath := determineAPIAction(gc)
-	if errUrlPath != nil {
-		return nil, errUrlPath
+	errURLPath := determineAPIAction(gc)
+	if errURLPath != nil {
+		return nil, errURLPath
 	}
 
 	newReq, reqErr := buildHTTPRequest(gc.lastReqData.httpMethod, gc.lastReqData.httpEndpoint, bufPayload)
@@ -105,8 +106,8 @@ func (gc *GatewayClient) SendRequest(req *http.Request) (interface{}, error) {
 	return parsedResp, nil
 }
 
-// prepareJsonPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
-func prepareJsonPayload(pAuth structures.AuthData, pData interface{}) (*bytes.Buffer, error) {
+// prepareJSONPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
+func prepareJSONPayload(pAuth structures.AuthData, pData interface{}) (*bytes.Buffer, error) {
 	// Build whole payload structure with nested data bundles
 	reqData := &builder.RequestBuilder{}
 	reqData.SetMerchantAuthData(pAuth)
@@ -126,25 +127,25 @@ func prepareJsonPayload(pAuth structures.AuthData, pData interface{}) (*bytes.Bu
 
 // determineAPIAction, determiners needed HTTP action for request and builds destination URL path
 // Return http method(string), endpoint api url(string), error or nil
-func determineAPIAction(gc *GatewayClient) (error) {
+func determineAPIAction(gc *GatewayClient) error {
 	// Validate API config, base URL and version of API
-	if gc.API.BaseUri == "" {
-		return errors.New("Gateway client's URL is empty in, API settings.")
+	if gc.API.BaseURI == "" {
+		return errors.New("Gateway client's URL is empty in, API settings")
 	}
 
 	if gc.API.Version == "" {
-		return errors.New("Gateway client's Version is empty in, API settings.")
+		return errors.New("Gateway client's Version is empty in, API settings")
 	}
 
 	// gc.lastReqData.httpEndpoint, combines from base url, version prefix, version, operation type.
 	// Example output: http://url.pay.com/v55.0/sms
-	gc.lastReqData.httpEndpoint = fmt.Sprintf("%s/v%s/%s", gc.API.BaseUri, gc.API.Version, gc.lastReqData.operation)
+	gc.lastReqData.httpEndpoint = fmt.Sprintf("%s/v%s/%s", gc.API.BaseURI, gc.API.Version, gc.lastReqData.operation)
 
 	switch gc.lastReqData.operation {
-	case builder.SMS, builder.DMS_HOLD:
+	case builder.SMS, builder.DMSHOLD:
 		gc.lastReqData.httpMethod = "POST"
 	default:
-		return errors.New("Unknow operation type, can't determinets HTTP action.")
+		return errors.New("Unknow operation type, can't determinets HTTP action")
 	}
 
 	return nil
@@ -167,14 +168,14 @@ func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request,
 }
 
 // parseResponse, parsing response to structure
-func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
+func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error) {
 	// Empty response body
 	var responseBody interface{}
 
 	body, bodyErr := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 	if bodyErr != nil {
-		return nil, errors.New(fmt.Sprintf("Failed to read received body: %s ", bodyErr.Error()))
+		return nil, fmt.Errorf("Failed to read received body: %s ", bodyErr.Error())
 	}
 
 	// Determine operation response structure and parse it
@@ -185,7 +186,7 @@ func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
 		parseErr := json.Unmarshal(body, &gwResp)
 		if parseErr != nil {
 			if bodyErr != nil {
-				return nil, errors.New(fmt.Sprintf("Failed to unmarshal received body: %s ", bodyErr.Error()))
+				return nil, fmt.Errorf("Failed to unmarshal received body: %s ", bodyErr.Error())
 			}
 
 			return nil, errors.New("Failed to unmarshal received body, body error unkown")
@@ -194,7 +195,7 @@ func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
 		// Asian parsed response structure to response
 		responseBody = gwResp
 	default:
-		return nil, errors.New(fmt.Sprintf("Can't define response structure for operation type(%s)", gc.lastReqData.operation))
+		return nil, fmt.Errorf("Can't define response structure for operation type(%s)", gc.lastReqData.operation)
 	}
 
 	return responseBody, nil
