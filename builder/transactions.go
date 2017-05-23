@@ -26,9 +26,9 @@ type (
 		// Command Data, isn't for any request type
 		CommandData 	struct {
 			// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
-			FormID 		string		`json:"form-id"`
+			FormID 		string		`json:"form-id,omitempty"`
 			// Terminal MID when selecting terminal manually, allowed in sms, dms-hold
-			TerminalMID	string		`json:"terminal-mid"`
+			TerminalMID	string		`json:"terminal-mid,omitempty"`
 		} `json:"command-data,omitempty"`
 		GeneralData 	generalData			`json:"general-data,omitempty"`
 		PaymentMethod 	structures.PaymentMethodData	`json:"payment-method-data"`

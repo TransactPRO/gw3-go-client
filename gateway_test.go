@@ -113,7 +113,8 @@ func TestDetermineAPIActionUriError(t *testing.T) {
 	}
 
 	apiGC.API.BaseUri = ""
-	_, _, err := determineAPIAction(apiGC.API.BaseUri, apiGC.API.Version, builder.SMS)
+	apiGC.lastReqData.operation = builder.SMS
+	err := determineAPIAction(apiGC)
 	if err == nil {
 		t.Error(err)
 	}
@@ -126,7 +127,8 @@ func TestDetermineAPIActionVersionError(t *testing.T) {
 	}
 
 	apiGC.API.Version = ""
-	_, _, err := determineAPIAction(apiGC.API.BaseUri, apiGC.API.Version, builder.SMS)
+	apiGC.lastReqData.operation = builder.SMS
+	err := determineAPIAction(apiGC)
 	if err == nil {
 		t.Error(err)
 	}
@@ -139,8 +141,9 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 	}
 
 	var WRONG_OP builder.OperationType = "WRONG_OP"
+	apiGC.lastReqData.operation = WRONG_OP
 
-	_, _, err := determineAPIAction(apiGC.API.BaseUri, apiGC.API.Version, WRONG_OP)
+	err := determineAPIAction(apiGC)
 	if err == nil {
 		t.Error(err)
 	}
@@ -165,7 +168,7 @@ func TestSendRequest(t *testing.T)  {
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
-	sms.Money.Amount = 300
+	sms.Money.Amount = newRand.Intn(500)
 	sms.Money.Currency = "EUR"
 	sms.System.UserIP = "127.0.0.1"
 	sms.System.XForwardedFor = "127.0.0.1"
@@ -183,5 +186,4 @@ func TestSendRequest(t *testing.T)  {
 	if resp == nil {
 		t.Error("Parsed response is empty")
 	}
-
 }
