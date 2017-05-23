@@ -9,15 +9,6 @@ type (
 		SecretKey string 	`json:"secret-key"`
 	}
 
-	CommandData struct {
-		// Previously created Transaction in Transact Pro system
-		GWTransactionID string 		`json:"gateway-transaction-id"`
-		// Inside form ID when selecting non-default form manually
-		FormID 		string		`json:"form-id"`
-		// Terminal MID when selecting terminal manually
-		TerminalMID	string		`json:"terminal-mid"`
-	}
-
 	CustomerData struct {
 		// Customer (cardholder) email
 		Email 		string  `json:"email,omitempty"`
@@ -80,5 +71,11 @@ type (
 		UserIP		string `json:"user-ip"`
 		// Cardholder real IPv4 address in case of proxy
 		XForwardedFor 	string `json:"x-forwarded-for"`
+	}
+
+	// Single structures fields for COMMAND DATA BUNDLE, but not for any request type is allowed
+	CommandDataGWTransactionID struct {
+		// Previously created Transaction in Transact Pro system
+		GWTransactionID string 		`json:"gateway-transaction-id"`
 	}
 )

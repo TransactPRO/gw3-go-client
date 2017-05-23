@@ -9,23 +9,35 @@ const (
 	DMS_HOLD		= "hold-dms"
 )
 
+// OperationBuilder, operation structure builder for specific request
+//
+// Allowed methods: SMS
 type OperationBuilder struct {}
 
-// Combined general data structure
-type generalData struct{
-	CustomerData 	structures.CustomerData		`json:"customer-data,omitempty"`
-	OrderData	structures.OrderData 		`json:"order-data,omitempty"`
-}
+type (
+	// Combined general data structure
+	generalData struct{
+		CustomerData 	structures.CustomerData		`json:"customer-data,omitempty"`
+		OrderData	structures.OrderData 		`json:"order-data,omitempty"`
+	}
 
-// SMS bundle
-type SMSDataSet struct {
-	GeneralData 	generalData			`json:"general-data,omitempty"`
-	PaymentMethod 	structures.PaymentMethodData	`json:"payment-method-data"`
-	Money 		structures.MoneyData		`json:"money-data"`
-	System 		structures.SystemData		`json:"system"`
-}
+	// SMS data bundle
+	SMSDataSet struct {
+		// Command Data, isn't for any request type
+		CommandData 	struct {
+			// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
+			FormID 		string		`json:"form-id"`
+			// Terminal MID when selecting terminal manually, allowed in sms, dms-hold
+			TerminalMID	string		`json:"terminal-mid"`
+		} `json:"command-data,omitempty"`
+		GeneralData 	generalData			`json:"general-data,omitempty"`
+		PaymentMethod 	structures.PaymentMethodData	`json:"payment-method-data"`
+		Money 		structures.MoneyData		`json:"money-data"`
+		System 		structures.SystemData		`json:"system"`
+	}
+)
 
-// NewSMS, returns bundled structure of transaction SMS
+// SMS, method returns bundled structure of SMS transaction request
 func (ob *OperationBuilder) SMS() SMSDataSet {
 	return SMSDataSet{}
 }

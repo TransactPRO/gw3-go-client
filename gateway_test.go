@@ -8,47 +8,56 @@ import (
 	"time"
 )
 
-// ma, Merchant authorization configuration
+// caa, Merchant authorization configuration
 var (
 	// Merchant auth structure
-	ma *testCorrectMerchantAuth
+	caa *testCorrectAccAuth
+	// Accouunt config
+	cac *testCorrectAccConfig
 	// Correct instance of GatewayClient
 	gc *GatewayClient
 )
 
-type testCorrectMerchantAuth struct {
+type testCorrectAccAuth struct {
 	AccID  int
 	SecKey string
 }
 
+type testCorrectAccConfig struct {
+	TerminalMID string
+}
+
 func init()  {
-	ma = &testCorrectMerchantAuth{AccID:22, SecKey:"rg342QZSUaWzKHoCc5slyMGdAITk9LfR"}
-	gc, _ = NewGatewayClient(ma.AccID, ma.SecKey)
+	caa = &testCorrectAccAuth{
+		AccID:22, SecKey:"rg342QZSUaWzKHoCc5slyMGdAITk9LfR"}
+	cac = &testCorrectAccConfig{
+		TerminalMID: "590c699593ac4"}
+	gc, _ = NewGatewayClient(caa.AccID, caa.SecKey)
 }
 
 func TestNewGatewayClient(t *testing.T) {
-	_, err := NewGatewayClient(ma.AccID, ma.SecKey)
+	_, err := NewGatewayClient(caa.AccID, caa.SecKey)
 	if err != nil {
 		t.Error(err)
 	}
 }
 
 func TestNewGatewayClientIncorrectAccountID(t *testing.T) {
-	_, err := NewGatewayClient(0, ma.SecKey)
+	_, err := NewGatewayClient(0, caa.SecKey)
 	if err == nil {
 		t.Error(err)
 	}
 }
 
 func TestNewGatewayClientIncorrectSecretKey(t *testing.T) {
-	_, err := NewGatewayClient(ma.AccID, "")
+	_, err := NewGatewayClient(caa.AccID, "")
 	if err == nil {
 		t.Error(err)
 	}
 }
 
 func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T)  {
-	apiGC, err := NewGatewayClient(ma.AccID, ma.SecKey)
+	apiGC, err := NewGatewayClient(caa.AccID, caa.SecKey)
 	if err != nil {
 		t.Error(err)
 	}
@@ -98,7 +107,7 @@ func TestNewRequest(t *testing.T) {
 }
 
 func TestDetermineAPIActionUriError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(ma.AccID, ma.SecKey)
+	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGC != nil {
 		t.Error(errGC)
 	}
@@ -111,7 +120,7 @@ func TestDetermineAPIActionUriError(t *testing.T) {
 }
 
 func TestDetermineAPIActionVersionError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(ma.AccID, ma.SecKey)
+	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGC != nil {
 		t.Error(errGC)
 	}
@@ -124,7 +133,7 @@ func TestDetermineAPIActionVersionError(t *testing.T) {
 }
 
 func TestDetermineAPIActionHttpMethodError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(ma.AccID, ma.SecKey)
+	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGC != nil {
 		t.Error(errGC)
 	}
@@ -138,7 +147,7 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 }
 
 func TestSendRequest(t *testing.T)  {
-	correctGc, errGc := NewGatewayClient(ma.AccID, ma.SecKey)
+	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGc != nil {
 		t.Error(errGc)
 	}
@@ -146,6 +155,8 @@ func TestSendRequest(t *testing.T)  {
 	sms := correctGc.NewOp().SMS()
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
+	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
+	sms.CommandData.TerminalMID = cac.TerminalMID
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer ordering goods"
 	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID%d", newRand.Intn(rand.Int()))
