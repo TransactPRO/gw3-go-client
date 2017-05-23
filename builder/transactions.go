@@ -22,7 +22,7 @@ type (
 	}
 
 	// SMS data bundle
-	SMSDataSet struct {
+	SMSAssembly struct {
 		// Command Data, isn't for any request type
 		CommandData 	struct {
 			// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
@@ -38,6 +38,6 @@ type (
 )
 
 // SMS, method returns bundled structure of SMS transaction request
-func (ob *OperationBuilder) SMS() SMSDataSet {
-	return SMSDataSet{}
+func (ob *OperationBuilder) SMS() SMSAssembly {
+	return SMSAssembly{}
 }

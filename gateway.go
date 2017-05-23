@@ -27,7 +27,7 @@ type (
 		Version string
 	}
 
-	// Base request data for Transact Pro API
+	// lastRequestData, base structure for Transact Pro API requesting
 	lastRequestData struct {
 		httpMethod 	string
 		httpEndpoint 	string
@@ -172,11 +172,10 @@ func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
 	var responseBody interface{}
 
 	body, bodyErr := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 	if bodyErr != nil {
-		return nil, errors.New(fmt.Sprintf("failed to read received body: %s ", bodyErr.Error()))
+		return nil, errors.New(fmt.Sprintf("Failed to read received body: %s ", bodyErr.Error()))
 	}
-
-	resp.Body.Close()
 
 	// Determine operation response structure and parse it
 	switch gc.lastReqData.operation {
@@ -184,8 +183,13 @@ func parseResponse(gc *GatewayClient, resp *http.Response) (interface{}, error){
 		var gwResp structures.ResponseSMS
 		parseErr := json.Unmarshal(body, &gwResp)
 		if parseErr != nil {
-			return nil, errors.New(fmt.Sprintf("failed to read received body: %s ", bodyErr.Error()))
+			if bodyErr != nil {
+				return nil, errors.New(fmt.Sprintf("Failed to unmarshal received body: %s ", bodyErr.Error()))
+			}
+
+			return nil, errors.New("Failed to unmarshal received body, body error unkown")
 		}
+
 		responseBody = gwResp
 	default:
 		return nil, errors.New(fmt.Sprintf("Can't define response structure for operation type(%s)", gc.lastReqData.operation))

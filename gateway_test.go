@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"net/http"
+	"io"
+	"net/http/httptest"
 )
 
 // caa, Merchant authorization configuration
@@ -146,6 +149,57 @@ func TestDetermineAPIActionHttpMethodError(t *testing.T) {
 	err := determineAPIAction(apiGC)
 	if err == nil {
 		t.Error(err)
+	}
+}
+
+func TestParseResponseError(t *testing.T)  {
+	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+	if errGC != nil {
+		t.Error(errGC)
+	}
+
+	apiGC.lastReqData.httpMethod = "POST"
+	apiGC.lastReqData.httpEndpoint = "http://unit.pay.com/v66.0/sms"
+
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "TEST SMS UNIT")
+	}
+
+	req := httptest.NewRequest(apiGC.lastReqData.httpMethod, apiGC.lastReqData.httpEndpoint, nil)
+	w := httptest.NewRecorder()
+	handler(w, req)
+
+	tResp := w.Result()
+
+	_, err := parseResponse(apiGC, tResp)
+	if err == nil {
+		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
+	}
+}
+
+func TestParseResponseSMS(t *testing.T) {
+	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+	if errGC != nil {
+		t.Error(errGC)
+	}
+
+	apiGC.lastReqData.operation = builder.SMS
+	apiGC.lastReqData.httpMethod = "POST"
+	apiGC.lastReqData.httpEndpoint = "http://unit.pay.com/v66.0/sms"
+
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "TEST SMS UNIT")
+	}
+
+	req := httptest.NewRequest(apiGC.lastReqData.httpMethod, apiGC.lastReqData.httpEndpoint, nil)
+	w := httptest.NewRecorder()
+	handler(w, req)
+
+	tResp := w.Result()
+
+	_, err := parseResponse(apiGC, tResp)
+	if err == nil {
+		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
 	}
 }
 
