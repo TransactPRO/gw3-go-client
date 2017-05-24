@@ -10,6 +10,12 @@ type (
 		SecretKey string `json:"secret-key"`
 	}
 
+	// GeneralData combined structure about customer data and order data
+	GeneralData struct {
+		CustomerData CustomerData `json:"customer-data,omitempty"`
+		OrderData    OrderData    `json:"order-data,omitempty"`
+	}
+
 	// CustomerData structure with detailed fields of customer(cardholder)
 	CustomerData struct {
 		// Customer (cardholder) email

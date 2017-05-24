@@ -16,14 +16,16 @@ const (
 type OperationBuilder struct{}
 
 type (
-	// Combined general data structure
-	generalData struct {
-		CustomerData structures.CustomerData `json:"customer-data,omitempty"`
-		OrderData    structures.OrderData    `json:"order-data,omitempty"`
+	requestHTTPData struct {
+		// HTTP method
+		method string
+		// URL path part
+		routePath string
 	}
 
 	// SMSAssembly is structure for sms transaction type
 	SMSAssembly struct {
+		requestHTTPData
 		// Command Data, isn't for any request type
 		CommandData struct {
 			// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
@@ -31,7 +33,7 @@ type (
 			// Terminal MID when selecting terminal manually, allowed in sms, dms-hold
 			TerminalMID string `json:"terminal-mid,omitempty"`
 		} `json:"command-data,omitempty"`
-		GeneralData   generalData                  `json:"general-data,omitempty"`
+		GeneralData   structures.GeneralData       `json:"general-data,omitempty"`
 		PaymentMethod structures.PaymentMethodData `json:"payment-method-data"`
 		Money         structures.MoneyData         `json:"money-data"`
 		System        structures.SystemData        `json:"system"`
@@ -41,6 +43,16 @@ type (
 	DMSHoldAssembly struct {
 	}
 )
+
+// GetRoutePath return part of route path which will be used for send request
+func (rd *requestHTTPData) GetRoutePath() string {
+	return rd.routePath
+}
+
+// GetHTTPMethod return HTTP method which will be used for send request
+func (rd *requestHTTPData) GetHTTPMethod() string {
+	return rd.method
+}
 
 // SMS method returns bundled structure for SMS transaction request
 func (ob *OperationBuilder) SMS() SMSAssembly {
