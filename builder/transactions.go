@@ -16,16 +16,9 @@ const (
 type OperationBuilder struct{}
 
 type (
-	requestHTTPData struct {
-		// HTTP method
-		method string
-		// URL path part
-		routePath string
-	}
-
 	// SMSAssembly is structure for sms transaction type
 	SMSAssembly struct {
-		requestHTTPData
+		requestHTTPData requestHTTPData
 		// Command Data, isn't for any request type
 		CommandData struct {
 			// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
@@ -40,26 +33,29 @@ type (
 	}
 
 	// DMSHoldAssembly is structure for dms hold transaction type
-	DMSHoldAssembly struct {
-	}
+	//DMSHoldAssembly struct {
+	//	//requestHTTPData
+	//}
 )
-
-// GetRoutePath return part of route path which will be used for send request
-func (rd *requestHTTPData) GetRoutePath() string {
-	return rd.routePath
-}
-
-// GetHTTPMethod return HTTP method which will be used for send request
-func (rd *requestHTTPData) GetHTTPMethod() string {
-	return rd.method
-}
 
 // SMS method returns bundled structure for SMS transaction request
 func (ob *OperationBuilder) SMS() SMSAssembly {
-	return SMSAssembly{}
+	var newSMS SMSAssembly
+
+	// Set default settings for that operation
+	newSMS.requestHTTPData.method = "POST"
+	newSMS.requestHTTPData.operationType = SMS
+
+	return newSMS
 }
 
 // DMSHold method returns bundled structure for DMS HOLD transaction request
-func (ob *OperationBuilder) DMSHold() DMSHoldAssembly {
-	return DMSHoldAssembly{}
-}
+//func (ob *OperationBuilder) DMSHold() *DMSHoldAssembly {
+//	var newDMSHold DMSHoldAssembly
+//
+//	// Set default settings for that operation
+//	//newDMSHold.method = "POST"
+//	//newDMSHold.operationType = DMSHOLD
+//
+//	return &newDMSHold
+//}

@@ -2,14 +2,9 @@ package tprogateway
 
 import (
 	"fmt"
-	"io"
 	"math/rand"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 	"time"
-
-	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
 )
 
 // caa, Merchant authorization configuration
@@ -65,12 +60,12 @@ func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T) {
 
 	apiGC.API.BaseURI = "https://proxy.payment-tpro.co.uk"
 	if apiGC.API.BaseURI == dAPIBaseURI {
-		t.Error("API uri not changed")
+		t.Error("GatewayClient API uri not changed")
 	}
 
 	apiGC.API.Version = "1.0"
 	if apiGC.API.BaseURI == dAPIVersion {
-		t.Error("API Version not changed")
+		t.Error("GatewayClient API Version not changed")
 	}
 }
 
@@ -80,7 +75,7 @@ func TestNewOperation(t *testing.T) {
 		t.Error(err)
 	}
 
-	sms := gc.NewOp().SMS()
+	sms := gc.NewOperation().SMS()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "123"
@@ -91,7 +86,7 @@ func TestNewOperation(t *testing.T) {
 	sms.System.XForwardedFor = "xxx.66.33.12"
 
 	if sms.System.UserIP != "xxx.0.0.1" && sms.System.XForwardedFor != "xxx.66.33.12" {
-		t.Error("System structure not changed")
+		t.Error("SMS data system structure not changed")
 	}
 }
 
@@ -101,116 +96,23 @@ func TestNewRequest(t *testing.T) {
 		t.Error(err)
 	}
 
-	sms := gc.NewOp().SMS()
+	sms := gc.NewOperation().SMS()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
 	sms.Money.Amount = 300
 	sms.Money.Currency = "EUR"
 
-	newReq, err := gc.NewRequest(builder.SMS, sms)
+	resp, err := gc.NewRequest(sms)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if newReq == nil {
-		t.Error("HTTP NewRequest structure is empty.")
+	if resp == nil {
+		t.Error("HTTP NewRequest response is empty.")
 	}
 }
 
-func TestDetermineAPIActionUriError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
-	if errGC != nil {
-		t.Error(errGC)
-	}
-
-	apiGC.API.BaseURI = ""
-	apiGC.lastReqData.operation = builder.SMS
-	err := determineAPIAction(apiGC)
-	if err == nil {
-		t.Error(err)
-	}
-}
-
-func TestDetermineAPIActionVersionError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
-	if errGC != nil {
-		t.Error(errGC)
-	}
-
-	apiGC.API.Version = ""
-	apiGC.lastReqData.operation = builder.SMS
-	err := determineAPIAction(apiGC)
-	if err == nil {
-		t.Error(err)
-	}
-}
-
-func TestDetermineAPIActionHttpMethodError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
-	if errGC != nil {
-		t.Error(errGC)
-	}
-
-	var WrongOP builder.OperationType = "WRONG_OP"
-	apiGC.lastReqData.operation = WrongOP
-
-	err := determineAPIAction(apiGC)
-	if err == nil {
-		t.Error(err)
-	}
-}
-
-func TestParseResponseError(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
-	if errGC != nil {
-		t.Error(errGC)
-	}
-
-	apiGC.lastReqData.httpMethod = "POST"
-	apiGC.lastReqData.httpEndpoint = "http://unit.pay.com/v66.0/sms"
-
-	handler := func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "TEST SMS UNIT")
-	}
-
-	req := httptest.NewRequest(apiGC.lastReqData.httpMethod, apiGC.lastReqData.httpEndpoint, nil)
-	w := httptest.NewRecorder()
-	handler(w, req)
-
-	tResp := w.Result()
-
-	_, err := parseResponse(apiGC, tResp)
-	if err == nil {
-		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
-	}
-}
-
-func TestParseResponseSMS(t *testing.T) {
-	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
-	if errGC != nil {
-		t.Error(errGC)
-	}
-
-	apiGC.lastReqData.operation = builder.SMS
-	apiGC.lastReqData.httpMethod = "POST"
-	apiGC.lastReqData.httpEndpoint = "http://unit.pay.com/v66.0/sms"
-
-	handler := func(w http.ResponseWriter, r *http.Request) {
-		io.WriteString(w, "TEST SMS UNIT")
-	}
-
-	req := httptest.NewRequest(apiGC.lastReqData.httpMethod, apiGC.lastReqData.httpEndpoint, nil)
-	w := httptest.NewRecorder()
-	handler(w, req)
-
-	tResp := w.Result()
-
-	_, err := parseResponse(apiGC, tResp)
-	if err == nil {
-		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
-	}
-}
 
 func TestSendRequest(t *testing.T) {
 	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
@@ -222,7 +124,7 @@ func TestSendRequest(t *testing.T) {
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
 
-	sms := correctGc.NewOp().SMS()
+	sms := correctGc.NewOperation().SMS()
 	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
 	sms.CommandData.TerminalMID = cac.TerminalMID
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
@@ -238,17 +140,123 @@ func TestSendRequest(t *testing.T) {
 	sms.System.UserIP = "127.0.0.1"
 	sms.System.XForwardedFor = "127.0.0.1"
 
-	req, reqErr := correctGc.NewRequest(builder.SMS, sms)
+	resp, reqErr := correctGc.NewRequest(sms)
 	if reqErr != nil {
 		t.Error(reqErr)
 	}
-
-	resp, respErr := correctGc.SendRequest(req)
-	if respErr != nil {
-		t.Error(respErr)
-	}
-
 	if resp == nil {
 		t.Error("Parsed response is empty")
 	}
 }
+
+
+// @TODO cover more code with test cases like old one
+
+//func TestDetermineURLErrorBaseURI(t *testing.T) {
+//	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+//	if errGC != nil {
+//		t.Error(errGC)
+//	}
+//
+//	var reqB builder.RequestBuilder
+//
+//	apiGC.API.BaseURI = ""
+//	url, err := determineURL(apiGC, &reqB)
+//	if err == nil {
+//		t.Error(err)
+//	}
+//
+//	if url == "" {
+//		t.Error("URL returned empty")
+//	}
+//}
+//
+//func TestDetermineURLErrorVersion(t *testing.T) {
+//	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+//	if errGC != nil {
+//		t.Error(errGC)
+//	}
+//
+//	var reqB builder.RequestBuilder
+//
+//	apiGC.API.Version = ""
+//	url, err := determineURL(apiGC, &reqB)
+//	if err == nil {
+//		t.Error(err)
+//	}
+//
+//	if url == "" {
+//		t.Error("URL returned empty")
+//	}
+//}
+
+//func TestDetermineURLErrorEmptyURL(t *testing.T) {
+//	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+//	if errGC != nil {
+//		t.Error(errGC)
+//	}
+//
+//	var reqB builder.RequestBuilder
+//
+//	url, err := determineURL(apiGC, &reqB)
+//	if err == nil {
+//		t.Error(err)
+//	}
+//
+//	if url != "" {
+//		t.Error("URL formed with empty operation type. Problem in request builder")
+//	}
+//}
+
+//
+//func TestParseResponseError(t *testing.T) {
+//	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+//	if errGC != nil {
+//		t.Error(errGC)
+//	}
+//
+//	apiGC.lastReqData.httpMethod = "POST"
+//	apiGC.lastReqData.httpEndpoint = "http://unit.pay.com/v66.0/sms"
+//
+//	handler := func(w http.ResponseWriter, r *http.Request) {
+//		io.WriteString(w, "TEST SMS UNIT")
+//	}
+//
+//	req := httptest.NewRequest(apiGC.lastReqData.httpMethod, apiGC.lastReqData.httpEndpoint, nil)
+//	w := httptest.NewRecorder()
+//	handler(w, req)
+//
+//	tResp := w.Result()
+//
+//	_, err := parseResponse(apiGC, tResp)
+//	if err == nil {
+//		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
+//	}
+//}
+//
+//func TestParseResponseSMS(t *testing.T) {
+//	apiGC, errGC := NewGatewayClient(caa.AccID, caa.SecKey)
+//	if errGC != nil {
+//		t.Error(errGC)
+//	}
+//
+//	apiGC.lastReqData.operation = builder.SMS
+//	apiGC.lastReqData.httpMethod = "POST"
+//	apiGC.lastReqData.httpEndpoint = "http://unit.pay.com/v66.0/sms"
+//
+//	handler := func(w http.ResponseWriter, r *http.Request) {
+//		io.WriteString(w, "TEST SMS UNIT")
+//	}
+//
+//	req := httptest.NewRequest(apiGC.lastReqData.httpMethod, apiGC.lastReqData.httpEndpoint, nil)
+//	w := httptest.NewRecorder()
+//	handler(w, req)
+//
+//	tResp := w.Result()
+//
+//	_, err := parseResponse(apiGC, tResp)
+//	if err == nil {
+//		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
+//	}
+//}
+

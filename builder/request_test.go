@@ -40,3 +40,24 @@ func TestSetPayloadData(t *testing.T) {
 		t.Error("RequestBuilder's method SetPayloadData didn't set new interface data object")
 	}
 }
+
+func TestRequestHTTPData_GetHTTPMethod(t *testing.T) {
+	var req requestHTTPData
+
+	req.method = "POST"
+
+	methodHTTP := req.GetHTTPMethod()
+	if methodHTTP == "" {
+		t.Error("In HTTP request methods is empty")
+	}
+}
+
+func TestRequestHTTPData_GetRoutePath(t *testing.T) {
+	var req requestHTTPData
+
+	req.operationType = SMS
+	path := req.GetOperationType()
+	if path == "" {
+		t.Error("In HTTP request path is empty")
+	}
+}
