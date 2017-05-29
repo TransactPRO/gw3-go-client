@@ -13,7 +13,7 @@ func TestBuildSmsDataSet(t *testing.T) {
 
 	dataSet := ob.SMS()
 
-	if dataSet != smsDataSet {
+	if dataSet != nil {
 		t.Error("OperationBuilder method SMS returned wrong structure must be SMSAssembly")
 	}
 }

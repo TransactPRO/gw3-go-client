@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"bitbucket.transactpro.lv/tls/gw3-go-client/builder"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
 	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 )
 
@@ -34,6 +34,12 @@ type (
 		auth       *structures.AuthData
 		httpClient http.Client
 	}
+
+	// GenericRequest describes general request data structure
+	GenericRequest struct {
+		Auth interface{} `json:"auth-data"`
+		Data interface{} `json:"data"`
+	}
 )
 
 // NewGatewayClient new instance of prepared gateway client structure
@@ -55,16 +61,16 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 }
 
 // NewOperation method, returns builder for needed operation, like SMS, Reversal, even exploring transaction such as Refund History
-func (gc *GatewayClient) NewOperation() *builder.OperationBuilder {
-	return &builder.OperationBuilder{}
+func (gc *GatewayClient) Operation() *operations.OperationBuilder {
+	return &operations.OperationBuilder{}
 }
 
 // NewRequest method, send HTTP request to Transact Pro API
-func (gc *GatewayClient) NewRequest(opData interface{}) (*http.Response, error) {
+func (gc *GatewayClient) NewRequest(opData operations.OperationInterface) (*http.Response, error) {
 	// Build whole payload structure with nested data bundles
-	rawReqData := &builder.RequestBuilder{}
-	rawReqData.SetMerchantAuthData(*gc.auth)
-	rawReqData.SetPayloadData(opData)
+	rawReqData := &GenericRequest{}
+	rawReqData.Auth = *gc.auth
+	rawReqData.Data = opData
 
 	// Get prepared structure of json byte array
 	bufPayload, bufErr := prepareJSONPayload(rawReqData)
@@ -74,14 +80,14 @@ func (gc *GatewayClient) NewRequest(opData interface{}) (*http.Response, error) 
 
 	// Get combined URL path for request to API
 	//@TODO determine builder operation type
-	url, errURLPath := determineURL(gc, builder.SMS)
+	url, errURLPath := determineURL(gc, opData.GetOperationType())
 	if errURLPath != nil {
 		return nil, errURLPath
 	}
 
 	// Build correct HTTP request
 	// @TODO determine builder HTTP method
-	newReq, reqErr := buildHTTPRequest("POST", url, bufPayload)
+	newReq, reqErr := buildHTTPRequest(opData.GetHTTPMethod(), url, bufPayload)
 	if reqErr != nil {
 		return nil, reqErr
 	}
@@ -96,7 +102,7 @@ func (gc *GatewayClient) NewRequest(opData interface{}) (*http.Response, error) 
 }
 
 // prepareJSONPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
-func prepareJSONPayload(rawReq *builder.RequestBuilder) (*bytes.Buffer, error) {
+func prepareJSONPayload(rawReq *GenericRequest) (*bytes.Buffer, error) {
 	// When payload ready, convert it to Json format
 	bReqData, err := json.Marshal(&rawReq)
 	if err != nil {
@@ -110,7 +116,7 @@ func prepareJSONPayload(rawReq *builder.RequestBuilder) (*bytes.Buffer, error) {
 }
 
 // determineURL the full URL address to send request to Transact PRO API
-func determineURL(gc *GatewayClient, opType builder.OperationType) (string, error) {
+func determineURL(gc *GatewayClient, opType structures.OperationType) (string, error) {
 	// Complete URL for request
 	var completeURL string
 
@@ -151,7 +157,7 @@ func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request,
 }
 
 // ParseResponse method maps response to structure for given operation type
-func (gc *GatewayClient) ParseResponse(resp *http.Response, opType builder.OperationType) (interface{}, error) {
+func (gc *GatewayClient) ParseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
 	parsedResp, parseErr := parseResponse(resp, opType)
 	if parseErr != nil {
 		return nil, parseErr
@@ -161,7 +167,7 @@ func (gc *GatewayClient) ParseResponse(resp *http.Response, opType builder.Opera
 }
 
 // parseResponse, parsing response to structure
-func parseResponse(resp *http.Response, opType builder.OperationType) (interface{}, error) {
+func parseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
 	// Empty response body
 	var responseBody interface{}
 
@@ -173,7 +179,7 @@ func parseResponse(resp *http.Response, opType builder.OperationType) (interface
 
 	// Determine operation response structure and parse it
 	switch opType {
-	case builder.SMS:
+	case structures.SMS:
 		var gwResp structures.ResponseSMS
 
 		parseErr := json.Unmarshal(body, &gwResp)

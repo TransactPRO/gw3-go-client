@@ -2,8 +2,8 @@ package tprogateway
 
 import (
 	"fmt"
-	"math/rand"
 	"testing"
+	"math/rand"
 	"time"
 )
 
@@ -75,7 +75,7 @@ func TestNewOperation(t *testing.T) {
 		t.Error(err)
 	}
 
-	sms := gc.NewOperation().SMS()
+	sms := gc.Operation().NewSms()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "123"
@@ -96,7 +96,8 @@ func TestNewRequest(t *testing.T) {
 		t.Error(err)
 	}
 
-	sms := gc.NewOperation().SMS()
+	newOp := gc.Operation()
+	sms := newOp.NewSms()
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
@@ -113,7 +114,6 @@ func TestNewRequest(t *testing.T) {
 	}
 }
 
-
 func TestSendRequest(t *testing.T) {
 	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGc != nil {
@@ -124,7 +124,7 @@ func TestSendRequest(t *testing.T) {
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
 
-	sms := correctGc.NewOperation().SMS()
+	sms := correctGc.Operation().NewSms()
 	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
 	sms.CommandData.TerminalMID = cac.TerminalMID
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
@@ -148,7 +148,6 @@ func TestSendRequest(t *testing.T) {
 		t.Error("Parsed response is empty")
 	}
 }
-
 
 // @TODO cover more code with test cases like old one
 
@@ -259,4 +258,3 @@ func TestSendRequest(t *testing.T) {
 //		t.Error("GatewayClinet parse response didn't return error of parsing http response struct")
 //	}
 //}
-
