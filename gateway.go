@@ -60,8 +60,8 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 	}, nil
 }
 
-// NewOperation method, returns builder for needed operation, like SMS, Reversal, even exploring transaction such as Refund History
-func (gc *GatewayClient) Operation() *operations.OperationBuilder {
+// OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transaction such as Refund History
+func (gc *GatewayClient) OperationBuilder() *operations.OperationBuilder {
 	return &operations.OperationBuilder{}
 }
 
