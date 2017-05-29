@@ -116,7 +116,7 @@ func prepareJSONPayload(rawReq *GenericRequest) (*bytes.Buffer, error) {
 }
 
 // determineURL the full URL address to send request to Transact PRO API
-func determineURL(gc *GatewayClient, opType structures.OperationType) (string, error) {
+func determineURL(gc *GatewayClient, opType operations.OperationType) (string, error) {
 	// Complete URL for request
 	var completeURL string
 
@@ -157,7 +157,7 @@ func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request,
 }
 
 // ParseResponse method maps response to structure for given operation type
-func (gc *GatewayClient) ParseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
+func (gc *GatewayClient) ParseResponse(resp *http.Response, opType operations.OperationType) (interface{}, error) {
 	parsedResp, parseErr := parseResponse(resp, opType)
 	if parseErr != nil {
 		return nil, parseErr
@@ -167,19 +167,22 @@ func (gc *GatewayClient) ParseResponse(resp *http.Response, opType structures.Op
 }
 
 // parseResponse, parsing response to structure
-func parseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
+func parseResponse(resp *http.Response, opType operations.OperationType) (interface{}, error) {
+	defer resp.Body.Close()
+
 	// Empty response body
 	var responseBody interface{}
 
 	body, bodyErr := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
 	if bodyErr != nil {
 		return nil, fmt.Errorf("Failed to read received body: %s ", bodyErr.Error())
 	}
 
+	// @TODO Map unauthorized response before map to any transaction
+
 	// Determine operation response structure and parse it
 	switch opType {
-	case structures.SMS:
+	case operations.SMS:
 		var gwResp structures.ResponseSMS
 
 		parseErr := json.Unmarshal(body, &gwResp)

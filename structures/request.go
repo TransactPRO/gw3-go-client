@@ -1,5 +1,7 @@
 package structures
 
+import "bitbucket.transactpro.lv/tls/gw3-go-client/operations"
+
 // Transact Pro Gateway's request parameters data structures
 type (
 	// requestHTTPData contains HTTP request method and operationType to append in URL path
@@ -7,7 +9,7 @@ type (
 		// HTTP method
 		Method string
 		// Operation type
-		OperationType OperationType
+		OperationType operations.OperationType
 	}
 
 	// AuthData structure with authorization fields
@@ -99,15 +101,4 @@ type (
 		// Previously created Transaction in Transact Pro system
 		GWTransactionID string `json:"gateway-transaction-id"`
 	}
-)
-
-// OperationType describes the operation action as string
-type OperationType string
-
-const (
-	// SMS transaction type
-	SMS OperationType = "sms"
-
-	// DMSHOLD transaction type
-	DMSHOLD = "hold-dms"
 )

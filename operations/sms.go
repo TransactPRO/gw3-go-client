@@ -3,7 +3,7 @@ package operations
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
 // SMS is default structure for sms transaction operation
-type SMS struct {
+type SMSAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	reqHTTPData operationRequestHTTPData
 	// Command Data, isn't for any request type
@@ -21,23 +21,23 @@ type SMS struct {
 }
 
 // NewSms returns new pointer to new SMS structure
-func (ob *OperationBuilder) NewSms() *SMS {
+func (ob *OperationBuilder) NewSms() *SMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opHTTPData operationRequestHTTPData
 	opHTTPData.methodHTTP = "POST"
-	opHTTPData.operationType = structures.SMS
+	opHTTPData.operationType = SMS
 
-	return &SMS{
+	return &SMSAssembly{
 		reqHTTPData: opHTTPData,
 	}
 }
 
 // GetHTTPMethod gets HTTP method for these operation
-func (sms *SMS) GetHTTPMethod() string {
+func (sms *SMSAssembly) GetHTTPMethod() string {
 	return sms.reqHTTPData.GetHTTPMethod()
 }
 
 // GetHTTPMethod gets action URL path for these operation
-func (sms *SMS) GetOperationType() structures.OperationType {
+func (sms *SMSAssembly) GetOperationType() OperationType {
 	return sms.reqHTTPData.GetOperationType()
 }
