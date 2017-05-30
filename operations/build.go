@@ -7,8 +7,20 @@ import (
 // Builder operation structure builder for specific request
 type Builder struct{}
 
-// NewSms returns new pointer to new SMS structure
+// NewSms returns new instance to new SMS structure
 func (ob *Builder) NewSms() *transaction.SMSAssembly {
 	// Get new prepared sms structure for assembly
 	return transaction.NewSMSAssembly()
+}
+
+// NewHoldDMS returns new instance to new SMS structure
+func (ob *Builder) NewHoldDMS() *transaction.HoldDMSAssembly {
+	// Get new prepared sms structure for assembly
+	return transaction.NewHoldDMSAssembly()
+}
+
+// NewHoldDMS returns new instance to new SMS structure
+func (ob *Builder) NewChargeDMS() *transaction.ChargeDMSAssembly {
+	// Get new prepared sms structure for assembly
+	return transaction.NewChargeDMSAssembly()
 }

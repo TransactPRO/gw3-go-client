@@ -91,6 +91,18 @@ type (
 		// Previously created Transaction in Transact Pro system
 		GWTransactionID string `json:"gateway-transaction-id"`
 	}
+
+	// CommandDataFormID is single structures fields for CommandData, it's used not for any operation
+	CommandDataFormID struct {
+		// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
+		FormID string `json:"form-id,omitempty"`
+	}
+
+	// CommandDataTerminalMID is single structures fields for CommandData, it's used not for any operation
+	CommandDataTerminalMID struct {
+		// TerminalMID when selecting terminal manually, allowed in sms, dms-hold
+		TerminalMID string `json:"terminal-mid,omitempty"`
+	}
 )
 
 // OperationRequestInterface contains two methods, witch allows to get binned information about operation request

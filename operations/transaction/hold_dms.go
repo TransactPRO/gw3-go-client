@@ -2,8 +2,8 @@ package transaction
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// SMSAssembly is default structure for Single-Message Transactions (SMS) transaction operation
-type SMSAssembly struct {
+// HoldDMSAssembly is default structure for Double-Message Transactions (DMS) Hold transaction operation
+type HoldDMSAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData
 	// Command Data, isn't for any request type and in that case it's combined
@@ -17,27 +17,27 @@ type SMSAssembly struct {
 	System        structures.SystemData        `json:"system"`
 }
 
-// NewSMSAssembly returns new instance with prepared HTTP request data SMSAssembly
-func NewSMSAssembly() *SMSAssembly {
+// NewSHoldDMSAssembly returns new instance with prepared HTTP request data SMSAssembly
+func NewHoldDMSAssembly() *HoldDMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
 	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.SMS)
+	opd.SetOperationType(structures.DMSHOLD)
 
-	return &SMSAssembly{
+	return &HoldDMSAssembly{
 		opHTTPData: opd,
 	}
 }
 
-// Implement methods for SMSAssembly structure, form pck structures OperationRequestInterface
+// Implement methods for HoldDMSAssembly structure, form pck structures OperationRequestInterface
 
 // GetHTTPMethod return HTTP method which will be used for send request
-func (op *SMSAssembly) GetHTTPMethod() string {
+func (op *HoldDMSAssembly) GetHTTPMethod() string {
 	return op.opHTTPData.GetHTTPMethod()
 }
 
 // GetOperationType return part of route path which will be used for send request
-func (op *SMSAssembly) GetOperationType() structures.OperationType {
+func (op *HoldDMSAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
 }

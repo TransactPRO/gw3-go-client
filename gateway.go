@@ -189,10 +189,10 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 
 	// Determine operation response structure and parse it
 	switch opType {
-	case structures.SMS:
-		var gwResp structures.SMSResponse
+	case structures.SMS, structures.DMSHOLD, structures.DMSCHARGE:
+		var gwResp structures.TransactionResponse
 
-		// Try parse response to SMS strucutre
+		// Try parse response to transaction default structure
 		parseErr := json.Unmarshal(body, &gwResp)
 		if parseErr != nil {
 			if bodyErr != nil {

@@ -4,9 +4,10 @@ package structures
 type OperationType string
 
 const (
-	// SMS transaction type
+	// SMS transaction type in route path
 	SMS OperationType = "sms"
-
-	// DMSHOLD transaction type
+	// DMSHOLD transaction type in route path
 	DMSHOLD = "hold-dms"
+	// DMSCHARGE transaction type in route path
+	DMSCHARGE = "charge-dms"
 )

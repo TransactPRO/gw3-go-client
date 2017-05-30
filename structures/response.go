@@ -2,7 +2,7 @@ package structures
 
 // Transact Pro Gateway's response data structures
 type (
-	// Unauthorized response will be return if Merchant authorization was incorrect, HTTP status code will be 401
+	// UnauthorizedResponse will be return if Merchant authorization was incorrect, HTTP status code will be 401
 	// Example of json: { "msg": "Unauthorized", "status": 401 }
 	UnauthorizedResponse struct {
 		Msg    string `json:"msg"`
@@ -10,7 +10,7 @@ type (
 	}
 
 	// SMSResponse is structure of SMS operation response
-	SMSResponse struct {
+	TransactionResponse struct {
 		GateWay         gateWay         `json:"gw"`
 		Error           interface{}     `json:"error"`
 		AcquirerDetails acquirerDetails `json:"acquirer-details"`

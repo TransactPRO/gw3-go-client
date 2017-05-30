@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	"strconv"
 	"testing"
 	"time"
 
@@ -143,11 +144,11 @@ func TestSendRequest(t *testing.T) {
 	newRand := rand.New(newSource)
 
 	sms := correctGc.OperationBuilder().NewSms()
-	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
+	sms.CommandData.FormID = strconv.Itoa(newRand.Intn(100500))
 	sms.CommandData.TerminalMID = cac.TerminalMID
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer ordering goods"
-	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID%d", newRand.Intn(rand.Int()))
+	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.CustomerData.Email = "some@email.com"
 	sms.GeneralData.CustomerData.BillingAddress.City = "Riga"
 	sms.PaymentMethod.Pan = "5262482284416445"
@@ -171,21 +172,26 @@ func TestSendRequest(t *testing.T) {
 }
 
 func TestSendRequestSMSWithParse(t *testing.T) {
+	// HA
+	//correctGc, errGc := NewGatewayClient(28, "94dYyLTjVGM2aXSh6Aq1QcCHnPNev38p")
 	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGc != nil {
 		t.Error(errGc)
 		return
 	}
 
+	//correctGc.API.BaseURI = "http://uriel.ha.fpngw3.env"
+
 	// Create some random values for our request
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
 
 	sms := correctGc.OperationBuilder().NewSms()
-	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
+	//sms.CommandData.FormID = strconv.Itoa(newRand.Intn(100500))
+	//sms.CommandData.TerminalMID = "30"
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer ordering goods"
-	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID%d", newRand.Intn(rand.Int()))
+	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.CustomerData.Email = "some@email.com"
 	sms.GeneralData.CustomerData.BillingAddress.City = "Riga"
 	sms.PaymentMethod.Pan = "5262482284416445"
@@ -217,6 +223,8 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 		t.Error("Parsed responses of SMS is empty, problem in method ParseResponse ")
 		return
 	}
+
+	fmt.Println(fmt.Sprintf("%+v", parsedRes))
 }
 
 func TestSendRequestUnauthorizedSMSWithParse(t *testing.T) {
@@ -267,6 +275,70 @@ func TestSendRequestUnauthorizedSMSWithParse(t *testing.T) {
 
 	if gwResp.Msg != "Unauthorized" && gwResp.Status != 401 {
 		t.Error("Incorect parse of unauthorized response from Transact Pro gateway")
+		return
+	}
+}
+
+func TestSendRequestDMSreqHoldAndCharge(t *testing.T) {
+	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
+	if errGc != nil {
+		t.Error(errGc)
+		return
+	}
+
+	// Create some random values for our request
+	newSource := rand.NewSource(time.Now().UnixNano())
+	newRand := rand.New(newSource)
+	tranAmount := newRand.Intn(500)
+
+	opBuild := correctGc.OperationBuilder()
+
+	holdDMS := opBuild.NewHoldDMS()
+	holdDMS.GeneralData.OrderData.OrderDescription = "Gopher Gufer DO HOLD DMS"
+	holdDMS.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID:%d", newRand.Intn(rand.Int()))
+	holdDMS.GeneralData.CustomerData.BillingAddress.City = "Riga"
+
+	holdDMS.PaymentMethod.Pan = "5262482284416445"
+	holdDMS.PaymentMethod.ExpMmYy = "12/20"
+	holdDMS.PaymentMethod.Cvv = "403"
+
+	holdDMS.Money.Amount = tranAmount
+	holdDMS.Money.Currency = "EUR"
+
+	holdDMS.System.UserIP = "127.0.0.1"
+	holdDMS.System.XForwardedFor = "127.0.0.1"
+
+	respHold, respHoldErr := correctGc.NewRequest(holdDMS)
+	if respHoldErr != nil {
+		t.Error(respHoldErr)
+		return
+	}
+
+	if respHold == nil {
+		t.Error("DMS Hold parsed response is empty")
+		return
+	}
+
+	parsedRes, parseErr := correctGc.ParseResponse(respHold, structures.DMSHOLD)
+	if parseErr != nil {
+		t.Error(parseErr)
+		return
+	}
+
+	chargeDMS := opBuild.NewChargeDMS()
+	chargeDMS.CommandData.GWTransactionID = parsedRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
+	chargeDMS.Money.Amount = tranAmount
+	chargeDMS.System.UserIP = "127.0.0.1"
+	chargeDMS.System.XForwardedFor = "127.0.0.1"
+
+	respCharge, respChargeErr := correctGc.NewRequest(chargeDMS)
+	if respChargeErr != nil {
+		t.Error(respChargeErr)
+		return
+	}
+
+	if respCharge == nil {
+		t.Error("Parsed response is empty")
 		return
 	}
 }
