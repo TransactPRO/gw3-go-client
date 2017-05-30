@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 )
 
 // caa, Merchant authorization configuration
@@ -152,7 +152,6 @@ func TestSendRequest(t *testing.T) {
 	}
 }
 
-// @TODO cover more code
 func TestSendRequestSMSWithParse(t *testing.T) {
 	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGc != nil {
@@ -165,7 +164,7 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 
 	sms := correctGc.OperationBuilder().NewSms()
 	sms.CommandData.FormID = fmt.Sprintf("%d", newRand.Intn(100500))
-	sms.CommandData.TerminalMID = cac.TerminalMID
+	//sms.CommandData.TerminalMID = cac.TerminalMID
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer ordering goods"
 	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID%d", newRand.Intn(rand.Int()))
@@ -188,7 +187,7 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 		t.Error("Parsed response is empty")
 	}
 
-	parsedRes, parseErr := correctGc.ParseResponse(resp, operations.SMS)
+	parsedRes, parseErr := correctGc.ParseResponse(resp, structures.SMS)
 	if parseErr != nil {
 		t.Error(parseErr)
 	}

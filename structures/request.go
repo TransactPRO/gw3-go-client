@@ -1,23 +1,13 @@
 package structures
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/operations"
-
 // Transact Pro Gateway's request parameters data structures
 type (
-	// requestHTTPData contains HTTP request method and operationType to append in URL path
+	// RequestHTTPData contains HTTP request method and operationType to append in URL path
 	RequestHTTPData struct {
 		// HTTP method
 		Method string
 		// Operation type
-		OperationType operations.OperationType
-	}
-
-	// AuthData structure with authorization fields
-	AuthData struct {
-		// Transact Pro Account ID
-		AccountID int `json:"account-id"`
-		// Transact Pro Merchant Password
-		SecretKey string `json:"secret-key"`
+		OperationType OperationType
 	}
 
 	// GeneralData combined structure about customer data and order data
@@ -102,3 +92,35 @@ type (
 		GWTransactionID string `json:"gateway-transaction-id"`
 	}
 )
+
+// OperationRequestInterface contains two methods, witch allows to get binned information about operation request
+type OperationRequestInterface interface {
+	GetHTTPMethod() string
+	GetOperationType() OperationType
+}
+
+// OperationRequestHTTPData contained with HTTP method (POST, GET) and action URL path for operation (sms, dms_hold)
+type OperationRequestHTTPData struct {
+	methodHTTP    string
+	operationType OperationType
+}
+
+// GetHTTPMethod return HTTP method which will be used for send request
+func (op *OperationRequestHTTPData) GetHTTPMethod() string {
+	return op.methodHTTP
+}
+
+// SetHTTPMethod HTTP method which will be used for send request
+func (op *OperationRequestHTTPData) SetHTTPMethod(method string) {
+	op.methodHTTP = method
+}
+
+// GetOperationType return part of route path which will be used for send request
+func (op *OperationRequestHTTPData) GetOperationType() OperationType {
+	return op.operationType
+}
+
+// SetOperationType part of route path which will be used for send request
+func (op *OperationRequestHTTPData) SetOperationType(opt OperationType) {
+	op.operationType = opt
+}

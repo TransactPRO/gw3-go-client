@@ -1,11 +1,11 @@
-package operations
+package transaction
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// SMS is default structure for sms transaction operation
+// SMSAssembly is default structure for sms transaction operation
 type SMSAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
-	reqHTTPData operationRequestHTTPData
+	opHTTPData structures.OperationRequestHTTPData
 	// Command Data, isn't for any request type
 	CommandData struct {
 		// Inside form ID when selecting non-default form manually, allowed in sms, dms-hold
@@ -20,24 +20,27 @@ type SMSAssembly struct {
 	System        structures.SystemData        `json:"system"`
 }
 
-// NewSms returns new pointer to new SMS structure
-func (ob *OperationBuilder) NewSms() *SMSAssembly {
+// NewSMSAssembly returns new instance with prepared HTTP request data SMSAssembly
+func NewSMSAssembly() *SMSAssembly {
 	// Predefine default HTTP request data for sms operations
-	var opHTTPData operationRequestHTTPData
-	opHTTPData.methodHTTP = "POST"
-	opHTTPData.operationType = SMS
+	var opd structures.OperationRequestHTTPData
+
+	opd.SetHTTPMethod("POST")
+	opd.SetOperationType(structures.SMS)
 
 	return &SMSAssembly{
-		reqHTTPData: opHTTPData,
+		opHTTPData: opd,
 	}
 }
 
-// GetHTTPMethod gets HTTP method for these operation
-func (sms *SMSAssembly) GetHTTPMethod() string {
-	return sms.reqHTTPData.GetHTTPMethod()
+// Implement methods for SMSAssembly structure, form pck structures OperationRequestInterface
+
+// GetHTTPMethod return HTTP method which will be used for send request
+func (op *SMSAssembly) GetHTTPMethod() string {
+	return op.opHTTPData.GetHTTPMethod()
 }
 
-// GetHTTPMethod gets action URL path for these operation
-func (sms *SMSAssembly) GetOperationType() OperationType {
-	return sms.reqHTTPData.GetOperationType()
+// GetOperationType return part of route path which will be used for send request
+func (op *SMSAssembly) GetOperationType() structures.OperationType {
+	return op.opHTTPData.GetOperationType()
 }
