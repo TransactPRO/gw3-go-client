@@ -5,9 +5,9 @@ type (
 	// RequestHTTPData contains HTTP request method and operationType to append in URL path
 	RequestHTTPData struct {
 		// HTTP method
-		Method string
+		Method string `json:"-"`
 		// Operation type
-		OperationType OperationType
+		OperationType OperationType `json:"-"`
 	}
 
 	// GeneralData combined structure about customer data and order data
@@ -63,7 +63,7 @@ type (
 		// Credit card number
 		Pan string `json:"pan"`
 		// Credit card expiry date in mm/yy format
-		ExpMmYy string `json:"exp-mm-yy"`
+		ExpMmYy string `json:"exp-mm-yy,omitempty"`
 		// Credit card protection code
 		Cvv string `json:"cvv,omitempty"`
 		// Cardholder Name and Surname (Name and Surname on credit card)
@@ -73,9 +73,9 @@ type (
 	// MoneyData structure with detailed fields about transaction amount and currency
 	MoneyData struct {
 		// Money amount in minor units
-		Amount int `json:"amount"`
+		Amount int `json:"amount,omitempty"`
 		// Currency, ISO-4217 format
-		Currency string `json:"currency"`
+		Currency string `json:"currency,omitempty"`
 	}
 
 	// SystemData structure with fields with customer and merchants IP addressees
@@ -89,7 +89,7 @@ type (
 	// CommandDataGWTransactionID is single structures fields for CommandData, it's used not for any operation
 	CommandDataGWTransactionID struct {
 		// Previously created Transaction in Transact Pro system
-		GWTransactionID string `json:"gateway-transaction-id"`
+		GWTransactionID string `json:"gateway-transaction-id,omitempty"`
 	}
 
 	// CommandDataFormID is single structures fields for CommandData, it's used not for any operation

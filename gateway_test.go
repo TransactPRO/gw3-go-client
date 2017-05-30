@@ -169,6 +169,9 @@ func TestSendRequest(t *testing.T) {
 		t.Error("Parsed response is empty")
 		return
 	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("RAW %+v", resp))
 }
 
 func TestSendRequestSMSWithParse(t *testing.T) {
@@ -187,8 +190,8 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 	newRand := rand.New(newSource)
 
 	sms := correctGc.OperationBuilder().NewSms()
-	//sms.CommandData.FormID = strconv.Itoa(newRand.Intn(100500))
-	//sms.CommandData.TerminalMID = "30"
+	sms.CommandData.FormID = strconv.Itoa(newRand.Intn(100500))
+	sms.CommandData.TerminalMID = "30"
 	sms.GeneralData.OrderData.MerchantTransactionID = fmt.Sprintf("TestTranID:%d", newRand.Intn(rand.Int()))
 	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer ordering goods"
 	sms.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID:%d", newRand.Intn(rand.Int()))
@@ -212,6 +215,8 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 		t.Error("Parsed response is empty")
 		return
 	}
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("RAW %+v", resp))
 
 	parsedRes, parseErr := correctGc.ParseResponse(resp, structures.SMS)
 	if parseErr != nil {
@@ -224,6 +229,7 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 		return
 	}
 
+	// @TODO Debug print
 	fmt.Println(fmt.Sprintf("%+v", parsedRes))
 }
 
@@ -277,6 +283,10 @@ func TestSendRequestUnauthorizedSMSWithParse(t *testing.T) {
 		t.Error("Incorect parse of unauthorized response from Transact Pro gateway")
 		return
 	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", gwResp))
+
 }
 
 func TestSendRequestDMS(t *testing.T) {
@@ -319,14 +329,17 @@ func TestSendRequestDMS(t *testing.T) {
 		return
 	}
 
-	parsedRes, parseErr := correctGc.ParseResponse(respHold, structures.DMSHold)
+	parsedHoldRes, parseErr := correctGc.ParseResponse(respHold, structures.DMSHold)
 	if parseErr != nil {
 		t.Error(parseErr)
 		return
 	}
 
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", parsedHoldRes))
+
 	chargeDMS := opBuild.NewChargeDMS()
-	chargeDMS.CommandData.GWTransactionID = parsedRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
+	chargeDMS.CommandData.GWTransactionID = parsedHoldRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
 	chargeDMS.Money.Amount = tranAmount
 	chargeDMS.System.UserIP = "127.0.0.1"
 	chargeDMS.System.XForwardedFor = "127.0.0.1"
@@ -342,8 +355,17 @@ func TestSendRequestDMS(t *testing.T) {
 		return
 	}
 
+	parsedCharge, parseChargeErr := correctGc.ParseResponse(respCharge, structures.DMSCharge)
+	if parseChargeErr != nil {
+		t.Error(parseChargeErr)
+		return
+	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", parsedCharge))
+
 	cancel := opBuild.NewCancel()
-	cancel.CommandData.GWTransactionID = parsedRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
+	cancel.CommandData.GWTransactionID = parsedHoldRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
 	cancel.System.UserIP = "127.0.0.1"
 	cancel.System.XForwardedFor = "127.0.0.1"
 
@@ -357,4 +379,13 @@ func TestSendRequestDMS(t *testing.T) {
 		t.Error("Cancel parsed response is empty")
 		return
 	}
+
+	parsedCancel, parseCancelErr := correctGc.ParseResponse(respCancel, structures.CANCEL)
+	if parseCancelErr != nil {
+		t.Error(parseCancelErr)
+		return
+	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", parsedCancel))
 }

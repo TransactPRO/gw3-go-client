@@ -7,9 +7,13 @@ const (
 	// SMS transaction type in route path
 	SMS OperationType = "sms"
 	// DMSHold transaction type in route path
-	DMSHold = "hold-dms"
+	DMSHold OperationType = "hold-dms"
 	// DMSCharge transaction type in route path
-	DMSCharge = "charge-dms"
+	DMSCharge OperationType = "charge-dms"
 	// CANCEL transaction type in route path
-	CANCEL = "cancel"
+	CANCEL OperationType = "cancel"
+	// MOTOSMS transaction type in route path
+	MOTOSMS OperationType = "moto/sms"
+	// MOTOSMS transaction type in route path
+	MOTODMS OperationType = "moto/dms"
 )
