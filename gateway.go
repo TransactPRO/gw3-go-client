@@ -190,8 +190,9 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 	// Determine operation response structure and parse it
 	switch opType {
 	case structures.SMS:
-		var gwResp structures.ResponseSMS
+		var gwResp structures.SMSResponse
 
+		// Try parse response to SMS strucutre
 		parseErr := json.Unmarshal(body, &gwResp)
 		if parseErr != nil {
 			if bodyErr != nil {
@@ -201,7 +202,7 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 			return nil, errors.New("Failed to unmarshal received body, body error unkown")
 		}
 
-		// Asian parsed response structure to response
+		// Assign parsed response structure to interface
 		responseBody = gwResp
 	default:
 		return nil, fmt.Errorf("Can't define response structure for operation type(%s)", opType)
