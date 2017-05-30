@@ -17,13 +17,13 @@ type HoldDMSAssembly struct {
 	System        structures.SystemData        `json:"system"`
 }
 
-// NewSHoldDMSAssembly returns new instance with prepared HTTP request data SMSAssembly
+// NewHoldDMSAssembly returns new instance with prepared HTTP request data SMSAssembly
 func NewHoldDMSAssembly() *HoldDMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
 	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.DMSHOLD)
+	opd.SetOperationType(structures.DMSHold)
 
 	return &HoldDMSAssembly{
 		opHTTPData: opd,

@@ -279,7 +279,7 @@ func TestSendRequestUnauthorizedSMSWithParse(t *testing.T) {
 	}
 }
 
-func TestSendRequestDMSreqHoldAndCharge(t *testing.T) {
+func TestSendRequestDMS(t *testing.T) {
 	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
 	if errGc != nil {
 		t.Error(errGc)
@@ -319,7 +319,7 @@ func TestSendRequestDMSreqHoldAndCharge(t *testing.T) {
 		return
 	}
 
-	parsedRes, parseErr := correctGc.ParseResponse(respHold, structures.DMSHOLD)
+	parsedRes, parseErr := correctGc.ParseResponse(respHold, structures.DMSHold)
 	if parseErr != nil {
 		t.Error(parseErr)
 		return
@@ -338,7 +338,23 @@ func TestSendRequestDMSreqHoldAndCharge(t *testing.T) {
 	}
 
 	if respCharge == nil {
-		t.Error("Parsed response is empty")
+		t.Error("DMS Charge parsed response is empty")
+		return
+	}
+
+	cancel := opBuild.NewCancel()
+	cancel.CommandData.GWTransactionID = parsedRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
+	cancel.System.UserIP = "127.0.0.1"
+	cancel.System.XForwardedFor = "127.0.0.1"
+
+	respCancel, respCancelErr := correctGc.NewRequest(cancel)
+	if respCancelErr != nil {
+		t.Error(respCancelErr)
+		return
+	}
+
+	if respCancel == nil {
+		t.Error("Cancel parsed response is empty")
 		return
 	}
 }
