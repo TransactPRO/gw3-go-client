@@ -8,7 +8,6 @@ import (
 
 // @TODO Mock\Stub responses from gateway when calling HTTP requests\response
 
-
 func TestNewGatewayClient(t *testing.T) {
 	_, err := NewGatewayClient(42, "SecKey")
 	if err != nil {

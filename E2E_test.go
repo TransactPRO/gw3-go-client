@@ -71,7 +71,6 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 		return
 	}
 
-
 	// Create some random values for our request
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
@@ -150,7 +149,7 @@ func TestSendRequestUnauthorizedSMSWithParse(t *testing.T) {
 
 	body, bodyErr := ioutil.ReadAll(resp.Body)
 	if bodyErr != nil {
-		t.Error(fmt.Sprintf("Failed to read received body: %s ", bodyErr.Error()))
+		t.Errorf("Failed to read received body: %s ", bodyErr.Error)
 		return
 	}
 
@@ -159,7 +158,7 @@ func TestSendRequestUnauthorizedSMSWithParse(t *testing.T) {
 	parseErr := json.Unmarshal(body, &gwResp)
 	if parseErr != nil {
 		if bodyErr != nil {
-			t.Error(fmt.Sprintf("Failed to unmarshal received body: %s ", bodyErr.Error()))
+			t.Errorf("Failed to unmarshal received body: %s ", bodyErr.Error)
 			return
 		}
 		t.Error("Failed to unmarshal received body, body error unkown")
