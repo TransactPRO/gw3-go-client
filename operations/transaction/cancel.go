@@ -13,7 +13,7 @@ type CancelAssembly struct {
 	System structures.SystemData `json:"system"`
 }
 
-// NewCancelAssembly returns new instance with prepared HTTP request data SMSAssembly
+// NewCancelAssembly returns new instance with prepared HTTP request data CancelAssembly
 func NewCancelAssembly() *CancelAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData

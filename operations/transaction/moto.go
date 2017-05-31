@@ -16,7 +16,7 @@ type MOTOAssembly struct {
 	System        structures.SystemData        `json:"system"`
 }
 
-// NewMOTOSMSAssembly returns new instance with prepared HTTP request data SMSAssembly
+// NewMOTOSMSAssembly returns new instance with prepared HTTP request data MOTOAssembly
 func NewMOTOSMSAssembly() *MOTOAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
@@ -29,7 +29,7 @@ func NewMOTOSMSAssembly() *MOTOAssembly {
 	}
 }
 
-// NewMOTODMSAssembly returns new instance with prepared HTTP request data SMSAssembly
+// NewMOTODMSAssembly returns new instance with prepared HTTP request data MOTOAssembly
 func NewMOTODMSAssembly() *MOTOAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData

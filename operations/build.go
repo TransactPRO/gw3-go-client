@@ -35,8 +35,20 @@ func (ob *Builder) NewMOTOSMS() *transaction.MOTOAssembly {
 	return transaction.NewMOTOSMSAssembly()
 }
 
-// NewMOTODMS returns new instance to new MOTO SMS structure
+// NewMOTODMS returns new instance to new MOTO DMS structure
 func (ob *Builder) NewMOTODMS() *transaction.MOTOAssembly {
 	// Get new prepared sms structure for assembly
 	return transaction.NewMOTODMSAssembly()
+}
+
+// NewRecurrentSMS returns new instance to new recurrent SMS structure
+func (ob *Builder) NewRecurrentSMS() *transaction.RecurrentAssembly {
+	// Get new prepared sms structure for assembly
+	return transaction.NewRecurrentSMSAssembly()
+}
+
+// NewRecurrentDMS returns new instance to new recurrent DMS structure
+func (ob *Builder) NewRecurrentDMS() *transaction.RecurrentAssembly {
+	// Get new prepared sms structure for assembly
+	return transaction.NewRecurrentDMSAssembly()
 }

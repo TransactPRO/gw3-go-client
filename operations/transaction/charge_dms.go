@@ -14,7 +14,7 @@ type ChargeDMSAssembly struct {
 	System structures.SystemData `json:"system"`
 }
 
-// NewChargeDMSAssembly returns new instance with prepared HTTP request data SMSAssembly
+// NewChargeDMSAssembly returns new instance with prepared HTTP request data ChargeDMSAssembly
 func NewChargeDMSAssembly() *ChargeDMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData

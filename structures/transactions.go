@@ -16,4 +16,8 @@ const (
 	MOTOSMS OperationType = "moto/sms"
 	// MOTOSMS transaction type in route path
 	MOTODMS OperationType = "moto/dms"
+	// RecurrentSMS transaction type in route path
+	RecurrentSMS OperationType = "recurrent/sms"
+	// RecurrentDMS transaction type in route path
+	RecurrentDMS OperationType = "recurrent/dms"
 )
