@@ -1,6 +1,6 @@
 package structures
 
-// Transact Pro Gateway's response data structures
+// Transact Pro Gateway's response structures
 type (
 	// UnauthorizedResponse will be return if Merchant authorization was incorrect, HTTP status code will be 401
 	// Example of json: { "msg": "Unauthorized", "status": 401 }
@@ -12,20 +12,20 @@ type (
 	// SMSResponse is structure of SMS operation response
 	TransactionResponse struct {
 		GateWay         gateWay         `json:"gw"`
-		Error           interface{}     `json:"error"`
+		Error           gwError         `json:"error"`
 		AcquirerDetails acquirerDetails `json:"acquirer-details"`
 	}
 
-	// Data parts for different responses
+	// Data parts for responses
 
-	// GateWay Transact Pro system response
+	// gateWay Transact Pro system response
 	gateWay struct {
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
 		StatusCode           int    `json:"status-code,omitempty"`
 		StatusText           string `json:"status-text,omitempty"`
 	}
 
-	// AcquirerDetails response translated via Transact Pro system
+	// acquirerDetails response translated via Transact Pro system
 	acquirerDetails struct {
 		EciSLi            int    `json:"eci-sli,omitempty"`
 		TerminalID        string `json:"terminal-mid,omitempty"`
@@ -33,5 +33,13 @@ type (
 		ResultCode        string `json:"result-code,omitempty"`
 		StatusText        string `json:"status-text,omitempty"`
 		StatusDescription string `json:"status-description,omitempty"`
+	}
+
+	// gwError error structure part
+	gwError struct {
+		// Gateway error code
+		Code int `json:"code"`
+		// Gateway error description
+		Msg string `json:"msg"`
 	}
 )
