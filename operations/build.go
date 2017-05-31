@@ -10,6 +10,8 @@ type Builder struct{}
 
 // Transaction Types builders
 
+// @TODO In Transaction assembly refactor some data sets, cos not all bundles used for each transaction. Some used few fields in groups
+
 // NewSms returns new instance to new SMS structure
 func (ob *Builder) NewSms() *transactions.SMSAssembly {
 	// Get new prepared sms structure for assembly

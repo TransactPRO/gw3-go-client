@@ -12,6 +12,11 @@ import (
 	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 )
 
+/*
+	End to End test can be used:
+	To test request sending\handling between application and Transact Pro system API
+*/
+
 // testAuth is a pointer to GatewayClient authData structure with merchant cridtetionals
 var testAuth *authData
 

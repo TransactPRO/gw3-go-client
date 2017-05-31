@@ -14,7 +14,7 @@ type RefundAssembly struct {
 	PaymentMethod structures.PaymentMethodData `json:"payment-method-data"`
 	Money         structures.MoneyData         `json:"money-data"`
 	// System data contains user(cardholder) IPv4 address and IPv4 address in case of proxy
-	System        structures.SystemData        `json:"system"`
+	System structures.SystemData `json:"system"`
 }
 
 // NewRefundAssembly returns new instance with prepared HTTP request data RefundAssembly
