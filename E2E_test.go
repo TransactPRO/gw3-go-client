@@ -44,7 +44,7 @@ func TestSendRequest(t *testing.T) {
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
-	sms.Money.Amount = newRand.Intn(500)
+	sms.Money.Amount = newRand.Intn(11)
 	sms.Money.Currency = "EUR"
 	sms.System.UserIP = "127.0.0.1"
 	sms.System.XForwardedFor = "127.0.0.1"
@@ -86,7 +86,7 @@ func TestSendRequestSMSWithParse(t *testing.T) {
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
-	sms.Money.Amount = newRand.Intn(500)
+	sms.Money.Amount = newRand.Intn(5)
 	sms.Money.Currency = "EUR"
 	sms.System.UserIP = "127.0.0.1"
 	sms.System.XForwardedFor = "127.0.0.1"
@@ -185,7 +185,7 @@ func TestSendRequestDMS(t *testing.T) {
 	// Create some random values for our request
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
-	tranAmount := newRand.Intn(500)
+	tranAmount := newRand.Intn(12)
 
 	opBuild := gc.OperationBuilder()
 
@@ -261,7 +261,7 @@ func TestSendRequestDMSCancel(t *testing.T) {
 	// Create some random values for our request
 	newSource := rand.NewSource(time.Now().UnixNano())
 	newRand := rand.New(newSource)
-	tranAmount := newRand.Intn(500)
+	tranAmount := newRand.Intn(10)
 
 	opBuild := gc.OperationBuilder()
 
@@ -341,7 +341,7 @@ func TestSendRequestGetStatus(t *testing.T) {
 	sms.PaymentMethod.Pan = "5262482284416445"
 	sms.PaymentMethod.ExpMmYy = "12/20"
 	sms.PaymentMethod.Cvv = "403"
-	sms.Money.Amount = newRand.Intn(500)
+	sms.Money.Amount = newRand.Intn(10)
 	sms.Money.Currency = "EUR"
 	sms.System.UserIP = "127.0.0.1"
 	sms.System.XForwardedFor = "127.0.0.1"
@@ -406,6 +406,7 @@ func TestSendRequestGetStatus(t *testing.T) {
 		fmt.Println(tranD.GatewayTransactionID)
 		for _, tranS := range tranD.Status {
 			// @TODO Debug print
+			fmt.Println(fmt.Sprintf("StatusCodeGeneral: %d  : %s", tranS.StatusCodeGeneral, tranS.StatusTextGeneral))
 			fmt.Println(fmt.Sprintf("StatusCode: %d  : %s", tranS.StatusCode, tranS.StatusText))
 		}
 	}

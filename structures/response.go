@@ -42,8 +42,9 @@ type (
 		StatusDescription string `json:"status-description,omitempty"`
 	}
 
-	// ExploringResponse is structure of all exploring operations
+	// ExploringResponse the structure of all exploring operations
 	// contained asked Transact Pro transaction id and it's status data
+	// note: the response will be Json object to parse response you must assign to []ExploringResponse
 	ExploringResponse struct {
 		// GatewayTransactionID the past Transact Pro gateway transaction id
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
@@ -51,11 +52,17 @@ type (
 		Status []ExploreStatus `json:"status"`
 	}
 
+	// ExploreStatus the structure of Transact Pro statuses for past transaction
 	ExploreStatus struct {
+		// GatewayTransactionID past transaction ID in Transact Pro system
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
-		StatusCode           int    `json:"status-code,omitempty"`
-		StatusText           string `json:"status-text,omitempty"`
-		StatusCodeGeneral    int    `json:"status-code-general,omitempty"`
-		StatusTextGeneral    string `json:"status-text-general,omitempty"`
+		// StatusCode transaction status code
+		StatusCode int `json:"status-code,omitempty"`
+		// StatusText transaction status string representation
+		StatusText string `json:"status-text,omitempty"`
+		// StatusCodeGeneral transaction status code
+		StatusCodeGeneral int `json:"status-code-general,omitempty"`
+		// StatusTextGeneral transaction status code
+		StatusTextGeneral string `json:"status-text-general,omitempty"`
 	}
 )

@@ -18,7 +18,7 @@ const (
 	CANCEL OperationType = "cancel"
 	// MOTOSMS transactions request type for url route path
 	MOTOSMS OperationType = "moto/sms"
-	// MOTOSMS transactions request type for url route path
+	// MOTODMS transactions request type for url route path
 	MOTODMS OperationType = "moto/dms"
 	// RecurrentSMS transactions request type for url route path
 	RecurrentSMS OperationType = "recurrent/sms"
