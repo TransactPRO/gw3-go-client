@@ -48,7 +48,7 @@ type (
 	ExploringStatusResponse struct {
 		// GatewayTransactionID the past Transact Pro gateway transaction id
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
-		// Status contained informational data of transaction
+		// ExploringStatus contained informational data of transaction
 		Status []ExploreStatus `json:"status"`
 	}
 
@@ -58,11 +58,40 @@ type (
 	ExploringResultResponse struct {
 		// GatewayTransactionID the past Transact Pro gateway transaction id
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
-		// Status contained informational data of transaction
-		Status       []ExploreStatus `json:"status"`
-		DateCreated  string          `json:"date-created"`
-		DateFinished string          `json:"date-finished"`
-		ResultData   ExploreResult   `json:"result-data"`
+		// ExploringStatus contained informational data of transaction
+		DateCreated  string              `json:"date-created"`
+		DateFinished string              `json:"date-finished"`
+		ResultData   TransactionResponse `json:"result-data"`
+	}
+
+	// ExploringHistoryResponse the structure of all exploring operations
+	// contained asked Transact Pro transaction id and it's result data
+	// note: the response will be Json object to parse response you must assign to []ExploringHistoryResponse
+	ExploringHistoryResponse struct {
+		// GatewayTransactionID the past Transact Pro gateway transaction id
+		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
+		// History contained informational data of transaction
+		History []ExploreStatus `json:"history"`
+	}
+
+	// ExploringRecurrentsResponse the structure of all exploring operations
+	// contained asked Transact Pro transaction id and it's result data
+	// note: the response will be Json object to parse response you must assign to []ExploringRecurrentsResponse
+	ExploringRecurrentsResponse struct {
+		// GatewayTransactionID the past Transact Pro gateway transaction id
+		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
+		// History contained informational data of transaction
+		//@TODO add structure fields
+	}
+
+	// ExploringRefundResponse the structure of all exploring operations
+	// contained asked Transact Pro transaction id and it's result data
+	// note: the response will be Json object to parse response you must assign to []ExploringRefundResponse
+	ExploringRefundResponse struct {
+		// GatewayTransactionID the past Transact Pro gateway transaction id
+		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
+		// History contained informational data of transaction
+		//@TODO add structure fields
 	}
 
 	// ExploreStatus the structure of Transact Pro statuses for past transaction

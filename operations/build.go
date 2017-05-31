@@ -8,7 +8,11 @@ import (
 // Builder operation structure builder for specific request
 type Builder struct{}
 
-// Transaction Types builders
+/*
+
+	Transaction Types builders
+
+*/
 
 // @TODO In Transaction assembly refactor some data sets, cos not all bundles used for each transaction. Some used few fields in groups
 
@@ -72,7 +76,11 @@ func (ob *Builder) NewReversal() *transactions.ReversalAssembly {
 	return transactions.NewReversalAssembly()
 }
 
-// Exploring Past Payments builders
+/*
+
+	Exploring Past Payments builders
+
+*/
 
 // NewGetStatus returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
@@ -80,8 +88,26 @@ func (ob *Builder) NewGetStatus() *exploring_requests.ExploreTransactionAssembly
 	return exploring_requests.NewStatusAssembly()
 }
 
-// NewGetStatus returns new instance to new status structure
+// NewGetResult returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
 func (ob *Builder) NewGetResult() *exploring_requests.ExploreTransactionAssembly {
 	return exploring_requests.NewResultAssembly()
+}
+
+// NewGetHistory returns new instance to new status structure
+// allows to get status of past transaction in Transact Pro system
+func (ob *Builder) NewGetHistory() *exploring_requests.ExploreTransactionAssembly {
+	return exploring_requests.NewHistoryAssembly()
+}
+
+// NewGetRecurrents returns new instance to new status structure
+// allows to get status of past transaction in Transact Pro system
+func (ob *Builder) NewGetRecurrents() *exploring_requests.ExploreTransactionAssembly {
+	return exploring_requests.NewRecurrentsAssembly()
+}
+
+// NewGetRefunds returns new instance to new status structure
+// allows to get status of past transaction in Transact Pro system
+func (ob *Builder) NewGetRefunds() *exploring_requests.ExploreTransactionAssembly {
+	return exploring_requests.NewHistoryAssembly()
 }

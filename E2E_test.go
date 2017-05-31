@@ -395,7 +395,7 @@ func TestSendRequestGetStatus(t *testing.T) {
 	// @TODO Debug print
 	fmt.Println(fmt.Sprintf("%+v", respGetStatus))
 
-	parsedGetStatus, parsedGetStatusErr := gc.ParseResponse(respGetStatus, structures.Status)
+	parsedGetStatus, parsedGetStatusErr := gc.ParseResponse(respGetStatus, structures.ExploringStatus)
 	if parsedGetStatusErr != nil {
 		t.Error(parsedGetStatusErr)
 		return
@@ -404,7 +404,7 @@ func TestSendRequestGetStatus(t *testing.T) {
 	// @TODO Debug print
 	fmt.Println(fmt.Sprintf("%+v", parsedGetStatus))
 
-	tranSatus := parsedGetStatus.([]structures.ExploringResponse)
+	tranSatus := parsedGetStatus.([]structures.ExploringStatusResponse)
 
 	for _, tranD := range tranSatus {
 		// @TODO Debug print

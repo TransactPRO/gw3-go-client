@@ -21,7 +21,7 @@ func NewStatusAssembly() *ExploreTransactionAssembly {
 	var opd structures.OperationRequestHTTPData
 
 	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.Status)
+	opd.SetOperationType(structures.ExploringStatus)
 
 	return &ExploreTransactionAssembly{
 		opHTTPData: opd,
@@ -34,7 +34,46 @@ func NewResultAssembly() *ExploreTransactionAssembly {
 	var opd structures.OperationRequestHTTPData
 
 	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.Result)
+	opd.SetOperationType(structures.ExploringResult)
+
+	return &ExploreTransactionAssembly{
+		opHTTPData: opd,
+	}
+}
+
+// NewHistoryAssembly returns new instance with prepared HTTP request data ExploreTransactionAssembly
+func NewHistoryAssembly() *ExploreTransactionAssembly {
+	// Predefine default HTTP request data for sms operations
+	var opd structures.OperationRequestHTTPData
+
+	opd.SetHTTPMethod("POST")
+	opd.SetOperationType(structures.ExploringHistory)
+
+	return &ExploreTransactionAssembly{
+		opHTTPData: opd,
+	}
+}
+
+// NewRecurrentsAssembly returns new instance with prepared HTTP request data ExploreTransactionAssembly
+func NewRecurrentsAssembly() *ExploreTransactionAssembly {
+	// Predefine default HTTP request data for sms operations
+	var opd structures.OperationRequestHTTPData
+
+	opd.SetHTTPMethod("POST")
+	opd.SetOperationType(structures.ExploringRecurrents)
+
+	return &ExploreTransactionAssembly{
+		opHTTPData: opd,
+	}
+}
+
+// NewRefundsAssembly returns new instance with prepared HTTP request data ExploreTransactionAssembly
+func NewRefundsAssembly() *ExploreTransactionAssembly {
+	// Predefine default HTTP request data for sms operations
+	var opd structures.OperationRequestHTTPData
+
+	opd.SetHTTPMethod("POST")
+	opd.SetOperationType(structures.ExploringRefunds)
 
 	return &ExploreTransactionAssembly{
 		opHTTPData: opd,

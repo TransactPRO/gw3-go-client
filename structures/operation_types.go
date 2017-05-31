@@ -33,8 +33,14 @@ const (
 		Exploring Past Payments types
 	*/
 
-	// Status is a transaction status request type for url route path
-	Status OperationType = "status"
-	// Result is a transaction status request type for url route path
-	Result OperationType = "result"
+	// ExploringStatus is a transaction status request type for url route path
+	ExploringStatus OperationType = "status"
+	// ExploringResult is a transaction result request type for url route path
+	ExploringResult OperationType = "result"
+	// ExploringHistory is a transaction history request type for url route path
+	ExploringHistory OperationType = "history"
+	// ExploringRecurrents is a transaction history request type for url route path
+	ExploringRecurrents OperationType = "recurrents"
+	// ExploringRefunds is a transaction history request type for url route path
+	ExploringRefunds OperationType = "refunds"
 )

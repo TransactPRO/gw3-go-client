@@ -69,7 +69,7 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 	}, nil
 }
 
-// OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transactions such as Refund History
+// OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transactions such as Refund ExploringHistory
 func (gc *GatewayClient) OperationBuilder() *operations.Builder {
 	return &operations.Builder{}
 }
@@ -195,9 +195,85 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 
 	// Determine operation response structure and parse it
 	switch opType {
-	case structures.Status:
+	case structures.ExploringStatus:
 		//var gwResp interface{}
 		var gwResp []structures.ExploringStatusResponse
+
+		// Try parse response to transactions default structure
+		// @TODO Debug print marshal body
+		fmt.Println("RAW HTTP BODY " + string(body))
+
+		parseErr := json.Unmarshal(body, &gwResp)
+		if parseErr != nil {
+			if bodyErr != nil {
+				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
+			}
+
+			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
+		}
+
+		// Assign parsed response structure to interface
+		responseBody = gwResp
+	case structures.ExploringResult:
+		//var gwResp interface{}
+		var gwResp []structures.ExploringResultResponse
+
+		// Try parse response to transactions default structure
+		// @TODO Debug print marshal body
+		fmt.Println("RAW HTTP BODY " + string(body))
+
+		parseErr := json.Unmarshal(body, &gwResp)
+		if parseErr != nil {
+			if bodyErr != nil {
+				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
+			}
+
+			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
+		}
+
+		// Assign parsed response structure to interface
+		responseBody = gwResp
+	case structures.ExploringHistory:
+		//var gwResp interface{}
+		var gwResp []structures.ExploringHistoryResponse
+
+		// Try parse response to transactions default structure
+		// @TODO Debug print marshal body
+		fmt.Println("RAW HTTP BODY " + string(body))
+
+		parseErr := json.Unmarshal(body, &gwResp)
+		if parseErr != nil {
+			if bodyErr != nil {
+				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
+			}
+
+			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
+		}
+
+		// Assign parsed response structure to interface
+		responseBody = gwResp
+	case structures.ExploringRecurrents:
+		//var gwResp interface{}
+		var gwResp []structures.ExploringRecurrentsResponse
+
+		// Try parse response to transactions default structure
+		// @TODO Debug print marshal body
+		fmt.Println("RAW HTTP BODY " + string(body))
+
+		parseErr := json.Unmarshal(body, &gwResp)
+		if parseErr != nil {
+			if bodyErr != nil {
+				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
+			}
+
+			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
+		}
+
+		// Assign parsed response structure to interface
+		responseBody = gwResp
+	case structures.ExploringRefunds:
+		//var gwResp interface{}
+		var gwResp []structures.ExploringRefundResponse
 
 		// Try parse response to transactions default structure
 		// @TODO Debug print marshal body
