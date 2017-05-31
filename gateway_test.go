@@ -363,11 +363,59 @@ func TestSendRequestDMS(t *testing.T) {
 
 	// @TODO Debug print
 	fmt.Println(fmt.Sprintf("%+v", parsedCharge))
+}
+
+func TestSendRequestDMSCancel(t *testing.T) {
+	correctGc, errGc := NewGatewayClient(caa.AccID, caa.SecKey)
+	if errGc != nil {
+		t.Error(errGc)
+		return
+	}
+
+	// Create some random values for our request
+	newSource := rand.NewSource(time.Now().UnixNano())
+	newRand := rand.New(newSource)
+	tranAmount := newRand.Intn(500)
+
+	opBuild := correctGc.OperationBuilder()
+
+	holdDMS := opBuild.NewHoldDMS()
+	holdDMS.GeneralData.OrderData.OrderDescription = "Gopher Gufer DO HOLD DMS"
+	holdDMS.GeneralData.OrderData.OrderID = fmt.Sprintf("TestOrderID:%d", newRand.Intn(rand.Int()))
+	holdDMS.GeneralData.CustomerData.BillingAddress.City = "Riga"
+
+	holdDMS.PaymentMethod.Pan = "5262482284416445"
+	holdDMS.PaymentMethod.ExpMmYy = "12/20"
+	holdDMS.PaymentMethod.Cvv = "403"
+
+	holdDMS.Money.Amount = tranAmount
+	holdDMS.Money.Currency = "EUR"
+
+	holdDMS.System.UserIP = "127.0.0.1"
+	holdDMS.System.XForwardedFor = "127.0.0.1"
+
+	respHold, respHoldErr := correctGc.NewRequest(holdDMS)
+	if respHoldErr != nil {
+		t.Error(respHoldErr)
+		return
+	}
+
+	if respHold == nil {
+		t.Error("DMS Hold parsed response is empty")
+		return
+	}
+
+	parsedHoldRes, parseErr := correctGc.ParseResponse(respHold, structures.DMSHold)
+	if parseErr != nil {
+		t.Error(parseErr)
+		return
+	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", parsedHoldRes))
 
 	cancel := opBuild.NewCancel()
 	cancel.CommandData.GWTransactionID = parsedHoldRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
-	cancel.System.UserIP = "127.0.0.1"
-	cancel.System.XForwardedFor = "127.0.0.1"
 
 	respCancel, respCancelErr := correctGc.NewRequest(cancel)
 	if respCancelErr != nil {

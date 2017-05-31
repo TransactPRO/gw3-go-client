@@ -10,7 +10,7 @@ type CancelAssembly struct {
 	CommandData struct {
 		structures.CommandDataGWTransactionID
 	} `json:"command-data,omitempty"`
-	System structures.SystemData `json:"system"`
+	//System structures.SystemData `json:"system"`
 }
 
 // NewCancelAssembly returns new instance with prepared HTTP request data CancelAssembly

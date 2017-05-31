@@ -116,8 +116,12 @@ func prepareJSONPayload(rawReq *GenericRequest) (*bytes.Buffer, error) {
 		return nil, err
 	}
 
+	// @TODO Debug print marshal body
+	fmt.Println("RAW Marshal BODY " + string(bReqData))
+
 	// Write json object to buffer
 	buffer := bytes.NewBuffer(bReqData)
+
 
 	return buffer, nil
 }
@@ -143,6 +147,10 @@ func determineURL(gc *GatewayClient, opType structures.OperationType) (string, e
 
 	// AS example must be like: http://url.pay.com/v55.0/sms
 	completeURL = fmt.Sprintf("%s/v%s/%s", gc.API.BaseURI, gc.API.Version, opType)
+
+	// @TODO Debug print URL
+	fmt.Println("REQUEST URL " + completeURL)
+
 
 	return completeURL, nil
 }
