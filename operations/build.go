@@ -52,3 +52,9 @@ func (ob *Builder) NewRecurrentDMS() *transaction.RecurrentAssembly {
 	// Get new prepared sms structure for assembly
 	return transaction.NewRecurrentDMSAssembly()
 }
+
+// NewRefund returns new instance to new refund structure
+func (ob *Builder) NewRefund() *transaction.RefundAssembly {
+	// Get new prepared sms structure for assembly
+	return transaction.NewRefundAssembly()
+}

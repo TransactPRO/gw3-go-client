@@ -20,4 +20,6 @@ const (
 	RecurrentSMS OperationType = "recurrent/sms"
 	// RecurrentDMS transaction type in route path
 	RecurrentDMS OperationType = "recurrent/dms"
+	// Refund transaction type in route path
+	Refund OperationType = "refund"
 )
