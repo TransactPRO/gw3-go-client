@@ -22,4 +22,6 @@ const (
 	RecurrentDMS OperationType = "recurrent/dms"
 	// Refund transaction type in route path
 	Refund OperationType = "refund"
+	// Reversal transaction type in route path
+	Reversal OperationType = "reversal"
 )

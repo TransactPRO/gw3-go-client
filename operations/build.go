@@ -58,3 +58,9 @@ func (ob *Builder) NewRefund() *transaction.RefundAssembly {
 	// Get new prepared sms structure for assembly
 	return transaction.NewRefundAssembly()
 }
+
+// NewReversal returns new instance to new reversal structure
+func (ob *Builder) NewReversal() *transaction.ReversalAssembly {
+	// Get new prepared sms structure for assembly
+	return transaction.NewReversalAssembly()
+}
