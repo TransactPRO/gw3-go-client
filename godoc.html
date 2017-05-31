@@ -1,0 +1,305 @@
+use 'godoc cmd/bitbucket.transactpro.lv/tls/gw3-go-client' for documentation on the bitbucket.transactpro.lv/tls/gw3-go-client command
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = "";
+	document.CALLGRAPH = "";
+	</script>
+
+
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "bitbucket.transactpro.lv/tls/gw3-go-client"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package tprogateway provide ability to make requests to Transact Pro Gateway API v3.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#GatewayClient">type GatewayClient</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewGatewayClient">func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GatewayClient.NewRequest">func (gc *GatewayClient) NewRequest(opData structures.OperationRequestInterface) (*http.Response, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GatewayClient.OperationBuilder">func (gc *GatewayClient) OperationBuilder() *operations.Builder</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GatewayClient.ParseResponse">func (gc *GatewayClient) ParseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error)</a></dd>
+				
+			
+				
+				<dd><a href="#GenericRequest">type GenericRequest</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/bitbucket.transactpro.lv/tls/gw3-go-client/gateway.go">gateway.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="GatewayClient">type <a href="/src/target/gateway.go?s=901:996#L31">GatewayClient</a>
+				<a class="permalink" href="#GatewayClient">&#xb6;</a>
+			</h2>
+			<p>
+GatewayClient represents REST API client
+</p>
+
+			<pre>type GatewayClient struct {
+<span id="GatewayClient.API"></span>    API *confAPI
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewGatewayClient">func <a href="/src/target/gateway.go?s=1230:1308#L45">NewGatewayClient</a>
+					<a class="permalink" href="#NewGatewayClient">&#xb6;</a>
+				</h3>
+				<pre>func NewGatewayClient(AccountID <a href="/pkg/builtin/#int">int</a>, SecretKey <a href="/pkg/builtin/#string">string</a>) (*<a href="#GatewayClient">GatewayClient</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+NewGatewayClient new instance of prepared gateway client structure
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="GatewayClient.NewRequest">func (*GatewayClient) <a href="/src/target/gateway.go?s=2023:2127#L68">NewRequest</a>
+					<a class="permalink" href="#GatewayClient.NewRequest">&#xb6;</a>
+				</h3>
+				<pre>func (gc *<a href="#GatewayClient">GatewayClient</a>) NewRequest(opData <a href="/pkg/bitbucket.transactpro.lv/tls/gw3-go-client/structures/">structures</a>.<a href="/pkg/bitbucket.transactpro.lv/tls/gw3-go-client/structures/#OperationRequestInterface">OperationRequestInterface</a>) (*<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Response">Response</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+NewRequest method, send HTTP request to Transact Pro API
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GatewayClient.OperationBuilder">func (*GatewayClient) <a href="/src/target/gateway.go?s=1864:1927#L63">OperationBuilder</a>
+					<a class="permalink" href="#GatewayClient.OperationBuilder">&#xb6;</a>
+				</h3>
+				<pre>func (gc *<a href="#GatewayClient">GatewayClient</a>) OperationBuilder() *<a href="/pkg/bitbucket.transactpro.lv/tls/gw3-go-client/operations/">operations</a>.<a href="/pkg/bitbucket.transactpro.lv/tls/gw3-go-client/operations/#Builder">Builder</a></pre>
+				<p>
+OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transactions such as Refund ExploringHistory
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="GatewayClient.ParseResponse">func (*GatewayClient) <a href="/src/target/gateway.go?s=4825:4938#L163">ParseResponse</a>
+					<a class="permalink" href="#GatewayClient.ParseResponse">&#xb6;</a>
+				</h3>
+				<pre>func (gc *<a href="#GatewayClient">GatewayClient</a>) ParseResponse(resp *<a href="/pkg/net/http/">http</a>.<a href="/pkg/net/http/#Response">Response</a>, opType <a href="/pkg/bitbucket.transactpro.lv/tls/gw3-go-client/structures/">structures</a>.<a href="/pkg/bitbucket.transactpro.lv/tls/gw3-go-client/structures/#OperationType">OperationType</a>) (interface{}, <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ParseResponse method maps response to structure for given operation type
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="GenericRequest">type <a href="/src/target/gateway.go?s=1059:1156#L38">GenericRequest</a>
+				<a class="permalink" href="#GenericRequest">&#xb6;</a>
+			</h2>
+			<p>
+GenericRequest describes general request data structure
+</p>
+
+			<pre>type GenericRequest struct {
+<span id="GenericRequest.Auth"></span>    Auth interface{} `json:&#34;auth-data&#34;`
+<span id="GenericRequest.Data"></span>    Data interface{} `json:&#34;data&#34;`
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="..">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="operations/">operations</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="structures/">structures</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
