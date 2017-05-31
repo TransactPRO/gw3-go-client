@@ -122,7 +122,6 @@ func prepareJSONPayload(rawReq *GenericRequest) (*bytes.Buffer, error) {
 	// Write json object to buffer
 	buffer := bytes.NewBuffer(bReqData)
 
-
 	return buffer, nil
 }
 
@@ -150,7 +149,6 @@ func determineURL(gc *GatewayClient, opType structures.OperationType) (string, e
 
 	// @TODO Debug print URL
 	fmt.Println("REQUEST URL " + completeURL)
-
 
 	return completeURL, nil
 }
