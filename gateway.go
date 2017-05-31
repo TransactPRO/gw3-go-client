@@ -171,6 +171,7 @@ func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request,
 
 // ParseResponse method maps response to structure for given operation type
 func (gc *GatewayClient) ParseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
+	// @TODO Split response parser to additional packg
 	parsedResp, parseErr := parseResponse(resp, opType)
 	if parseErr != nil {
 		return nil, parseErr
@@ -196,7 +197,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 	// Determine operation response structure and parse it
 	switch opType {
 	case structures.ExploringStatus:
-		//var gwResp interface{}
 		var gwResp []structures.ExploringStatusResponse
 
 		// Try parse response to transactions default structure
@@ -215,7 +215,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 		// Assign parsed response structure to interface
 		responseBody = gwResp
 	case structures.ExploringResult:
-		//var gwResp interface{}
 		var gwResp []structures.ExploringResultResponse
 
 		// Try parse response to transactions default structure
@@ -234,7 +233,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 		// Assign parsed response structure to interface
 		responseBody = gwResp
 	case structures.ExploringHistory:
-		//var gwResp interface{}
 		var gwResp []structures.ExploringHistoryResponse
 
 		// Try parse response to transactions default structure
@@ -253,7 +251,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 		// Assign parsed response structure to interface
 		responseBody = gwResp
 	case structures.ExploringRecurrents:
-		//var gwResp interface{}
 		var gwResp []structures.ExploringRecurrentsResponse
 
 		// Try parse response to transactions default structure
@@ -272,7 +269,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 		// Assign parsed response structure to interface
 		responseBody = gwResp
 	case structures.ExploringRefunds:
-		//var gwResp interface{}
 		var gwResp []structures.ExploringRefundResponse
 
 		// Try parse response to transactions default structure
@@ -309,5 +305,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 		responseBody = gwResp
 	}
 
+	// @TODO Think about return type, mb instead of using interface better to use strict structure types
 	return responseBody, nil
 }

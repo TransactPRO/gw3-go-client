@@ -2,7 +2,7 @@ package transactions
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// MOTOAssembly is default structure for Offline Transactions (MOTO) transactions operation
+// RecurrentAssembly is default structure for recurrent transactions operation
 type RecurrentAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData
@@ -30,7 +30,7 @@ func NewRecurrentSMSAssembly() *RecurrentAssembly {
 	}
 }
 
-// NewRecurrentSMSAssembly returns new instance with prepared HTTP request data RecurrentAssembly
+// NewRecurrentDMSAssembly returns new instance with prepared HTTP request data RecurrentAssembly
 func NewRecurrentDMSAssembly() *RecurrentAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData

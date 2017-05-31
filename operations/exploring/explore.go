@@ -1,8 +1,8 @@
-package exploring_requests
+package exploring
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// StatusAssembly is default structure for transaction status operation
+// ExploreTransactionAssembly is default structure for transaction status operation
 type ExploreTransactionAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData

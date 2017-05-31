@@ -1,7 +1,7 @@
 package operations
 
 import (
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/exploring_requests"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/exploring"
 	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/transactions"
 )
 
@@ -84,30 +84,30 @@ func (ob *Builder) NewReversal() *transactions.ReversalAssembly {
 
 // NewGetStatus returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetStatus() *exploring_requests.ExploreTransactionAssembly {
-	return exploring_requests.NewStatusAssembly()
+func (ob *Builder) NewGetStatus() *exploring.ExploreTransactionAssembly {
+	return exploring.NewStatusAssembly()
 }
 
 // NewGetResult returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetResult() *exploring_requests.ExploreTransactionAssembly {
-	return exploring_requests.NewResultAssembly()
+func (ob *Builder) NewGetResult() *exploring.ExploreTransactionAssembly {
+	return exploring.NewResultAssembly()
 }
 
 // NewGetHistory returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetHistory() *exploring_requests.ExploreTransactionAssembly {
-	return exploring_requests.NewHistoryAssembly()
+func (ob *Builder) NewGetHistory() *exploring.ExploreTransactionAssembly {
+	return exploring.NewHistoryAssembly()
 }
 
 // NewGetRecurrents returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetRecurrents() *exploring_requests.ExploreTransactionAssembly {
-	return exploring_requests.NewRecurrentsAssembly()
+func (ob *Builder) NewGetRecurrents() *exploring.ExploreTransactionAssembly {
+	return exploring.NewRecurrentsAssembly()
 }
 
 // NewGetRefunds returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetRefunds() *exploring_requests.ExploreTransactionAssembly {
-	return exploring_requests.NewHistoryAssembly()
+func (ob *Builder) NewGetRefunds() *exploring.ExploreTransactionAssembly {
+	return exploring.NewHistoryAssembly()
 }
