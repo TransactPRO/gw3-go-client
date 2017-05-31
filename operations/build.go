@@ -1,9 +1,14 @@
 package operations
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/operations/transactions"
+import (
+	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/exploring_requests"
+	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/transactions"
+)
 
 // Builder operation structure builder for specific request
 type Builder struct{}
+
+// Transaction Types builders
 
 // NewSms returns new instance to new SMS structure
 func (ob *Builder) NewSms() *transactions.SMSAssembly {
@@ -63,4 +68,12 @@ func (ob *Builder) NewRefund() *transactions.RefundAssembly {
 func (ob *Builder) NewReversal() *transactions.ReversalAssembly {
 	// Get new prepared sms structure for assembly
 	return transactions.NewReversalAssembly()
+}
+
+// Exploring Past Payments builders
+
+// NewGetStatus returns new instance to new status structure
+// allows to get status of past transaction in Transact Pro system
+func (ob *Builder) NewGetStatus() *exploring_requests.StatusAssembly {
+	return exploring_requests.NewStatusAssembly()
 }

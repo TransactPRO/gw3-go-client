@@ -103,6 +103,12 @@ type (
 		// TerminalMID when selecting terminal manually, allowed in sms, dms-hold
 		TerminalMID string `json:"terminal-mid,omitempty"`
 	}
+
+	// CommandDataExploreGWTransactionIDs used in explore operations and contains the slice of GWTransactionID's
+	CommandDataExploreGWTransactionIDs struct {
+		// Previously created Transaction in Transact Pro system
+		GWTransactionIDs []string `json:"gateway-transaction-ids,omitempty"`
+	}
 )
 
 // OperationRequestInterface contains two methods, witch allows to get binned information about operation request

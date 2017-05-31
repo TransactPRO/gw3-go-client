@@ -323,3 +323,90 @@ func TestSendRequestDMSCancel(t *testing.T) {
 	// @TODO Debug print
 	fmt.Println(fmt.Sprintf("%+v", parsedCancel))
 }
+
+func TestSendRequestGetStatus(t *testing.T) {
+	gc, gcErr := NewGatewayClient(testAuth.AccountID, testAuth.SecretKey)
+	if gcErr != nil {
+		t.Error(gcErr)
+		return
+	}
+
+	// Create some random values for our request
+	newSource := rand.NewSource(time.Now().UnixNano())
+	newRand := rand.New(newSource)
+
+	opBuilder := gc.OperationBuilder()
+	sms := opBuilder.NewSms()
+	sms.GeneralData.OrderData.OrderDescription = "Gopher Gufer will get transaction status"
+	sms.PaymentMethod.Pan = "5262482284416445"
+	sms.PaymentMethod.ExpMmYy = "12/20"
+	sms.PaymentMethod.Cvv = "403"
+	sms.Money.Amount = newRand.Intn(500)
+	sms.Money.Currency = "EUR"
+	sms.System.UserIP = "127.0.0.1"
+	sms.System.XForwardedFor = "127.0.0.1"
+
+	resp, reqErr := gc.NewRequest(sms)
+	if reqErr != nil {
+		t.Error(reqErr)
+		return
+	}
+
+	if resp == nil {
+		t.Error("Parsed response is empty")
+		return
+	}
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("RAW %+v", resp))
+
+	parsedRes, parseErr := gc.ParseResponse(resp, structures.SMS)
+	if parseErr != nil {
+		t.Error(parseErr)
+		return
+	}
+
+	if parsedRes == nil {
+		t.Error("Parsed responses of SMS is empty, problem in method ParseResponse ")
+		return
+	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", parsedRes))
+
+	gwIds := make([]string, 1)
+	gwIds[0] = parsedRes.(structures.TransactionResponse).GateWay.GatewayTransactionID
+
+	getStatus := opBuilder.NewGetStatus()
+	getStatus.CommandData.GWTransactionIDs = gwIds
+	getStatus.System.UserIP = "127.0.0.1"
+	getStatus.System.XForwardedFor = "127.0.0.1"
+
+	respGetStatus, reqGetStatusErr := gc.NewRequest(getStatus)
+	if reqGetStatusErr != nil {
+		t.Error(reqGetStatusErr)
+		return
+	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", respGetStatus))
+
+	parsedGetStatus, parsedGetStatusErr := gc.ParseResponse(respGetStatus, structures.Status)
+	if parsedGetStatusErr != nil {
+		t.Error(parsedGetStatusErr)
+		return
+	}
+
+	// @TODO Debug print
+	fmt.Println(fmt.Sprintf("%+v", parsedGetStatus))
+
+	tranSatus := parsedGetStatus.([]structures.ExploringResponse)
+
+	for _, tranD := range tranSatus {
+		// @TODO Debug print
+		fmt.Println(tranD.GatewayTransactionID)
+		for _, tranS := range tranD.Status {
+			// @TODO Debug print
+			fmt.Println(fmt.Sprintf("StatusCode: %d  : %s", tranS.StatusCode, tranS.StatusText))
+		}
+	}
+}

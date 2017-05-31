@@ -5,14 +5,14 @@ type (
 	// UnauthorizedResponse will be return if Merchant authorization was incorrect, HTTP status code will be 401
 	// Example of json: { "msg": "Unauthorized", "status": 401 }
 	UnauthorizedResponse struct {
-		Msg    string `json:"msg"`
-		Status int    `json:"status"`
+		Msg    string `json:"msg,omitempty"`
+		Status int    `json:"status,omitempty"`
 	}
 
-	// SMSResponse is structure of SMS operation response
+	// TransactionResponse is structure of all transaction operations
 	TransactionResponse struct {
 		GateWay         gateWay         `json:"gw"`
-		Error           gwError         `json:"error"`
+		Error           gateWayError    `json:"error"`
 		AcquirerDetails acquirerDetails `json:"acquirer-details"`
 	}
 
@@ -23,6 +23,13 @@ type (
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
 		StatusCode           int    `json:"status-code,omitempty"`
 		StatusText           string `json:"status-text,omitempty"`
+	}
+	// gateWayError error structure part
+	gateWayError struct {
+		// Gateway error code
+		Code int `json:"code,omitempty"`
+		// Gateway error description
+		Msg string `json:"msg,omitempty"`
 	}
 
 	// acquirerDetails response translated via Transact Pro system
@@ -35,11 +42,20 @@ type (
 		StatusDescription string `json:"status-description,omitempty"`
 	}
 
-	// gwError error structure part
-	gwError struct {
-		// Gateway error code
-		Code int `json:"code"`
-		// Gateway error description
-		Msg string `json:"msg"`
+	// ExploringResponse is structure of all exploring operations
+	// contained asked Transact Pro transaction id and it's status data
+	ExploringResponse struct {
+		// GatewayTransactionID the past Transact Pro gateway transaction id
+		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
+		// Status contained informational data of transaction
+		Status []ExploreStatus `json:"status"`
+	}
+
+	ExploreStatus struct {
+		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
+		StatusCode           int    `json:"status-code,omitempty"`
+		StatusText           string `json:"status-text,omitempty"`
+		StatusCodeGeneral    int    `json:"status-code-general,omitempty"`
+		StatusTextGeneral    string `json:"status-text-general,omitempty"`
 	}
 )

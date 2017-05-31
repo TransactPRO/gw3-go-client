@@ -36,5 +36,5 @@ const (
 	// Status is a transaction status request type for url route path
 	Status OperationType = "status"
 	// Result is a transaction status request type for url route path
-	Result OperationType = "result"
+	//Result OperationType = "result"
 )
