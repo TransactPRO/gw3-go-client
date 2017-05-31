@@ -10,7 +10,8 @@ type CancelAssembly struct {
 	CommandData struct {
 		structures.CommandDataGWTransactionID
 	} `json:"command-data,omitempty"`
-	//System structures.SystemData `json:"system"`
+	// System data contains user(cardholder) IPv4 address and IPv4 address in case of proxy
+	System structures.SystemData `json:"system"`
 }
 
 // NewCancelAssembly returns new instance with prepared HTTP request data CancelAssembly

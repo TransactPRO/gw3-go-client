@@ -109,6 +109,12 @@ type (
 		// Previously created Transaction in Transact Pro system
 		GWTransactionIDs []string `json:"gateway-transaction-ids,omitempty"`
 	}
+
+	// CommandDataExploreMerchantTransactionIDs used in explore operations and contains the slice of MerchantTransactionIDs's
+	CommandDataExploreMerchantTransactionIDs struct {
+		// Previously created Transaction in Transact Pro system
+		MerchantTransactionIDs []string `json:"merchant-transaction-ids,omitempty"`
+	}
 )
 
 // OperationRequestInterface contains two methods, witch allows to get binned information about operation request

@@ -11,6 +11,7 @@ type ChargeDMSAssembly struct {
 		structures.CommandDataGWTransactionID
 	} `json:"command-data,omitempty"`
 	Money  structures.MoneyData  `json:"money-data"`
+	// System data contains user(cardholder) IPv4 address and IPv4 address in case of proxy
 	System structures.SystemData `json:"system"`
 }
 

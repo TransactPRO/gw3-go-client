@@ -74,6 +74,12 @@ func (ob *Builder) NewReversal() *transactions.ReversalAssembly {
 
 // NewGetStatus returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetStatus() *exploring_requests.StatusAssembly {
+func (ob *Builder) NewGetStatus() *exploring_requests.ExploreTransactionAssembly {
 	return exploring_requests.NewStatusAssembly()
+}
+
+// NewGetStatus returns new instance to new status structure
+// allows to get status of past transaction in Transact Pro system
+func (ob *Builder) NewGetResult() *exploring_requests.ExploreTransactionAssembly {
+	return exploring_requests.NewResultAssembly()
 }

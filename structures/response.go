@@ -42,14 +42,27 @@ type (
 		StatusDescription string `json:"status-description,omitempty"`
 	}
 
-	// ExploringResponse the structure of all exploring operations
+	// ExploringStatusResponse the structure of all exploring operations
 	// contained asked Transact Pro transaction id and it's status data
-	// note: the response will be Json object to parse response you must assign to []ExploringResponse
-	ExploringResponse struct {
+	// note: the response will be Json object to parse response you must assign to []ExploringStatusResponse
+	ExploringStatusResponse struct {
 		// GatewayTransactionID the past Transact Pro gateway transaction id
 		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
 		// Status contained informational data of transaction
 		Status []ExploreStatus `json:"status"`
+	}
+
+	// ExploringResultResponse the structure of all exploring operations
+	// contained asked Transact Pro transaction id and it's result data
+	// note: the response will be Json object to parse response you must assign to []ExploringResultResponse
+	ExploringResultResponse struct {
+		// GatewayTransactionID the past Transact Pro gateway transaction id
+		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
+		// Status contained informational data of transaction
+		Status       []ExploreStatus `json:"status"`
+		DateCreated  string          `json:"date-created"`
+		DateFinished string          `json:"date-finished"`
+		ResultData   ExploreResult   `json:"result-data"`
 	}
 
 	// ExploreStatus the structure of Transact Pro statuses for past transaction
@@ -64,5 +77,12 @@ type (
 		StatusCodeGeneral int `json:"status-code-general,omitempty"`
 		// StatusTextGeneral transaction status code
 		StatusTextGeneral string `json:"status-text-general,omitempty"`
+	}
+
+	// ExploreResult structure of past transaction result
+	ExploreResult struct {
+		GateWay         gateWay         `json:"gw"`
+		Error           gateWayError    `json:"error"`
+		AcquirerDetails acquirerDetails `json:"acquirer-details"`
 	}
 )

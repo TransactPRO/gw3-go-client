@@ -197,7 +197,7 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 	switch opType {
 	case structures.Status:
 		//var gwResp interface{}
-		var gwResp []structures.ExploringResponse
+		var gwResp []structures.ExploringStatusResponse
 
 		// Try parse response to transactions default structure
 		// @TODO Debug print marshal body
