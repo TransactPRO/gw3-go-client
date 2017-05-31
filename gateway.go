@@ -69,7 +69,7 @@ func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
 	}, nil
 }
 
-// OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transaction such as Refund History
+// OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transactions such as Refund History
 func (gc *GatewayClient) OperationBuilder() *operations.Builder {
 	return &operations.Builder{}
 }
@@ -185,14 +185,14 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 		return nil, fmt.Errorf("Failed to read received body: %s ", bodyErr.Error())
 	}
 
-	// @TODO Map unauthorized response before map to any transaction
+	// @TODO Map unauthorized response before map to any transactions
 
 	// Determine operation response structure and parse it
 	switch opType {
-	case structures.SMS, structures.DMSHold, structures.DMSCharge, structures.CANCEL:
+	default:
 		var gwResp structures.TransactionResponse
 
-		// Try parse response to transaction default structure
+		// Try parse response to transactions default structure
 		parseErr := json.Unmarshal(body, &gwResp)
 		if parseErr != nil {
 			if bodyErr != nil {
@@ -204,8 +204,6 @@ func parseResponse(resp *http.Response, opType structures.OperationType) (interf
 
 		// Assign parsed response structure to interface
 		responseBody = gwResp
-	default:
-		return nil, fmt.Errorf("Can't define response structure for operation type(%s)", opType)
 	}
 
 	return responseBody, nil

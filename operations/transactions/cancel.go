@@ -1,8 +1,8 @@
-package transaction
+package transactions
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// CancelAssembly is default structure for Double-Message Transactions (DMS) Cancel transaction operation
+// CancelAssembly is default structure for Double-Message Transactions (DMS) Cancel transactions operation
 type CancelAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData

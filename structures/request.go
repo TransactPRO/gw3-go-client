@@ -26,10 +26,10 @@ type (
 		ShippingAddress Address `json:"shipping-address,omitempty"`
 	}
 
-	// OrderData structure with detailed fields of merchant order (transaction)
+	// OrderData structure with detailed fields of merchant order (transactions)
 	OrderData struct {
-		// Merchant-side transaction ID
-		MerchantTransactionID string `json:"merchant-transaction-id,omitempty"`
+		// Merchant-side transactions ID
+		MerchantTransactionID string `json:"merchant-transactions-id,omitempty"`
 		// Merchant-side user ID
 		MerchantID string `json:"merchant-user-id,omitempty"`
 		// Merchant-side order ID
@@ -70,7 +70,7 @@ type (
 		CardholderName string `json:"cardholder-name,omitempty"`
 	}
 
-	// MoneyData structure with detailed fields about transaction amount and currency
+	// MoneyData structure with detailed fields about transactions amount and currency
 	MoneyData struct {
 		// Money amount in minor units
 		Amount int `json:"amount,omitempty"`

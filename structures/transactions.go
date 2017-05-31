@@ -4,24 +4,24 @@ package structures
 type OperationType string
 
 const (
-	// SMS transaction type in route path
+	// SMS transactions type in route path
 	SMS OperationType = "sms"
-	// DMSHold transaction type in route path
+	// DMSHold transactions type in route path
 	DMSHold OperationType = "hold-dms"
-	// DMSCharge transaction type in route path
+	// DMSCharge transactions type in route path
 	DMSCharge OperationType = "charge-dms"
-	// CANCEL transaction type in route path
+	// CANCEL transactions type in route path
 	CANCEL OperationType = "cancel"
-	// MOTOSMS transaction type in route path
+	// MOTOSMS transactions type in route path
 	MOTOSMS OperationType = "moto/sms"
-	// MOTOSMS transaction type in route path
+	// MOTOSMS transactions type in route path
 	MOTODMS OperationType = "moto/dms"
-	// RecurrentSMS transaction type in route path
+	// RecurrentSMS transactions type in route path
 	RecurrentSMS OperationType = "recurrent/sms"
-	// RecurrentDMS transaction type in route path
+	// RecurrentDMS transactions type in route path
 	RecurrentDMS OperationType = "recurrent/dms"
-	// Refund transaction type in route path
+	// Refund transactions type in route path
 	Refund OperationType = "refund"
-	// Reversal transaction type in route path
+	// Reversal transactions type in route path
 	Reversal OperationType = "reversal"
 )

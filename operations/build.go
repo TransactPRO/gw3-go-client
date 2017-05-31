@@ -1,66 +1,66 @@
 package operations
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/operations/transaction"
+import "bitbucket.transactpro.lv/tls/gw3-go-client/operations/transactions"
 
 // Builder operation structure builder for specific request
 type Builder struct{}
 
 // NewSms returns new instance to new SMS structure
-func (ob *Builder) NewSms() *transaction.SMSAssembly {
+func (ob *Builder) NewSms() *transactions.SMSAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewSMSAssembly()
+	return transactions.NewSMSAssembly()
 }
 
 // NewHoldDMS returns new instance to new HoldDMS structure
-func (ob *Builder) NewHoldDMS() *transaction.HoldDMSAssembly {
+func (ob *Builder) NewHoldDMS() *transactions.HoldDMSAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewHoldDMSAssembly()
+	return transactions.NewHoldDMSAssembly()
 }
 
 // NewChargeDMS returns new instance to new ChargeDMS  structure
-func (ob *Builder) NewChargeDMS() *transaction.ChargeDMSAssembly {
+func (ob *Builder) NewChargeDMS() *transactions.ChargeDMSAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewChargeDMSAssembly()
+	return transactions.NewChargeDMSAssembly()
 }
 
 // NewCancel returns new instance to new ChargeDMS  structure
-func (ob *Builder) NewCancel() *transaction.CancelAssembly {
+func (ob *Builder) NewCancel() *transactions.CancelAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewCancelAssembly()
+	return transactions.NewCancelAssembly()
 }
 
 // NewMOTOSMS returns new instance to new MOTO SMS structure
-func (ob *Builder) NewMOTOSMS() *transaction.MOTOAssembly {
+func (ob *Builder) NewMOTOSMS() *transactions.MOTOAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewMOTOSMSAssembly()
+	return transactions.NewMOTOSMSAssembly()
 }
 
 // NewMOTODMS returns new instance to new MOTO DMS structure
-func (ob *Builder) NewMOTODMS() *transaction.MOTOAssembly {
+func (ob *Builder) NewMOTODMS() *transactions.MOTOAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewMOTODMSAssembly()
+	return transactions.NewMOTODMSAssembly()
 }
 
 // NewRecurrentSMS returns new instance to new recurrent SMS structure
-func (ob *Builder) NewRecurrentSMS() *transaction.RecurrentAssembly {
+func (ob *Builder) NewRecurrentSMS() *transactions.RecurrentAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewRecurrentSMSAssembly()
+	return transactions.NewRecurrentSMSAssembly()
 }
 
 // NewRecurrentDMS returns new instance to new recurrent DMS structure
-func (ob *Builder) NewRecurrentDMS() *transaction.RecurrentAssembly {
+func (ob *Builder) NewRecurrentDMS() *transactions.RecurrentAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewRecurrentDMSAssembly()
+	return transactions.NewRecurrentDMSAssembly()
 }
 
 // NewRefund returns new instance to new refund structure
-func (ob *Builder) NewRefund() *transaction.RefundAssembly {
+func (ob *Builder) NewRefund() *transactions.RefundAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewRefundAssembly()
+	return transactions.NewRefundAssembly()
 }
 
 // NewReversal returns new instance to new reversal structure
-func (ob *Builder) NewReversal() *transaction.ReversalAssembly {
+func (ob *Builder) NewReversal() *transactions.ReversalAssembly {
 	// Get new prepared sms structure for assembly
-	return transaction.NewReversalAssembly()
+	return transactions.NewReversalAssembly()
 }

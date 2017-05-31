@@ -1,8 +1,8 @@
-package transaction
+package transactions
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// ChargeDMSAssembly is default structure for Double-Message Transactions (DMS) Hold transaction operation
+// ChargeDMSAssembly is default structure for Double-Message Transactions (DMS) Hold transactions operation
 type ChargeDMSAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData

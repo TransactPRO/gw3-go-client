@@ -1,9 +1,9 @@
-package transaction
+package transactions
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// MOTOAssembly is default structure for Offline Transactions (MOTO) transaction operation
-type RecurrentAssembly struct {
+// RefundAssembly is default structure for Refunds transactions operation
+type ReversalAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData
 	// Command Data, isn't for any request type and in that case it's combined
@@ -16,40 +16,27 @@ type RecurrentAssembly struct {
 	System        structures.SystemData        `json:"system"`
 }
 
-// NewRecurrentSMSAssembly returns new instance with prepared HTTP request data RecurrentAssembly
-func NewRecurrentSMSAssembly() *RecurrentAssembly {
+// NewReversalAssembly returns new instance with prepared HTTP request data RefundAssembly
+func NewReversalAssembly() *ReversalAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
 	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.RecurrentSMS)
+	opd.SetOperationType(structures.Reversal)
 
-	return &RecurrentAssembly{
+	return &ReversalAssembly{
 		opHTTPData: opd,
 	}
 }
 
-// NewRecurrentSMSAssembly returns new instance with prepared HTTP request data RecurrentAssembly
-func NewRecurrentDMSAssembly() *RecurrentAssembly {
-	// Predefine default HTTP request data for sms operations
-	var opd structures.OperationRequestHTTPData
-
-	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.RecurrentDMS)
-
-	return &RecurrentAssembly{
-		opHTTPData: opd,
-	}
-}
-
-// Implement methods for RecurrentAssembly structure, form pck structures OperationRequestInterface
+// Implement methods for ReversalAssembly structure, form pck structures OperationRequestInterface
 
 // GetHTTPMethod return HTTP method which will be used for send request
-func (op *RecurrentAssembly) GetHTTPMethod() string {
+func (op *ReversalAssembly) GetHTTPMethod() string {
 	return op.opHTTPData.GetHTTPMethod()
 }
 
 // GetOperationType return part of route path which will be used for send request
-func (op *RecurrentAssembly) GetOperationType() structures.OperationType {
+func (op *ReversalAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
 }

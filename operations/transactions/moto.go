@@ -1,14 +1,13 @@
-package transaction
+package transactions
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// HoldDMSAssembly is default structure for Double-Message Transactions (DMS) Hold transaction operation
-type HoldDMSAssembly struct {
+// MOTOAssembly is default structure for Offline Transactions (MOTO) transactions operation
+type MOTOAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData
 	// Command Data, isn't for any request type and in that case it's combined
 	CommandData struct {
-		structures.CommandDataFormID
 		structures.CommandDataTerminalMID
 	} `json:"command-data,omitempty"`
 	GeneralData   structures.GeneralData       `json:"general-data,omitempty"`
@@ -17,27 +16,40 @@ type HoldDMSAssembly struct {
 	System        structures.SystemData        `json:"system"`
 }
 
-// NewHoldDMSAssembly returns new instance with prepared HTTP request data HoldDMSAssembly
-func NewHoldDMSAssembly() *HoldDMSAssembly {
+// NewMOTOSMSAssembly returns new instance with prepared HTTP request data MOTOAssembly
+func NewMOTOSMSAssembly() *MOTOAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
 	opd.SetHTTPMethod("POST")
-	opd.SetOperationType(structures.DMSHold)
+	opd.SetOperationType(structures.MOTOSMS)
 
-	return &HoldDMSAssembly{
+	return &MOTOAssembly{
 		opHTTPData: opd,
 	}
 }
 
-// Implement methods for HoldDMSAssembly structure, form pck structures OperationRequestInterface
+// NewMOTODMSAssembly returns new instance with prepared HTTP request data MOTOAssembly
+func NewMOTODMSAssembly() *MOTOAssembly {
+	// Predefine default HTTP request data for sms operations
+	var opd structures.OperationRequestHTTPData
+
+	opd.SetHTTPMethod("POST")
+	opd.SetOperationType(structures.MOTODMS)
+
+	return &MOTOAssembly{
+		opHTTPData: opd,
+	}
+}
+
+// Implement methods for MOTOAssembly structure, form pck structures OperationRequestInterface
 
 // GetHTTPMethod return HTTP method which will be used for send request
-func (op *HoldDMSAssembly) GetHTTPMethod() string {
+func (op *MOTOAssembly) GetHTTPMethod() string {
 	return op.opHTTPData.GetHTTPMethod()
 }
 
 // GetOperationType return part of route path which will be used for send request
-func (op *HoldDMSAssembly) GetOperationType() structures.OperationType {
+func (op *MOTOAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
 }

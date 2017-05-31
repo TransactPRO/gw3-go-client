@@ -1,8 +1,8 @@
-package transaction
+package transactions
 
 import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
 
-// SMSAssembly is default structure for Single-Message Transactions (SMS) transaction operation
+// SMSAssembly is default structure for Single-Message Transactions (SMS) transactions operation
 type SMSAssembly struct {
 	// HTTPData contains HTTP request method and operation action value for request in URL path
 	opHTTPData structures.OperationRequestHTTPData
