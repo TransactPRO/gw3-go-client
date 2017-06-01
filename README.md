@@ -29,38 +29,38 @@ Read more about all gateway possibilities in the [Official documentation](http:/
 
 #### Basic usage
 ```go
-    // Setup your cridtetionals for authorized requests
+    // Setup your credentials for authorized requests
     AccID := 42 // Your account ID form Transact Pro
     SecKey := "someSecretKey" // Your API secret key
 
     // Setup new Gateway Client
-	gateCli, gateCliErr := NewGatewayClient(AccID, SecKey)
-	if gateCliErr != nil {
-		log.Fatal(gateCliErr)
-	}
+    gateCli, gateCliErr := tprogateway.NewGatewayClient(AccID, SecKey)
+    if gateCliErr != nil {
+        log.Fatal(gateCliErr)
+    }
 
     // Prepare operation builder to handle your operations
     specOpsBuilder :=  gateCli.OperationBuilder()
 
     // Now, define your special operation for processing
-	sms := specOpsBuilder.NewSms()
+    sms := specOpsBuilder.NewSms()
 
-	// Set transaction data
-	sms.GeneralData.OrderData.OrderDescription = "Operation Single-Message Transactions"
-	sms.GeneralData.CustomerData.Email = "some@email.com"
-	sms.PaymentMethod.Pan = "1111111111111111"
-	sms.PaymentMethod.ExpMmYy = "10/60"
-	sms.PaymentMethod.Cvv = "123"
-	sms.Money.Amount = 1500
-	sms.Money.Currency = "USD"
-	sms.System.UserIP = "199.99.99.1"
-	sms.System.XForwardedFor = "199.99.99.1"
+    // Set transaction data
+    sms.GeneralData.OrderData.OrderDescription = "Operation Single-Message Transactions"
+    sms.GeneralData.CustomerData.Email = "some@email.com"
+    sms.PaymentMethod.Pan = "1111111111111111"
+    sms.PaymentMethod.ExpMmYy = "10/60"
+    sms.PaymentMethod.Cvv = "123"
+    sms.Money.Amount = 1500
+    sms.Money.Currency = "USD"
+    sms.System.UserIP = "199.99.99.1"
+    sms.System.XForwardedFor = "199.99.99.1"
 
     // Now process the operation
-	opResp, opErr := gc.NewRequest(sms)
-	if opErr != nil {
+    opResp, opErr := gc.NewRequest(sms)
+    if opErr != nil {
         log.Printf(opErr)
-	}
+    }
 ```
 
 ### Submit bugs and feature requests

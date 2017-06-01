@@ -17,7 +17,7 @@ import (
 	To test request sending\handling between application and Transact Pro system API
 */
 
-// testAuth is a pointer to GatewayClient authData structure with merchant cridtetionals
+// testAuth is a pointer to GatewayClient authData structure with merchant credentials
 var testAuth *authData
 
 func init() {

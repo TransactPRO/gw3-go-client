@@ -23,9 +23,11 @@ const (
 )
 
 type (
-	// confAPI, endpoint config to rich Transact Pro system
+	// confAPI, endpoint config to Transact Pro system
 	confAPI struct {
+		// BaseURI typical host name with scheme. Example: http://some.host
 		BaseURI string
+		// Version is prefix in route path for url. Example: 42.1
 		Version string
 	}
 
@@ -125,7 +127,7 @@ func prepareJSONPayload(rawReq *GenericRequest) (*bytes.Buffer, error) {
 	return buffer, nil
 }
 
-// determineURL the full URL address to send request to Transact PRO API
+// determineURL the full URL address to send request to Transact Pro API
 func determineURL(gc *GatewayClient, opType structures.OperationType) (string, error) {
 	// Complete URL for request
 	var completeURL string
