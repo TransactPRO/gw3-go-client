@@ -20,6 +20,10 @@ const (
 	MOTOSMS OperationType = "moto/sms"
 	// MOTODMS transactions request type for url route path
 	MOTODMS OperationType = "moto/dms"
+	// CREDIT transactions request type for url route path
+	CREDIT OperationType = "credit"
+	// P2P transactions request type for url route path
+	P2P OperationType = "p2p"
 	// RecurrentSMS transactions request type for url route path
 	RecurrentSMS OperationType = "recurrent/sms"
 	// RecurrentDMS transactions request type for url route path

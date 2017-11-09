@@ -15,6 +15,8 @@ Read more about all gateway possibilities in the [Official documentation](http:/
   - CANCEL
   - MOTO SMS
   - MOTO DMS
+  - CREDIT
+  - P2P
   - RECURRENT DMS
   - RECURRENT SMS
   - REFUND
@@ -38,6 +40,7 @@ Read more about all gateway possibilities in the [Official documentation](http:/
     if gateCliErr != nil {
         log.Fatal(gateCliErr)
     }
+	gateCli.API.BaseURI = "https://<Gateway URL>"
 
     // Prepare operation builder to handle your operations
     specOpsBuilder :=  gateCli.OperationBuilder()
@@ -57,7 +60,7 @@ Read more about all gateway possibilities in the [Official documentation](http:/
     sms.System.XForwardedFor = "199.99.99.1"
 
     // Now process the operation
-    opResp, opErr := gc.NewRequest(sms)
+    opResp, opErr := gateCli.NewRequest(sms)
     if opErr != nil {
         log.Printf(opErr)
     }
