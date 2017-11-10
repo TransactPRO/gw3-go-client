@@ -18,7 +18,7 @@ import (
 
 // Default API settings
 const (
-	dAPIBaseURI = "http://uriel.sk.fpngw3.env"
+	dAPIBaseURI = "https://api.transactpro.lv"
 	dAPIVersion = "3.0"
 )
 

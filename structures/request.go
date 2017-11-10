@@ -20,6 +20,10 @@ type (
 	CustomerData struct {
 		// Customer (cardholder) email
 		Email string `json:"email,omitempty"`
+		// Customer (cardholder) phone
+		Phone string `json:"phone,omitempty"`
+		// Customer (cardholder) birth date in "MMDDYYYY" format
+		BirthDate string `json:"birth-date,omitempty"`
 		// Customer (cardholder) physical location
 		BillingAddress Address `json:"billing-address,omitempty"`
 		// Customer (cardholder) address where he want to receive orders
@@ -38,14 +42,18 @@ type (
 		OrderDescription string `json:"order-description,omitempty"`
 		// Merchant-side Key-Value order data
 		OrderMeta interface{} `json:"order-meta,omitempty"`
+		// Merchant-side URL
+		MerchantURL string `json:"merchant-side-url,omitempty"`
+		// Recipient name
+		RecipientName string `json:"recipient-name,omitempty"`
 	}
 
 	// Address structure with detailed fields of customer(cardholder) place
 	Address struct {
 		// Billing\Shipping country
-		Country string `json:"Country,omitempty"`
+		Country string `json:"country,omitempty"`
 		// Billing\Shipping state
-		State string `json:"State,omitempty"`
+		State string `json:"state,omitempty"`
 		// Billing\Shipping city
 		City string `json:"city,omitempty"`
 		// Billing\Shipping street

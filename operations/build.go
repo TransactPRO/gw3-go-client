@@ -52,6 +52,18 @@ func (ob *Builder) NewMOTODMS() *transactions.MOTOAssembly {
 	return transactions.NewMOTODMSAssembly()
 }
 
+// NewCredit returns new instance to new Credit structure
+func (ob *Builder) NewCredit() *transactions.CreditAssembly {
+	// Get new prepared Credit structure for assembly
+	return transactions.NewCreditAssembly()
+}
+
+// NewP2P returns new instance to new P2P structure
+func (ob *Builder) NewP2P() *transactions.P2PAssembly {
+	// Get new prepared P2P structure for assembly
+	return transactions.NewP2PAssembly()
+}
+
 // NewRecurrentSMS returns new instance to new recurrent SMS structure
 func (ob *Builder) NewRecurrentSMS() *transactions.RecurrentAssembly {
 	// Get new prepared sms structure for assembly
