@@ -64,10 +64,22 @@ func (ob *Builder) NewP2P() *transactions.P2PAssembly {
 	return transactions.NewP2PAssembly()
 }
 
+// NewInitRecurrentSMS returns new instance to new Init Recurrent SMS structure
+func (ob *Builder) NewInitRecurrentSMS() *transactions.InitRecurrentSMSAssembly {
+	// Get new prepared sms structure for assembly
+	return transactions.NewInitRecurrentSMSAssembly()
+}
+
 // NewRecurrentSMS returns new instance to new recurrent SMS structure
 func (ob *Builder) NewRecurrentSMS() *transactions.RecurrentAssembly {
 	// Get new prepared sms structure for assembly
 	return transactions.NewRecurrentSMSAssembly()
+}
+
+// NewInitRecurrentDMS returns new instance to new Init Recurrent DMS structure
+func (ob *Builder) NewInitRecurrentDMS() *transactions.InitRecurrentDMSAssembly {
+	// Get new prepared sms structure for assembly
+	return transactions.NewInitRecurrentDMSAssembly()
 }
 
 // NewRecurrentDMS returns new instance to new recurrent DMS structure
