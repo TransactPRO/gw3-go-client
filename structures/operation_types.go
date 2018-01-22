@@ -25,8 +25,12 @@ const (
 	// P2P transactions request type for url route path
 	P2P OperationType = "p2p"
 	// RecurrentSMS transactions request type for url route path
+	InitRecurrentSMS OperationType = "recurrent/sms/init"
+	// RecurrentSMS transactions request type for url route path
 	RecurrentSMS OperationType = "recurrent/sms"
 	// RecurrentDMS transactions request type for url route path
+	InitRecurrentDMS OperationType = "recurrent/dms/init"
+	// Refund transactions request type for url route path
 	RecurrentDMS OperationType = "recurrent/dms"
 	// Refund transactions request type for url route path
 	Refund OperationType = "refund"
