@@ -18,7 +18,7 @@ import (
 
 // Default API settings
 const (
-	dAPIBaseURI = "https://api.transactpro.lv"
+	dAPIBaseURI = "https://api.sandbox.transactpro.io"
 	dAPIVersion = "3.0"
 )
 

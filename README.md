@@ -5,8 +5,6 @@ This package provide ability to make requests to Transact Pro Gateway API v3.
 ## Documentation
 This `README` provide introduction to the library usage.
 
-Read more about all gateway possibilities in the [Official documentation](http://transactpro.lv/docs/gw3-api-doc.pdf)
-
 ### Supported operations
 - Transactions
   - SMS
