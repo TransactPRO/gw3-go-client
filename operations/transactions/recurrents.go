@@ -1,6 +1,6 @@
 package transactions
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+import "github.com/TransactPRO/gw3-go-client/structures"
 
 // RecurrentAssembly is default structure for recurrent transactions operation
 type RecurrentAssembly struct {

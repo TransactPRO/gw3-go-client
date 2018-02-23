@@ -1,6 +1,6 @@
 package exploring
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+import "github.com/TransactPRO/gw3-go-client/structures"
 
 // ExploreTransactionAssembly is default structure for transaction status operation
 type ExploreTransactionAssembly struct {

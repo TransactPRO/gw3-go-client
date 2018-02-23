@@ -9,8 +9,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations"
-	"bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+	"github.com/TransactPRO/gw3-go-client/operations"
+	"github.com/TransactPRO/gw3-go-client/structures"
 )
 
 // @TODO Add logger with mode enabled\disabled, debug

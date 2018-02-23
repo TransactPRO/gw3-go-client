@@ -1,6 +1,6 @@
 package transactions
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+import "github.com/TransactPRO/gw3-go-client/structures"
 
 // SMSAssembly is default structure for Single-Message Transactions (SMS) transactions operation
 type SMSAssembly struct {

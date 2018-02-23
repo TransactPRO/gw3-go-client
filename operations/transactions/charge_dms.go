@@ -1,6 +1,6 @@
 package transactions
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+import "github.com/TransactPRO/gw3-go-client/structures"
 
 // ChargeDMSAssembly is default structure for Double-Message Transactions (DMS) Hold transactions operation
 type ChargeDMSAssembly struct {

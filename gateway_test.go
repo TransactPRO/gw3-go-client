@@ -3,7 +3,7 @@ package tprogateway
 import (
 	"testing"
 
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/transactions"
+	"github.com/TransactPRO/gw3-go-client/operations/transactions"
 )
 
 // @TODO Mock\Stub responses from gateway when calling HTTP requests\response

@@ -1,6 +1,6 @@
 package transactions
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+import "github.com/TransactPRO/gw3-go-client/structures"
 
 // InitRecurrentDMSAssembly is default structure for Init Rcurrent DMS Hold transactions operation
 type InitRecurrentDMSAssembly struct {

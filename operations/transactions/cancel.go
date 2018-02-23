@@ -1,6 +1,6 @@
 package transactions
 
-import "bitbucket.transactpro.lv/tls/gw3-go-client/structures"
+import "github.com/TransactPRO/gw3-go-client/structures"
 
 // CancelAssembly is default structure for Cancel transactions operation
 type CancelAssembly struct {

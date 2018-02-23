@@ -1,8 +1,8 @@
 package operations
 
 import (
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/exploring"
-	"bitbucket.transactpro.lv/tls/gw3-go-client/operations/transactions"
+	"github.com/TransactPRO/gw3-go-client/operations/exploring"
+	"github.com/TransactPRO/gw3-go-client/operations/transactions"
 )
 
 // Builder operation structure builder for specific request
