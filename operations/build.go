@@ -3,6 +3,7 @@ package operations
 import (
 	"github.com/TransactPRO/gw3-go-client/operations/exploring"
 	"github.com/TransactPRO/gw3-go-client/operations/transactions"
+	"github.com/TransactPRO/gw3-go-client/operations/verify"
 )
 
 // Builder operation structure builder for specific request
@@ -62,6 +63,12 @@ func (ob *Builder) NewCredit() *transactions.CreditAssembly {
 func (ob *Builder) NewP2P() *transactions.P2PAssembly {
 	// Get new prepared P2P structure for assembly
 	return transactions.NewP2PAssembly()
+}
+
+// NewB2P returns new instance to new B2P structure
+func (ob *Builder) NewB2P() *transactions.B2PAssembly {
+	// Get new prepared B2P structure for assembly
+	return transactions.NewB2PAssembly()
 }
 
 // NewInitRecurrentSMS returns new instance to new Init Recurrent SMS structure
@@ -134,4 +141,16 @@ func (ob *Builder) NewGetRecurrents() *exploring.ExploreTransactionAssembly {
 // allows to get status of past transaction in Transact Pro system
 func (ob *Builder) NewGetRefunds() *exploring.ExploreTransactionAssembly {
 	return exploring.NewHistoryAssembly()
+}
+
+/*
+
+	Verifications requests builders
+
+ */
+
+// NewVerify3dEnrollment returns new instance to new Verify3dEnrollment structure
+// allows verify card 3-D Secure enrollment
+func (ob *Builder) NewVerify3dEnrollment() *verify.Verify3dEnrollmentAssembly {
+	return verify.NewVerify3dEnrollmentAssembly()
 }

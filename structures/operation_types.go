@@ -24,6 +24,8 @@ const (
 	CREDIT OperationType = "credit"
 	// P2P transactions request type for url route path
 	P2P OperationType = "p2p"
+	// B2P transactions request type for url route path
+	B2P OperationType = "b2p"
 	// RecurrentSMS transactions request type for url route path
 	InitRecurrentSMS OperationType = "recurrent/sms/init"
 	// RecurrentSMS transactions request type for url route path
@@ -51,4 +53,10 @@ const (
 	ExploringRecurrents OperationType = "recurrents"
 	// ExploringRefunds is a transaction history request type for url route path
 	ExploringRefunds OperationType = "refunds"
+
+	/*
+		Verification requests
+	*/
+	// Verify card 3-D Secure enrollment request type for url route path
+	Verify3dEnrollment OperationType = "verify/3d-enrollment"
 )

@@ -33,7 +33,7 @@ type (
 	// OrderData structure with detailed fields of merchant order (transactions)
 	OrderData struct {
 		// Merchant-side transactions ID
-		MerchantTransactionID string `json:"merchant-transactions-id,omitempty"`
+		MerchantTransactionID string `json:"merchant-transaction-id,omitempty"`
 		// Merchant-side user ID
 		MerchantID string `json:"merchant-user-id,omitempty"`
 		// Merchant-side order ID
@@ -122,6 +122,16 @@ type (
 	CommandDataExploreMerchantTransactionIDs struct {
 		// Previously created Transaction in Transact Pro system
 		MerchantTransactionIDs []string `json:"merchant-transaction-ids,omitempty"`
+	}
+
+	// Data structure for verify 3-D Secure enrollment request
+	Verify3dEnrollmentData struct {
+		// Credit card number
+		Pan string `json:"pan,omitempty"`
+		// TerminalMID
+		TerminalMID string `json:"terminal-mid,omitempty"`
+		// Currency, ISO-4217 format
+		Currency string `json:"currency,omitempty"`
 	}
 )
 

@@ -15,6 +15,7 @@ This `README` provide introduction to the library usage.
   - MOTO DMS
   - CREDIT
   - P2P
+  - B2P
   - INIT RECURRENT DMS
   - RECURRENT DMS
   - INIT RECURRENT SMS
@@ -28,6 +29,9 @@ This `README` provide introduction to the library usage.
   - REFUNDS
   - RESULT
   - STATUS
+
+- Verifications
+  - Verify card 3-D Secure enrollment
 
 #### Basic usage
 ```go
