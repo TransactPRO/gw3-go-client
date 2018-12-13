@@ -36,11 +36,11 @@ This `README` provide introduction to the library usage.
 #### Basic usage
 ```go
     // Setup your credentials for authorized requests
-    AccID := 42 // Your account ID form Transact Pro
+    AccGUID := "someAccountGUID" // Your account GUID from Transact Pro
     SecKey := "someSecretKey" // Your API secret key
 
     // Setup new Gateway Client
-    gateCli, gateCliErr := tprogateway.NewGatewayClient(AccID, SecKey)
+    gateCli, gateCliErr := tprogateway.NewGatewayClient(AccGUID, SecKey)
     if gateCliErr != nil {
         log.Fatal(gateCliErr)
     }
