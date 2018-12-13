@@ -33,8 +33,8 @@ type (
 
 	// AuthData merchant authorization structure fields used in operaion request
 	authData struct {
-		// Transact Pro Account ID
-		AccountID int `json:"account-id"`
+		// Transact Pro Account GUID
+		AccountGUID string `json:"account-guid"`
 		// Transact Pro Merchant Password
 		SecretKey string `json:"secret-key"`
 	}
@@ -54,20 +54,20 @@ type (
 )
 
 // NewGatewayClient new instance of prepared gateway client structure
-func NewGatewayClient(AccountID int, SecretKey string) (*GatewayClient, error) {
-	if AccountID == 0 {
-		return nil, errors.New("Account ID can not be 0, please use the given ID from Transact Pro")
+func NewGatewayClient(AccountGUID, SecretKey string) (*GatewayClient, error) {
+	if AccountGUID == "" {
+		return nil, errors.New("Account GUID can't be empty. It's required for merchant authorization")
 	}
 
 	if SecretKey == "" {
-		return nil, errors.New("Secret key can't be empty. It's needed for merchant authorization")
+		return nil, errors.New("Secret key can't be empty. It's required for merchant authorization")
 	}
 
 	return &GatewayClient{
 		API: &confAPI{
 			BaseURI: dAPIBaseURI, Version: dAPIVersion},
 		auth: &authData{
-			AccountID: AccountID, SecretKey: SecretKey},
+			AccountGUID: AccountGUID, SecretKey: SecretKey},
 	}, nil
 }
 

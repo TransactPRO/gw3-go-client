@@ -9,15 +9,15 @@ import (
 // @TODO Mock\Stub responses from gateway when calling HTTP requests\response
 
 func TestNewGatewayClient(t *testing.T) {
-	_, err := NewGatewayClient(42, "SecKey")
+	_, err := NewGatewayClient("3383e58e-9cde-4ffa-85cf-81cd25b2423e", "SecKey")
 	if err != nil {
 		t.Error(err)
 		return
 	}
 }
 
-func TestNewGatewayClientIncorrectAccountID(t *testing.T) {
-	_, err := NewGatewayClient(0, "SecKey")
+func TestNewGatewayClientIncorrectAccountGUID(t *testing.T) {
+	_, err := NewGatewayClient("", "SecKey")
 	if err == nil {
 		t.Error(err)
 		return
@@ -25,7 +25,7 @@ func TestNewGatewayClientIncorrectAccountID(t *testing.T) {
 }
 
 func TestNewGatewayClientIncorrectSecretKey(t *testing.T) {
-	_, err := NewGatewayClient(42, "")
+	_, err := NewGatewayClient("3383e58e-9cde-4ffa-85cf-81cd25b2423e", "")
 	if err == nil {
 		t.Error(err)
 		return
@@ -33,7 +33,7 @@ func TestNewGatewayClientIncorrectSecretKey(t *testing.T) {
 }
 
 func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T) {
-	gc, err := NewGatewayClient(42, "SecKey")
+	gc, err := NewGatewayClient("3383e58e-9cde-4ffa-85cf-81cd25b2423e", "SecKey")
 	if err != nil {
 		t.Error(err)
 		return
@@ -53,7 +53,7 @@ func TestNewGatewayClientRedefineDefaultAPISettings(t *testing.T) {
 }
 
 func TestNewOperation(t *testing.T) {
-	gc, err := NewGatewayClient(42, "SecKey")
+	gc, err := NewGatewayClient("3383e58e-9cde-4ffa-85cf-81cd25b2423e", "SecKey")
 	if err != nil {
 		t.Error(err)
 		return
