@@ -12,7 +12,8 @@ type ChargeDMSAssembly struct {
 	} `json:"command-data,omitempty"`
 	Money structures.MoneyData `json:"money-data"`
 	// System data contains user(cardholder) IPv4 address and IPv4 address in case of proxy
-	System structures.SystemData `json:"system"`
+	System      structures.SystemData  `json:"system"`
+	GeneralData structures.GeneralData `json:"general-data,omitempty"`
 }
 
 // NewChargeDMSAssembly returns new instance with prepared HTTP request data ChargeDMSAssembly
