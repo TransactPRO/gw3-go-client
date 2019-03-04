@@ -1,3 +1,7 @@
+##### Version 1.3.2 (2019-03-04)
+
+	Add merchant-referring-name fields to an order.
+
 ##### Version 1.3.1 (2019-01-23)
 
 	Fix methods DMS Hold Charge and Cancel: methods require merchant transaction ID.
