@@ -46,6 +46,8 @@ type (
 		MerchantURL string `json:"merchant-side-url,omitempty"`
 		// Recipient name
 		RecipientName string `json:"recipient-name,omitempty"`
+		// Merchant referring name for dynamic descriptor
+		MerchantReferringName string `json:"merchant-referring-name,omitempty"`
 	}
 
 	// Address structure with detailed fields of customer(cardholder) place
