@@ -147,10 +147,16 @@ func (ob *Builder) NewGetRefunds() *exploring.ExploreTransactionAssembly {
 
 	Verifications requests builders
 
- */
+*/
 
 // NewVerify3dEnrollment returns new instance to new Verify3dEnrollment structure
 // allows verify card 3-D Secure enrollment
 func (ob *Builder) NewVerify3dEnrollment() *verify.Verify3dEnrollmentAssembly {
 	return verify.NewVerify3dEnrollmentAssembly()
+}
+
+// NewVerifyCard returns new instance to new VerifyCard structure
+// allows complete card verification
+func (ob *Builder) NewVerifyCard() *verify.VerifyCardAssembly {
+	return verify.NewVerifyCardAssembly()
 }
