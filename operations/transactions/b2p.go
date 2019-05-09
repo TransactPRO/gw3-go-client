@@ -8,6 +8,8 @@ type B2PAssembly struct {
 	opHTTPData structures.OperationRequestHTTPData
 	// Command Data, isn't for any request type and in that case it's combined
 	CommandData struct {
+		structures.CommandData
+		structures.CommandDataFormID
 		structures.CommandDataTerminalMID
 	} `json:"command-data,omitempty"`
 	GeneralData   structures.GeneralData       `json:"general-data,omitempty"`

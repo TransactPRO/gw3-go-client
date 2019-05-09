@@ -59,4 +59,6 @@ const (
 	*/
 	// Verify card 3-D Secure enrollment request type for url route path
 	Verify3dEnrollment OperationType = "verify/3d-enrollment"
+	// Verify card completion request type for url route path
+	VerifyCard OperationType = "verify/card"
 )

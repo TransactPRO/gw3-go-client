@@ -32,6 +32,7 @@ This `README` provide introduction to the library usage.
 
 - Verifications
   - Verify card 3-D Secure enrollment
+  - Complete card verification
 
 #### Basic usage
 ```go
@@ -68,6 +69,21 @@ This `README` provide introduction to the library usage.
     if opErr != nil {
         log.Printf(opErr)
     }
+```
+
+### Card verification
+
+```go
+// set card verification init mode for a payment
+payment.CommandData.CardVerificationMode = structures.CardVerificationModeInit
+
+// complete card verification
+request := specOpsBuilder.NewVerifyCard()
+request.VerifyCardData.GWTransactionID = initialPaymentGatewayId
+gateCli.NewRequest(request)
+
+// set card verification verify mode for subsequent payments
+newPayment.CommandData.CardVerificationMode = structures.CardVerificationModeVerify
 ```
 
 ### Submit bugs and feature requests

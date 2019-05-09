@@ -1,5 +1,10 @@
 package structures
 
+const (
+	CardVerificationModeInit   = 1
+	CardVerificationModeVerify = 2
+)
+
 // Transact Pro Gateway's request parameters data structures
 type (
 	// RequestHTTPData contains HTTP request method and operationType to append in URL path
@@ -35,7 +40,7 @@ type (
 		// Merchant-side transactions ID
 		MerchantTransactionID string `json:"merchant-transaction-id,omitempty"`
 		// Merchant-side user ID
-		MerchantID string `json:"merchant-user-id,omitempty"`
+		MerchantUserID string `json:"merchant-user-id,omitempty"`
 		// Merchant-side order ID
 		OrderID string `json:"order-id,omitempty"`
 		// Merchant-side order short sms, dms-hold, moto description
@@ -98,6 +103,11 @@ type (
 		XForwardedFor string `json:"x-forwarded-for"`
 	}
 
+	// CommandData structure with fields to set various payemnt processing modes
+	CommandData struct {
+		CardVerificationMode uint `json:"card-verification"`
+	}
+
 	// CommandDataGWTransactionID is single structures fields for CommandData, it's used not for any operation
 	CommandDataGWTransactionID struct {
 		// Previously created Transaction in Transact Pro system
@@ -128,7 +138,7 @@ type (
 		MerchantTransactionIDs []string `json:"merchant-transaction-ids,omitempty"`
 	}
 
-	// Data structure for verify 3-D Secure enrollment request
+	// Verify3dEnrollmentData structure for verify 3-D Secure enrollment request
 	Verify3dEnrollmentData struct {
 		// Credit card number
 		Pan string `json:"pan,omitempty"`
@@ -136,6 +146,12 @@ type (
 		TerminalMID string `json:"terminal-mid,omitempty"`
 		// Currency, ISO-4217 format
 		Currency string `json:"currency,omitempty"`
+	}
+
+	// VerifyCardData structure for card verification completion request
+	VerifyCardData struct {
+		// Previously created Transaction in Transact Pro system
+		GWTransactionID string `json:"gateway-transaction-id,omitempty"`
 	}
 )
 
