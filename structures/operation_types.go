@@ -61,4 +61,10 @@ const (
 	Verify3dEnrollment OperationType = "verify/3d-enrollment"
 	// Verify card completion request type for url route path
 	VerifyCard OperationType = "verify/card"
+
+	/*
+		Tokenization requests
+	*/
+	// Create payment data token url route path
+	CreateToken OperationType = "token/create"
 )

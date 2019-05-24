@@ -5,6 +5,14 @@ const (
 	CardVerificationModeVerify = 2
 )
 
+const (
+	DataSourceCardholder = iota
+	DataSourceSaveToGateway
+	DataSourceUseGatewaySaved
+	DataSourceSavingByMerchant
+	DataSourceUseMerchantSaved
+)
+
 // Transact Pro Gateway's request parameters data structures
 type (
 	// RequestHTTPData contains HTTP request method and operationType to append in URL path
@@ -78,7 +86,7 @@ type (
 	// PaymentMethodData structure with detailed fields of PAN data
 	PaymentMethodData struct {
 		// Credit card number
-		Pan string `json:"pan"`
+		Pan string `json:"pan,omitempty"`
 		// Credit card expiry date in mm/yy format
 		ExpMmYy string `json:"exp-mm-yy,omitempty"`
 		// Credit card protection code
@@ -103,9 +111,11 @@ type (
 		XForwardedFor string `json:"x-forwarded-for"`
 	}
 
-	// CommandData structure with fields to set various payemnt processing modes
+	// CommandData structure with fields to set various payment processing modes
 	CommandData struct {
-		CardVerificationMode uint `json:"card-verification"`
+		CardVerificationMode    uint   `json:"card-verification,omitempty"`
+		PaymentMethodDataSource uint   `json:"payment-method-data-source"`
+		PaymentMethodDataToken  string `json:"payment-method-data-token,omitempty"`
 	}
 
 	// CommandDataGWTransactionID is single structures fields for CommandData, it's used not for any operation
