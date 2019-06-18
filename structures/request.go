@@ -8,9 +8,11 @@ const (
 const (
 	DataSourceCardholder = iota
 	DataSourceSaveToGateway
-	DataSourceUseGatewaySaved
+	DataSourceUseGatewaySavedCardholderInitiated
 	DataSourceSavingByMerchant
-	DataSourceUseMerchantSaved
+	DataSourceUseMerchantSavedCardholderInitiated
+	DataSourceUseGatewaySavedMerchantInitiated
+	DataSourceUseMerchantSavedMerchantInitiated
 )
 
 // Transact Pro Gateway's request parameters data structures
