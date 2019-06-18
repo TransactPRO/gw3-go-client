@@ -104,7 +104,7 @@ operation.Money.Currency = "EUR"
 gateCli.NewRequest(operation)
 
 // send a payment with flag to load payment data by token
-newPayment.CommandData.PaymentMethodDataSource = structures.DataSourceUseGatewaySaved
+newPayment.CommandData.PaymentMethodDataSource = structures.DataSourceUseGatewaySavedCardholderInitiated
 newPayment.CommandData.PaymentMethodDataToken = "<initial gateway-transaction-id>"
 ```
 
