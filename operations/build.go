@@ -2,6 +2,7 @@ package operations
 
 import (
 	"github.com/TransactPRO/gw3-go-client/operations/exploring"
+	"github.com/TransactPRO/gw3-go-client/operations/token"
 	"github.com/TransactPRO/gw3-go-client/operations/transactions"
 	"github.com/TransactPRO/gw3-go-client/operations/verify"
 )
@@ -159,4 +160,16 @@ func (ob *Builder) NewVerify3dEnrollment() *verify.Verify3dEnrollmentAssembly {
 // allows complete card verification
 func (ob *Builder) NewVerifyCard() *verify.VerifyCardAssembly {
 	return verify.NewVerifyCardAssembly()
+}
+
+/*
+
+	Tokenization requests builders
+
+*/
+
+// NewCreateToken returns new instance to new CreateTokenAssembly structure
+// allows to create a token for given payment data
+func (ob *Builder) NewCreateToken() *token.CreateTokenAssembly {
+	return token.NewCreateTokenAssembly()
 }

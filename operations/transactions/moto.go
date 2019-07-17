@@ -8,10 +8,12 @@ type MOTOAssembly struct {
 	opHTTPData structures.OperationRequestHTTPData
 	// Command Data, isn't for any request type and in that case it's combined
 	CommandData struct {
+		structures.CommandData
+		structures.CommandDataFormID
 		structures.CommandDataTerminalMID
 	} `json:"command-data,omitempty"`
 	GeneralData   structures.GeneralData       `json:"general-data,omitempty"`
-	PaymentMethod structures.PaymentMethodData `json:"payment-method-data"`
+	PaymentMethod structures.PaymentMethodData `json:"payment-method-data,omitempty"`
 	Money         structures.MoneyData         `json:"money-data"`
 	// System data contains user(cardholder) IPv4 address and IPv4 address in case of proxy
 	System structures.SystemData `json:"system"`

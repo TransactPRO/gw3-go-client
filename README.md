@@ -34,6 +34,9 @@ This `README` provide introduction to the library usage.
   - Verify card 3-D Secure enrollment
   - Complete card verification
 
+- Tokenization
+  - Create payment data token
+
 #### Basic usage
 ```go
     // Setup your credentials for authorized requests
@@ -84,6 +87,25 @@ gateCli.NewRequest(request)
 
 // set card verification verify mode for subsequent payments
 newPayment.CommandData.CardVerificationMode = structures.CardVerificationModeVerify
+```
+
+### Payment data tokenization
+
+```go
+// option 1: create a payment with flag to save payment data
+payment.CommandData.PaymentMethodDataSource = structures.DataSourceSaveToGateway
+
+// option 2: send "create token" request with payment data
+operation = specOpsBuilder.NewCreateToken();
+operation.PaymentMethod.Pan = "1111111111111111"
+operation.PaymentMethod.ExpMmYy = "10/60"
+operation.PaymentMethod.CardholderName = "John Doe"
+operation.Money.Currency = "EUR"
+gateCli.NewRequest(operation)
+
+// send a payment with flag to load payment data by token
+newPayment.CommandData.PaymentMethodDataSource = structures.DataSourceUseGatewaySavedCardholderInitiated
+newPayment.CommandData.PaymentMethodDataToken = "<initial gateway-transaction-id>"
 ```
 
 ### Submit bugs and feature requests
