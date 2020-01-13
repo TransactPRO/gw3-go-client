@@ -65,6 +65,8 @@ type (
 		MerchantReferringName string `json:"merchant-referring-name,omitempty"`
 		// Custom return URL after 3D Secure authentification
 		Custom3dReturnUrl string `json:"custom-3d-return-url,omitempty"`
+		// Custom return URL
+		CustomReturnUrl string `json:"custom-return-url,omitempty"`
 	}
 
 	// Address structure with detailed fields of customer(cardholder) place
