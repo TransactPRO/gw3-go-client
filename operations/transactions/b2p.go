@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // B2PAssembly is default structure for Offline Transactions (B2P) transactions operation
 type B2PAssembly struct {
@@ -24,7 +28,7 @@ func NewB2PAssembly() *B2PAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.B2P)
 
 	return &B2PAssembly{
@@ -42,4 +46,11 @@ func (op *B2PAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *B2PAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *B2PAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

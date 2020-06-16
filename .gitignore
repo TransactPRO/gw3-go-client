@@ -54,3 +54,6 @@ client
 
 # .nfs files are created when an open file is removed but is still being accessed
 .nfs*
+
+# modules sum file
+go.sum

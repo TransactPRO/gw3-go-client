@@ -1,10 +1,12 @@
 package structures
 
+// Card verification allowed modes
 const (
 	CardVerificationModeInit   = 1
 	CardVerificationModeVerify = 2
 )
 
+// Payment data source allowed values
 const (
 	DataSourceCardholder = iota
 	DataSourceSaveToGateway
@@ -64,9 +66,9 @@ type (
 		// Merchant referring name for dynamic descriptor
 		MerchantReferringName string `json:"merchant-referring-name,omitempty"`
 		// Custom return URL after 3D Secure authentification
-		Custom3dReturnUrl string `json:"custom-3d-return-url,omitempty"`
+		Custom3dReturnURL string `json:"custom-3d-return-url,omitempty"`
 		// Custom return URL
-		CustomReturnUrl string `json:"custom-return-url,omitempty"`
+		CustomReturnURL string `json:"custom-return-url,omitempty"`
 	}
 
 	// Address structure with detailed fields of customer(cardholder) place

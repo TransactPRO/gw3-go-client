@@ -1,6 +1,10 @@
 package token
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // CreateTokenAssembly is default structure for payment data tokenization operation
 type CreateTokenAssembly struct {
@@ -22,7 +26,7 @@ func NewCreateTokenAssembly() *CreateTokenAssembly {
 	// Predefine default HTTP request data for create token operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.CreateToken)
 
 	return &CreateTokenAssembly{
@@ -40,4 +44,11 @@ func (op *CreateTokenAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *CreateTokenAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *CreateTokenAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(result)
+	return
 }

@@ -2,9 +2,12 @@ package operations
 
 import (
 	"github.com/TransactPRO/gw3-go-client/operations/exploring"
+	"github.com/TransactPRO/gw3-go-client/operations/helpers"
+	"github.com/TransactPRO/gw3-go-client/operations/reporting"
 	"github.com/TransactPRO/gw3-go-client/operations/token"
 	"github.com/TransactPRO/gw3-go-client/operations/transactions"
 	"github.com/TransactPRO/gw3-go-client/operations/verify"
+	"github.com/TransactPRO/gw3-go-client/structures"
 )
 
 // Builder operation structure builder for specific request
@@ -15,8 +18,6 @@ type Builder struct{}
 	Transaction Types builders
 
 */
-
-// @TODO In Transaction assembly refactor some data sets, cos not all bundles used for each transaction. Some used few fields in groups
 
 // NewSms returns new instance to new SMS structure
 func (ob *Builder) NewSms() *transactions.SMSAssembly {
@@ -116,32 +117,38 @@ func (ob *Builder) NewReversal() *transactions.ReversalAssembly {
 
 // NewGetStatus returns new instance to new status structure
 // allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetStatus() *exploring.ExploreTransactionAssembly {
+func (ob *Builder) NewGetStatus() *exploring.ExploreStatusAssembly {
 	return exploring.NewStatusAssembly()
 }
 
 // NewGetResult returns new instance to new status structure
-// allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetResult() *exploring.ExploreTransactionAssembly {
+// allows to get result of past transaction in Transact Pro system
+func (ob *Builder) NewGetResult() *exploring.ExploreResultAssembly {
 	return exploring.NewResultAssembly()
 }
 
 // NewGetHistory returns new instance to new status structure
-// allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetHistory() *exploring.ExploreTransactionAssembly {
+// allows to get history of past transaction in Transact Pro system
+func (ob *Builder) NewGetHistory() *exploring.ExploreHistoryAssembly {
 	return exploring.NewHistoryAssembly()
 }
 
 // NewGetRecurrents returns new instance to new status structure
-// allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetRecurrents() *exploring.ExploreTransactionAssembly {
+// allows to get subsequent recurring transactions of past transaction in Transact Pro system
+func (ob *Builder) NewGetRecurrents() *exploring.ExploreRecurrentsAssembly {
 	return exploring.NewRecurrentsAssembly()
 }
 
 // NewGetRefunds returns new instance to new status structure
-// allows to get status of past transaction in Transact Pro system
-func (ob *Builder) NewGetRefunds() *exploring.ExploreTransactionAssembly {
-	return exploring.NewHistoryAssembly()
+// allows to get refunds list of past transaction in Transact Pro system
+func (ob *Builder) NewGetRefunds() *exploring.ExploreRefundsAssembly {
+	return exploring.NewRefundsAssembly()
+}
+
+// NewGetLimits returns new instance to new status structure
+// allows to get limits for authorized object
+func (ob *Builder) NewGetLimits() *exploring.ExploreLimitsAssembly {
+	return exploring.NewLimitsAssembly()
 }
 
 /*
@@ -152,13 +159,13 @@ func (ob *Builder) NewGetRefunds() *exploring.ExploreTransactionAssembly {
 
 // NewVerify3dEnrollment returns new instance to new Verify3dEnrollment structure
 // allows verify card 3-D Secure enrollment
-func (ob *Builder) NewVerify3dEnrollment() *verify.Verify3dEnrollmentAssembly {
+func (ob *Builder) NewVerify3dEnrollment() *verify.ThreeDEnrollmentAssembly {
 	return verify.NewVerify3dEnrollmentAssembly()
 }
 
 // NewVerifyCard returns new instance to new VerifyCard structure
 // allows complete card verification
-func (ob *Builder) NewVerifyCard() *verify.VerifyCardAssembly {
+func (ob *Builder) NewVerifyCard() *verify.CardAssembly {
 	return verify.NewVerifyCardAssembly()
 }
 
@@ -172,4 +179,28 @@ func (ob *Builder) NewVerifyCard() *verify.VerifyCardAssembly {
 // allows to create a token for given payment data
 func (ob *Builder) NewCreateToken() *token.CreateTokenAssembly {
 	return token.NewCreateTokenAssembly()
+}
+
+/*
+
+	Reporting builders
+
+*/
+
+// NewReport returns new instance to new structure
+// allows to load a transactions report in CSV format
+func (ob *Builder) NewReport() *reporting.ReportAssembly {
+	return reporting.NewReportAssembly()
+}
+
+/*
+
+	Helpers builders
+
+*/
+
+// NewRetrieveForm returns new instance to new structure
+// allows to load an HTML form from the Gateway
+func (ob *Builder) NewRetrieveForm(paymentResponse *structures.TransactionResponse) (result *helpers.RetrieveFormAssembly, err error) {
+	return helpers.NewRetrieveFormAssembly(paymentResponse)
 }

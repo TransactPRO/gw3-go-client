@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // CreditAssembly is default structure for Offline Transactions (Credit) transactions operation
 type CreditAssembly struct {
@@ -24,7 +28,7 @@ func NewCreditAssembly() *CreditAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.CREDIT)
 
 	return &CreditAssembly{
@@ -42,4 +46,11 @@ func (op *CreditAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *CreditAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *CreditAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

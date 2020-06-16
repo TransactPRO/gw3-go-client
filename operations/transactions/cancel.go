@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // CancelAssembly is default structure for Cancel transactions operation
 type CancelAssembly struct {
@@ -20,7 +24,7 @@ func NewCancelAssembly() *CancelAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.CANCEL)
 
 	return &CancelAssembly{
@@ -38,4 +42,11 @@ func (op *CancelAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *CancelAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *CancelAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

@@ -3,6 +3,7 @@ package structures
 // OperationType describes the operation action as string
 type OperationType string
 
+// OperationType possible values
 const (
 	/*
 		Transaction Types
@@ -53,6 +54,8 @@ const (
 	ExploringRecurrents OperationType = "recurrents"
 	// ExploringRefunds is a transaction history request type for url route path
 	ExploringRefunds OperationType = "refunds"
+	// ExploringLimits is limits request type for url route path
+	ExploringLimits OperationType = "limits"
 
 	/*
 		Verification requests
@@ -67,4 +70,9 @@ const (
 	*/
 	// Create payment data token url route path
 	CreateToken OperationType = "token/create"
+
+	/*
+		Reporting requests
+	*/
+	Report OperationType = "report"
 )
