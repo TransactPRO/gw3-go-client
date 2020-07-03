@@ -29,6 +29,7 @@ This `README` provide introduction to the library usage.
   - REFUNDS
   - RESULT
   - STATUS
+  - LIMITS
 
 - Verifications
   - Verify card 3-D Secure enrollment
@@ -37,18 +38,24 @@ This `README` provide introduction to the library usage.
 - Tokenization
   - Create payment data token
 
-#### Basic usage
+- Callback processing
+  - verify callback data sign
+
+- Reporting
+  - Get transactions report in CSV format
+
+### Basic usage
 ```go
     // Setup your credentials for authorized requests
-    AccGUID := "someAccountGUID" // Your account GUID from Transact Pro
+    ObjectGUID := "someObjectGUID" // Your GUID from Transact Pro
     SecKey := "someSecretKey" // Your API secret key
 
     // Setup new Gateway Client
-    gateCli, gateCliErr := tprogateway.NewGatewayClient(AccGUID, SecKey)
+    gateCli, gateCliErr := tprogateway.NewGatewayClient(ObjectGUID, SecKey)
     if gateCliErr != nil {
         log.Fatal(gateCliErr)
     }
-	gateCli.API.BaseURI = "https://<Gateway URL>"
+    gateCli.API.BaseURI = "https://<Gateway URL>"
 
     // Prepare operation builder to handle your operations
     specOpsBuilder :=  gateCli.OperationBuilder()
@@ -70,7 +77,18 @@ This `README` provide introduction to the library usage.
     // Now process the operation
     opResp, opErr := gateCli.NewRequest(sms)
     if opErr != nil {
-        log.Printf(opErr)
+        log.Fatal(opErr)
+    }
+
+    parsedResponse, parsingError := order.ParseResponse(opResp)
+    if parsingError != nil {
+        log.Fatal(parsingError)
+    }
+
+    if parsedResponse.Error.Code != structures.ErrorCode(0) {
+        log.Println(parsedResponse.Error.Message)
+    } else if parsedResponse.Gateway.StatusCode == structures.StatusMpiURLGenerated {
+        // Redirect user to received URL
     }
 ```
 
@@ -83,7 +101,12 @@ payment.CommandData.CardVerificationMode = structures.CardVerificationModeInit
 // complete card verification
 request := specOpsBuilder.NewVerifyCard()
 request.VerifyCardData.GWTransactionID = initialPaymentGatewayId
-gateCli.NewRequest(request)
+response := gateCli.NewRequest(request)
+if response.StatusCode == http.StatusOK {
+    log.Println("SUCCESS")
+} else {
+    log.Println("FAILURE")
+}
 
 // set card verification verify mode for subsequent payments
 newPayment.CommandData.CardVerificationMode = structures.CardVerificationModeVerify
@@ -108,9 +131,76 @@ newPayment.CommandData.PaymentMethodDataSource = structures.DataSourceUseGateway
 newPayment.CommandData.PaymentMethodDataToken = "<initial gateway-transaction-id>"
 ```
 
+### Callback validation
+
+```go
+// verify data digest
+responseDigest, err := NewResponseDigest(signFromPost)
+responseDigest.OriginalURI = paymentResponse.Digest.URI
+responseDigest.OriginalCnonce = paymentResponse.Digest.Cnonce
+responseDigest.Body = []byte(jsonFromPost)
+verifyErr := responseDigest.Verify("object-guid", "secret-key")
+
+// parse callback data as a payment response
+var parsedResult CallbackResult
+parsingErr := json.Unmarshal(responseDigest.Body, &parsedResult)
+```
+
+### Transactions report loading
+
+```go
+operation := specOpsBuilder.NewReport()
+operation.DateCreatedFrom = structures.Time(time.Now().UTC().Add(-86400 * time.Second))
+operation.DateFinishedTo = structures.Time(time.Now().UTC())
+
+opResp, opErr := gateCli.NewRequest(operation)
+if opErr != nil {
+    log.Fatal(opErr)
+}
+
+report, parsingErr := operation.ParseResponse(opResp)
+if parsingErr != nil {
+    log.Fatal(parsingErr)
+}
+
+report := report(gateCli, specOpsBuilder)
+log.Println(report.Headers)
+iterationErr := report.Iterate(func(row map[string]string) bool {
+    log.Println(row)
+    return true
+})
+
+if iterationErr != nil {
+    log.Fatal(iterationErr)
+}
+```
+
+### Customization
+
+If you need to load an HTML form from Gateway instead of cardholder browser redirect, a special operation type may be used:
+
+```go
+operation, err := specOpsBuilder.NewRetrieveForm(parsedPaymentResponse)
+if err != nil {
+    log.Fatal(iterationErr)
+}
+
+opResp, opErr := gateCli.NewRequest(operation)
+if opErr != nil {
+    log.Fatal(opErr)
+}
+
+log.Println(string(opResp.Payload))
+```
+
+## About
+
+### Requirements
+
+- This library works with Go 1.12 or above.
+
 ### Submit bugs and feature requests
 Bugs and feature request are tracked on [GitHub](https://github.com/TransactPRO/gw3-go-client/issues)
-
 
 ### How to run unit tests by executing command in terminal:
 ```bash

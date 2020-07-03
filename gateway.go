@@ -8,13 +8,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/TransactPRO/gw3-go-client/operations"
 	"github.com/TransactPRO/gw3-go-client/structures"
 )
-
-// @TODO Add logger with mode enabled\disabled, debug
-// @TODO cover more code with test
 
 // Default API settings
 const (
@@ -31,44 +30,56 @@ type (
 		Version string
 	}
 
-	// AuthData merchant authorization structure fields used in operaion request
+	// AuthData merchant authorization structure fields used in operation request
 	authData struct {
-		// Transact Pro Account GUID
-		AccountGUID string `json:"account-guid"`
-		// Transact Pro Merchant Password
-		SecretKey string `json:"secret-key"`
+		ObjectGUID string `json:"-"`
+		SecretKey  string `json:"-"`
+		SessionID  string `json:"session-id,omitempty"`
 	}
 
 	// GatewayClient represents REST API client
 	GatewayClient struct {
 		API        *confAPI
-		auth       *authData
-		httpClient http.Client
+		Auth       *authData
+		HTTPClient http.Client
 	}
 
 	// GenericRequest describes general request data structure
 	GenericRequest struct {
-		Auth interface{} `json:"auth-data"`
-		Data interface{} `json:"data"`
+		Auth       *authData   `json:"auth-data,omitempty"`
+		Data       interface{} `json:"data,omitempty"`
+		FilterData interface{} `json:"filter-data,omitempty"`
 	}
 )
 
-// NewGatewayClient new instance of prepared gateway client structure
-func NewGatewayClient(AccountGUID, SecretKey string) (*GatewayClient, error) {
-	if AccountGUID == "" {
-		return nil, errors.New("Account GUID can't be empty. It's required for merchant authorization")
+// NewGatewayClient creates new instance of prepared gateway client structure
+func NewGatewayClient(ObjectGUID, SecretKey string) (*GatewayClient, error) {
+	if ObjectGUID == "" {
+		return nil, errors.New("GUID can't be empty. It's required for merchant authorization")
 	}
 
 	if SecretKey == "" {
-		return nil, errors.New("Secret key can't be empty. It's required for merchant authorization")
+		return nil, errors.New("secret key can't be empty. It's required for merchant authorization")
 	}
 
 	return &GatewayClient{
-		API: &confAPI{
-			BaseURI: dAPIBaseURI, Version: dAPIVersion},
-		auth: &authData{
-			AccountGUID: AccountGUID, SecretKey: SecretKey},
+		API:  &confAPI{BaseURI: dAPIBaseURI, Version: dAPIVersion},
+		Auth: &authData{ObjectGUID: ObjectGUID, SecretKey: SecretKey},
 	}, nil
+}
+
+// NewGatewayClientForSession creates new instance of prepared gateway client structure
+// Should be used when active session is available
+func NewGatewayClientForSession(ObjectGUID, SecretKey, SessionID string) (response *GatewayClient, err error) {
+	if SessionID == "" {
+		return nil, errors.New("SessionID can't be empty. Session authorization means non-empty session")
+	}
+
+	if response, err = NewGatewayClient(ObjectGUID, SecretKey); err == nil {
+		response.Auth.SessionID = SessionID
+	}
+
+	return
 }
 
 // OperationBuilder method, returns builder for needed operation, like SMS, Reversal, even exploring transactions such as Refund ExploringHistory
@@ -77,37 +88,71 @@ func (gc *GatewayClient) OperationBuilder() *operations.Builder {
 }
 
 // NewRequest method, send HTTP request to Transact Pro API
-func (gc *GatewayClient) NewRequest(opData structures.OperationRequestInterface) (*http.Response, error) {
+// GatewayResponse may be non-nil in case of error if a response payload was read
+// but some validation after failed (like digest verification)
+func (gc *GatewayClient) NewRequest(opData structures.OperationRequestInterface) (*structures.GatewayResponse, error) {
 	// Build whole payload structure with nested data bundles
 	rawReqData := &GenericRequest{}
-	rawReqData.Auth = *gc.auth
-	rawReqData.Data = opData
+	rawReqData.Auth = gc.Auth
+	if opData.GetOperationType() == structures.Report {
+		rawReqData.FilterData = opData
+	} else {
+		rawReqData.Data = opData
+	}
 
 	// Get prepared structure of json byte array
-	bufPayload, bufErr := prepareJSONPayload(rawReqData)
-	if bufErr != nil {
-		return nil, bufErr
+	var bufPayload *bytes.Buffer
+	if opData.GetHTTPMethod() != http.MethodGet {
+		var bufErr error
+		if bufPayload, bufErr = prepareJSONPayload(rawReqData); bufErr != nil {
+			return nil, bufErr
+		}
+	} else {
+		bufPayload = bytes.NewBuffer(nil)
 	}
 
 	// Get combined URL path for request to API
-	url, errURLPath := determineURL(gc, opData.GetOperationType())
+	requestURL, errURLPath := determineURL(gc, opData.GetOperationType())
 	if errURLPath != nil {
 		return nil, errURLPath
 	}
 
 	// Build correct HTTP request
-	newReq, reqErr := buildHTTPRequest(opData.GetHTTPMethod(), url, bufPayload)
+	newReq, reqDigest, reqErr := buildHTTPRequest(rawReqData.Auth, opData.GetHTTPMethod(), requestURL, bufPayload)
 	if reqErr != nil {
 		return nil, reqErr
 	}
 
 	// Send HTTP request object
-	resp, respErr := gc.httpClient.Do(newReq)
+	resp, respErr := gc.HTTPClient.Do(newReq)
 	if respErr != nil {
 		return nil, respErr
 	}
+	defer func() { _ = resp.Body.Close() }()
 
-	return resp, nil
+	content, payloadErr := ioutil.ReadAll(resp.Body)
+	if payloadErr != nil {
+		return nil, payloadErr
+	}
+
+	gwResponse := structures.NewGatewayResponse(resp, content)
+	if gwResponse.Successful() {
+		var digestErr error
+		gwResponse.Digest, digestErr = structures.NewResponseDigest(resp.Header.Get("Authorization"))
+		if digestErr != nil {
+			return gwResponse, digestErr
+		}
+
+		gwResponse.Digest.OriginalURI = reqDigest.URI
+		gwResponse.Digest.OriginalCnonce = reqDigest.Cnonce
+		gwResponse.Digest.Body = gwResponse.Payload
+		digestErr = gwResponse.Digest.Verify(rawReqData.Auth.ObjectGUID, rawReqData.Auth.SecretKey)
+		if digestErr != nil {
+			return gwResponse, digestErr
+		}
+	}
+
+	return gwResponse, nil
 }
 
 // prepareJSONPayload, validates\combines AuthData and Data struct to one big structure and converts to json(Marshal) to buffer
@@ -117,9 +162,6 @@ func prepareJSONPayload(rawReq *GenericRequest) (*bytes.Buffer, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// @TODO Debug print marshal body
-	fmt.Println("RAW Marshal BODY " + string(bReqData))
 
 	// Write json object to buffer
 	buffer := bytes.NewBuffer(bReqData)
@@ -134,179 +176,61 @@ func determineURL(gc *GatewayClient, opType structures.OperationType) (string, e
 
 	// Validate API config, base URL and version of API
 	if gc.API.BaseURI == "" {
-		return "", errors.New("Gateway client's URL is empty in, API settings")
+		return "", errors.New("gateway client's URL is empty in, API settings")
 	}
 
 	if gc.API.Version == "" {
-		return "", errors.New("Gateway client's Version is empty in, API settings")
+		return "", errors.New("gateway client's Version is empty in, API settings")
 	}
 
 	// Try to get operation type from request data
 	if opType == "" {
-		return "", errors.New("Operation type is empty. Problem in operation builder")
+		return "", errors.New("operation type is empty. Problem in operation builder")
 	}
 
 	// AS example must be like: http://url.pay.com/v55.0/sms
-	completeURL = fmt.Sprintf("%s/v%s/%s", gc.API.BaseURI, gc.API.Version, opType)
-
-	// @TODO Debug print URL
-	fmt.Println("REQUEST URL " + completeURL)
+	if strings.HasPrefix(string(opType), "http") {
+		completeURL = string(opType)
+	} else if opType == structures.Report {
+		completeURL = fmt.Sprintf("%s/%s", gc.API.BaseURI, opType)
+	} else {
+		completeURL = fmt.Sprintf("%s/v%s/%s", gc.API.BaseURI, gc.API.Version, opType)
+	}
 
 	return completeURL, nil
 }
 
 // buildHTTPRequest, accepts prepared body for HTTP
 // Builds NewRequest from http package
-func buildHTTPRequest(method, url string, payload *bytes.Buffer) (*http.Request, error) {
+func buildHTTPRequest(auth *authData, method, requestURL string, payload *bytes.Buffer) (*http.Request, *structures.RequestDigest, error) {
+	var err error
+
+	var parsedURL *url.URL
+	if parsedURL, err = url.Parse(requestURL); err != nil {
+		return nil, nil, fmt.Errorf("incorrect URL: %s", err)
+	}
+
+	var requestDigest *structures.RequestDigest
+	if requestDigest, err = structures.NewRequestDigest(auth.ObjectGUID, auth.SecretKey, parsedURL.Path, payload.Bytes()); err != nil {
+		return nil, nil, err
+	}
+
+	var digest string
+	if digest, err = requestDigest.CreateHeader(); err != nil {
+		return nil, nil, err
+	}
+
 	// Build whole HTTP request with payload data
-	newReq, err := http.NewRequest(method, url, payload)
-	if err != nil {
-		return nil, err
+	var newReq *http.Request
+	if newReq, err = http.NewRequest(method, requestURL, payload); err != nil {
+		return nil, nil, err
 	}
 
 	// Set default headers for new request
-	newReq.Header.Set("Accept", "application/json")
-	newReq.Header.Set("Content-type", "application/json")
-
-	return newReq, nil
-}
-
-// ParseResponse method maps response to structure for given operation type
-func (gc *GatewayClient) ParseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
-	// @TODO Split response parser to additional packg
-	parsedResp, parseErr := parseResponse(resp, opType)
-	if parseErr != nil {
-		return nil, parseErr
+	newReq.Header.Set("Authorization", digest)
+	if method != http.MethodGet {
+		newReq.Header.Set("Content-type", "application/json")
 	}
 
-	return parsedResp, nil
-}
-
-// parseResponse, parsing response to structure
-func parseResponse(resp *http.Response, opType structures.OperationType) (interface{}, error) {
-	defer resp.Body.Close()
-
-	// Empty response body
-	var responseBody interface{}
-
-	body, bodyErr := ioutil.ReadAll(resp.Body)
-	if bodyErr != nil {
-		return nil, fmt.Errorf("Failed to read received body: %s ", bodyErr.Error())
-	}
-
-	// @TODO Map unauthorized response before map to any transactions
-
-	// Determine operation response structure and parse it
-	switch opType {
-	case structures.ExploringStatus:
-		var gwResp []structures.ExploringStatusResponse
-
-		// Try parse response to transactions default structure
-		// @TODO Debug print marshal body
-		fmt.Println("RAW HTTP BODY " + string(body))
-
-		parseErr := json.Unmarshal(body, &gwResp)
-		if parseErr != nil {
-			if bodyErr != nil {
-				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
-			}
-
-			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
-		}
-
-		// Assign parsed response structure to interface
-		responseBody = gwResp
-	case structures.ExploringResult:
-		var gwResp []structures.ExploringResultResponse
-
-		// Try parse response to transactions default structure
-		// @TODO Debug print marshal body
-		fmt.Println("RAW HTTP BODY " + string(body))
-
-		parseErr := json.Unmarshal(body, &gwResp)
-		if parseErr != nil {
-			if bodyErr != nil {
-				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
-			}
-
-			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
-		}
-
-		// Assign parsed response structure to interface
-		responseBody = gwResp
-	case structures.ExploringHistory:
-		var gwResp []structures.ExploringHistoryResponse
-
-		// Try parse response to transactions default structure
-		// @TODO Debug print marshal body
-		fmt.Println("RAW HTTP BODY " + string(body))
-
-		parseErr := json.Unmarshal(body, &gwResp)
-		if parseErr != nil {
-			if bodyErr != nil {
-				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
-			}
-
-			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
-		}
-
-		// Assign parsed response structure to interface
-		responseBody = gwResp
-	case structures.ExploringRecurrents:
-		var gwResp []structures.ExploringRecurrentsResponse
-
-		// Try parse response to transactions default structure
-		// @TODO Debug print marshal body
-		fmt.Println("RAW HTTP BODY " + string(body))
-
-		parseErr := json.Unmarshal(body, &gwResp)
-		if parseErr != nil {
-			if bodyErr != nil {
-				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
-			}
-
-			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
-		}
-
-		// Assign parsed response structure to interface
-		responseBody = gwResp
-	case structures.ExploringRefunds:
-		var gwResp []structures.ExploringRefundResponse
-
-		// Try parse response to transactions default structure
-		// @TODO Debug print marshal body
-		fmt.Println("RAW HTTP BODY " + string(body))
-
-		parseErr := json.Unmarshal(body, &gwResp)
-		if parseErr != nil {
-			if bodyErr != nil {
-				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
-			}
-
-			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
-		}
-
-		// Assign parsed response structure to interface
-		responseBody = gwResp
-	default:
-		var gwResp structures.TransactionResponse
-
-		// Try parse response to transactions default structure
-		// @TODO Debug print marshal body
-		fmt.Println("RAW HTTP BODY " + string(body))
-		parseErr := json.Unmarshal(body, &gwResp)
-		if parseErr != nil {
-			if bodyErr != nil {
-				return nil, fmt.Errorf("Failed to unmarshal received http body: %s ", bodyErr.Error())
-			}
-
-			return nil, fmt.Errorf("Failed to unmarshal received http body, http body error unkown, unmarshal error: %s", parseErr)
-		}
-
-		// Assign parsed response structure to interface
-		responseBody = gwResp
-	}
-
-	// @TODO Think about return type, mb instead of using interface better to use strict structure types
-	return responseBody, nil
+	return newReq, requestDigest, nil
 }

@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // InitRecurrentSMSAssembly is default structure for Init Recurrent SMS transactions operation
 type InitRecurrentSMSAssembly struct {
@@ -24,7 +28,7 @@ func NewInitRecurrentSMSAssembly() *InitRecurrentSMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.InitRecurrentSMS)
 
 	return &InitRecurrentSMSAssembly{
@@ -42,4 +46,11 @@ func (op *InitRecurrentSMSAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *InitRecurrentSMSAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *InitRecurrentSMSAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

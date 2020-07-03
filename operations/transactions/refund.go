@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // RefundAssembly is default structure for Refunds transactions operation
 type RefundAssembly struct {
@@ -22,7 +26,7 @@ func NewRefundAssembly() *RefundAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.Refund)
 
 	return &RefundAssembly{
@@ -40,4 +44,11 @@ func (op *RefundAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *RefundAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *RefundAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

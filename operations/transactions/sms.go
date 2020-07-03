@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // SMSAssembly is default structure for Single-Message Transactions (SMS) transactions operation
 type SMSAssembly struct {
@@ -24,7 +28,7 @@ func NewSMSAssembly() *SMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.SMS)
 
 	return &SMSAssembly{
@@ -42,4 +46,11 @@ func (op *SMSAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *SMSAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *SMSAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

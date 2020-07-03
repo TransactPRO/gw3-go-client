@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // ChargeDMSAssembly is default structure for Double-Message Transactions (DMS) Hold transactions operation
 type ChargeDMSAssembly struct {
@@ -21,7 +25,7 @@ func NewChargeDMSAssembly() *ChargeDMSAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.DMSCharge)
 
 	return &ChargeDMSAssembly{
@@ -39,4 +43,11 @@ func (op *ChargeDMSAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *ChargeDMSAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *ChargeDMSAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }

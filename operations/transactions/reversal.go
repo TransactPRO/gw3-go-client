@@ -1,6 +1,10 @@
 package transactions
 
-import "github.com/TransactPRO/gw3-go-client/structures"
+import (
+	"net/http"
+
+	"github.com/TransactPRO/gw3-go-client/structures"
+)
 
 // ReversalAssembly is default structure for reversal transactions operation
 type ReversalAssembly struct {
@@ -22,7 +26,7 @@ func NewReversalAssembly() *ReversalAssembly {
 	// Predefine default HTTP request data for sms operations
 	var opd structures.OperationRequestHTTPData
 
-	opd.SetHTTPMethod("POST")
+	opd.SetHTTPMethod(http.MethodPost)
 	opd.SetOperationType(structures.Reversal)
 
 	return &ReversalAssembly{
@@ -40,4 +44,11 @@ func (op *ReversalAssembly) GetHTTPMethod() string {
 // GetOperationType return part of route path which will be used for send request
 func (op *ReversalAssembly) GetOperationType() structures.OperationType {
 	return op.opHTTPData.GetOperationType()
+}
+
+// ParseResponse parses Gateway response into corresponding data structure
+func (op *ReversalAssembly) ParseResponse(response *structures.GatewayResponse) (result *structures.TransactionResponse, err error) {
+	result = new(structures.TransactionResponse)
+	err = response.ParseJSON(&result)
+	return
 }
