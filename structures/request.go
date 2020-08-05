@@ -115,6 +115,16 @@ type (
 		UserIP string `json:"user-ip"`
 		// Cardholder real IPv4 address in case of proxy
 		XForwardedFor string `json:"x-forwarded-for"`
+
+		BrowserAcceptHeader      string `json:"browser-accept-header"`
+		BrowserJavaEnabled       bool   `json:"browser-java-enabled"`
+		BrowserJavascriptEnabled bool   `json:"browser-javascript-enabled"`
+		BrowserLanguage          string `json:"browser-language"`
+		BrowserColorDepth        string `json:"browser-color-depth"`
+		BrowserScreenHeight      string `json:"browser-screen-height"`
+		BrowserScreenWidth       string `json:"browser-screen-width"`
+		BrowserTz                string `json:"browser-tz"`
+		BrowserUserAgent         string `json:"browser-user-agent"`
 	}
 
 	// CommandData structure with fields to set various payment processing modes
