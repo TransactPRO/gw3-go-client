@@ -44,6 +44,7 @@ type (
 	// Gateway Transact Pro system response
 	Gateway struct {
 		GatewayTransactionID         string  `json:"gateway-transaction-id,omitempty"`
+		MerchantTransactionID        string  `json:"merchant-transaction-id,omitempty"`
 		StatusCode                   Status  `json:"status-code,omitempty"`
 		StatusText                   string  `json:"status-text,omitempty"`
 		RedirectURL                  *URL    `json:"redirect-url,omitempty"`
