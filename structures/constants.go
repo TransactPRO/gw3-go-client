@@ -97,6 +97,7 @@ const (
 	EecNoParentTransactionProvided ErrorCode = 1157
 	EecDynamicDescriptorError      ErrorCode = 1158
 	EecUcofError                   ErrorCode = 1159
+	EecSuspectedFraud              ErrorCode = 1160
 
 	EecTerminalNotFound                 ErrorCode = 1200
 	EecAllTerminalCountersExceeded      ErrorCode = 1201
@@ -106,8 +107,9 @@ const (
 	EecTerminalNotSupportingMOTO                  ErrorCode = 1204
 	EecTerminalNotSupportingRecurringTransactions ErrorCode = 1205
 
-	EecDeclinedByAcquirer ErrorCode = 1301
-	EecAcquirerError      ErrorCode = 1302
+	EecDeclinedByAcquirer  ErrorCode = 1301
+	EecAcquirerError       ErrorCode = 1302
+	EecAcquirerSoftDecline ErrorCode = 1303
 
 	EecInvalidFormID   ErrorCode = 1400
 	EecFormUnavailable ErrorCode = 1401
