@@ -19,7 +19,7 @@ jobs:
       id: go
 
     - name: Get dependencies
-      run: go mod download
+      run: go mod download && go mod tidy
 
     - name: Vet
       run: go vet
