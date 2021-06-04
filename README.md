@@ -2,6 +2,12 @@
 
 This package provide ability to make requests to Transact Pro Gateway API v3.
 
+## Installation
+
+```bash
+go get github.com/TransactPRO/gw3-go-client
+```
+
 ## Documentation
 This `README` provide introduction to the library usage.
 
@@ -61,21 +67,21 @@ This `README` provide introduction to the library usage.
     specOpsBuilder :=  gateCli.OperationBuilder()
 
     // Now, define your special operation for processing
-    sms := specOpsBuilder.NewSms()
+    order := specOpsBuilder.NewSms()
 
     // Set transaction data
-    sms.GeneralData.OrderData.OrderDescription = "Operation Single-Message Transactions"
-    sms.GeneralData.CustomerData.Email = "some@email.com"
-    sms.PaymentMethod.Pan = "1111111111111111"
-    sms.PaymentMethod.ExpMmYy = "10/60"
-    sms.PaymentMethod.Cvv = "123"
-    sms.Money.Amount = 1500
-    sms.Money.Currency = "USD"
-    sms.System.UserIP = "199.99.99.1"
-    sms.System.XForwardedFor = "199.99.99.1"
+    order.GeneralData.OrderData.OrderDescription = "Operation Single-Message Transactions"
+    order.GeneralData.CustomerData.Email = "some@email.com"
+    order.PaymentMethod.Pan = "1111111111111111"
+    order.PaymentMethod.ExpMmYy = "10/60"
+    order.PaymentMethod.Cvv = "123"
+    order.Money.Amount = 1500
+    order.Money.Currency = "USD"
+    order.System.UserIP = "199.99.99.1"
+    order.System.XForwardedFor = "199.99.99.1"
 
     // Now process the operation
-    opResp, opErr := gateCli.NewRequest(sms)
+    opResp, opErr := gateCli.NewRequest(order)
     if opErr != nil {
         log.Fatal(opErr)
     }
@@ -87,8 +93,8 @@ This `README` provide introduction to the library usage.
 
     if parsedResponse.Error.Code != structures.ErrorCode(0) {
         log.Println(parsedResponse.Error.Message)
-    } else if parsedResponse.Gateway.StatusCode == structures.StatusMpiURLGenerated {
-        // Redirect user to received URL
+    } else if parsedResponse.Gateway.RedirectURL != nil {
+        // Redirect a user to received URL
     }
 ```
 
@@ -129,6 +135,11 @@ gateCli.NewRequest(operation)
 // send a payment with flag to load payment data by token
 newPayment.CommandData.PaymentMethodDataSource = structures.DataSourceUseGatewaySavedCardholderInitiated
 newPayment.CommandData.PaymentMethodDataToken = "<initial gateway-transaction-id>"
+
+// execute the request and parse the response
+if parsedResponse.Error.Code == structures.EecAcquirerSoftDecline && parsedResponse.Gateway.RedirectURL != nil {
+    // Redirect a user to received URL
+}
 ```
 
 ### Callback validation
