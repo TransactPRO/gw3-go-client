@@ -1,3 +1,7 @@
+##### Version v1.7.3 (2021-06-04)
+
+	Added error codes for soft declines
+
 ##### Version v1.7.2 (2020-09-02)
 
 	Add merchant-transaction-id to payment response parsing
