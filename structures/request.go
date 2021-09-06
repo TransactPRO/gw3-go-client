@@ -69,6 +69,10 @@ type (
 		Custom3dReturnURL string `json:"custom-3d-return-url,omitempty"`
 		// Custom return URL
 		CustomReturnURL string `json:"custom-return-url,omitempty"`
+		// Date after which no further authorizations shall be performed (format: YYYYMMDD)
+		RecurringExpiry string `json:"recurring-expiry,omitempty"`
+		// The minimum number of days between authorizations (for variable frequency use 1)
+		RecurringFrequency string `json:"recurring-frequency,omitempty"`
 	}
 
 	// Address structure with detailed fields of customer(cardholder) place
