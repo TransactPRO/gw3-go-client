@@ -287,9 +287,10 @@ func TestParseResultResponse(t *testing.T) {
 
 func TestParseStatusResponse(t *testing.T) {
 	body := "{\"transactions\":[{\"gateway-transaction-id\":\"cd7b8bdf-3c78-4540-95d0-68018d2aba97\",\"status\":" +
-		"[{\"gateway-transaction-id\":\"cd7b8bdf-3c78-4540-95d0-68018d2aba97\",\"status-code\":7,\"status-code-general\":8," +
-		"\"status-text\":\"SUCCESS\",\"status-text-general\":\"EXPIRED\"}]},{\"gateway-transaction-id\":\"37908991-789b-4d79-8c6a-f90ba0ce12b6\"," +
-		"\"status\":[{\"gateway-transaction-id\":\"37908991-789b-4d79-8c6a-f90ba0ce12b6\",\"status-code\":8,\"status-code-general\":7," +
+		"[{\"card-mask\":\"534219*5267\",\"card-family\":\"MC\",\"gateway-transaction-id\":\"cd7b8bdf-3c78-4540-95d0-68018d2aba97\"," +
+		"\"status-code\":7,\"status-code-general\":8,\"status-text\":\"SUCCESS\",\"status-text-general\":\"EXPIRED\"}]}," +
+		"{\"gateway-transaction-id\":\"37908991-789b-4d79-8c6a-f90ba0ce12b6\",\"status\":[" +
+		"{\"gateway-transaction-id\":\"37908991-789b-4d79-8c6a-f90ba0ce12b6\",\"status-code\":8,\"status-code-general\":7," +
 		"\"status-text\":\"EXPIRED\",\"status-text-general\":\"SUCCESS\"}]}," +
 		"{\"error\":{\"code\":400,\"message\":\"Failed to fetch data for transaction with gateway id: 99900000-789b-4d79-8c6a-f90ba0ce12b0\"}," +
 		"\"gateway-transaction-id\":\"99900000-789b-4d79-8c6a-f90ba0ce12b0\"}]}"
@@ -306,6 +307,8 @@ func TestParseStatusResponse(t *testing.T) {
 	assert.Equal(t, structures.StatusExpired, tr1.Status[0].StatusCodeGeneral)
 	assert.Equal(t, "SUCCESS", tr1.Status[0].StatusText)
 	assert.Equal(t, "EXPIRED", tr1.Status[0].StatusTextGeneral)
+	assert.Equal(t, structures.CardFamilyMasterCard, tr1.Status[0].CardFamily)
+	assert.Equal(t, "534219*5267", tr1.Status[0].CardMask)
 
 	tr2 := parsedResponse.Transactions[1]
 	assert.Equal(t, "37908991-789b-4d79-8c6a-f90ba0ce12b6", tr2.GatewayTransactionID)

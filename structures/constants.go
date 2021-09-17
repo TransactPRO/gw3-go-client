@@ -7,6 +7,8 @@ type (
 	ErrorCode int
 	// Enrollment represents card's 3-D Secure enrollment
 	Enrollment int
+	// CardFamily represents card family
+	CardFamily int
 )
 
 // Gateway transaction statuses
@@ -150,6 +152,48 @@ func (o *Enrollment) UnmarshalJSON(raw []byte) error {
 		*o = EnrollmentYes
 	default:
 		*o = EnrollmentUnknown
+	}
+
+	return nil
+}
+
+// Card families
+const (
+	CardFamilyUnknown CardFamily = iota
+	CardFamilyVISA
+	CardFamilyMasterCard
+	CardFamilyMaestro
+	CardFamilyAmericanExpress
+)
+
+var cardFamily2string = map[CardFamily]string{
+	CardFamilyVISA:            "VISA",
+	CardFamilyMasterCard:      "MasterCard",
+	CardFamilyMaestro:         "Maestro",
+	CardFamilyAmericanExpress: "AmericanExpress",
+}
+
+func (o CardFamily) String() string {
+	if result, ok := cardFamily2string[o]; ok {
+		return result
+	}
+
+	return "unknown"
+}
+
+// UnmarshalJSON is a custom unmarshal function for 3-D Secure enrollment representation string
+func (o *CardFamily) UnmarshalJSON(raw []byte) error {
+	switch string(raw) {
+	case "\"VISA\"":
+		*o = CardFamilyVISA
+	case "\"MC\"":
+		*o = CardFamilyMasterCard
+	case "\"MA\"":
+		*o = CardFamilyMaestro
+	case "\"AMEX\"":
+		*o = CardFamilyAmericanExpress
+	default:
+		*o = CardFamilyUnknown
 	}
 
 	return nil

@@ -118,11 +118,13 @@ type (
 
 	// TransactionStatus represents one item for exploring results collection
 	TransactionStatus struct {
-		GatewayTransactionID string `json:"gateway-transaction-id,omitempty"`
-		StatusCode           Status `json:"status-code,omitempty"`
-		StatusText           string `json:"status-text,omitempty"`
-		StatusCodeGeneral    Status `json:"status-code-general,omitempty"`
-		StatusTextGeneral    string `json:"status-text-general,omitempty"`
+		GatewayTransactionID string     `json:"gateway-transaction-id,omitempty"`
+		StatusCode           Status     `json:"status-code,omitempty"`
+		StatusText           string     `json:"status-text,omitempty"`
+		StatusCodeGeneral    Status     `json:"status-code-general,omitempty"`
+		StatusTextGeneral    string     `json:"status-text-general,omitempty"`
+		CardMask             string     `json:"card-mask,omitempty"`
+		CardFamily           CardFamily `json:"card-family,omitempty"`
 	}
 
 	// ExploringResultResponse represents transaction's result response

@@ -30,3 +30,29 @@ func TestEnrollmentUnmarshalJSON(t *testing.T) {
 		})
 	}
 }
+
+func TestCardFamilyUnmarshalJSON(t *testing.T) {
+	examples := map[string]struct {
+		value CardFamily
+		str   string
+	}{
+		"VISA": {CardFamilyVISA, "VISA"},
+		"MC":   {CardFamilyMasterCard, "MasterCard"},
+		"MA":   {CardFamilyMaestro, "Maestro"},
+		"AMEX": {CardFamilyAmericanExpress, "AmericanExpress"},
+		"aaa":  {CardFamilyUnknown, "unknown"},
+	}
+
+	for value, expected := range examples {
+		t.Run(expected.str, func(t *testing.T) {
+			jsonValue := "\"" + value + "\""
+
+			var actual CardFamily
+			err := json.Unmarshal([]byte(jsonValue), &actual)
+
+			assert.NoError(t, err)
+			assert.Equal(t, expected.value, actual)
+			assert.Equal(t, expected.str, actual.String())
+		})
+	}
+}

@@ -21,15 +21,15 @@ type (
 	}
 
 	// ExploreStatusAssembly is a transactions status exploring operation
-	ExploreStatusAssembly ExploreTransactionAssembly
+	ExploreStatusAssembly struct{ ExploreTransactionAssembly }
 	// ExploreResultAssembly is a transactions result exploring operation
-	ExploreResultAssembly ExploreTransactionAssembly
+	ExploreResultAssembly struct{ ExploreTransactionAssembly }
 	// ExploreHistoryAssembly is a transactions history exploring operation
-	ExploreHistoryAssembly ExploreTransactionAssembly
+	ExploreHistoryAssembly struct{ ExploreTransactionAssembly }
 	// ExploreRefundsAssembly is a transactions refunds exploring operation
-	ExploreRefundsAssembly ExploreTransactionAssembly
+	ExploreRefundsAssembly struct{ ExploreTransactionAssembly }
 	// ExploreRecurrentsAssembly is a transactions subsequent recurring transactions exploring operation
-	ExploreRecurrentsAssembly ExploreTransactionAssembly
+	ExploreRecurrentsAssembly struct{ ExploreTransactionAssembly }
 
 	// ExploreLimitsAssembly is a structure for object limits exploring operation
 	ExploreLimitsAssembly struct {
@@ -47,7 +47,7 @@ func NewStatusAssembly() *ExploreStatusAssembly {
 	opd.SetOperationType(structures.ExploringStatus)
 
 	return &ExploreStatusAssembly{
-		opHTTPData: opd,
+		ExploreTransactionAssembly{opHTTPData: opd},
 	}
 }
 
@@ -60,7 +60,7 @@ func NewResultAssembly() *ExploreResultAssembly {
 	opd.SetOperationType(structures.ExploringResult)
 
 	return &ExploreResultAssembly{
-		opHTTPData: opd,
+		ExploreTransactionAssembly{opHTTPData: opd},
 	}
 }
 
@@ -73,7 +73,7 @@ func NewHistoryAssembly() *ExploreHistoryAssembly {
 	opd.SetOperationType(structures.ExploringHistory)
 
 	return &ExploreHistoryAssembly{
-		opHTTPData: opd,
+		ExploreTransactionAssembly{opHTTPData: opd},
 	}
 }
 
@@ -86,7 +86,7 @@ func NewRecurrentsAssembly() *ExploreRecurrentsAssembly {
 	opd.SetOperationType(structures.ExploringRecurrents)
 
 	return &ExploreRecurrentsAssembly{
-		opHTTPData: opd,
+		ExploreTransactionAssembly{opHTTPData: opd},
 	}
 }
 
@@ -99,7 +99,7 @@ func NewRefundsAssembly() *ExploreRefundsAssembly {
 	opd.SetOperationType(structures.ExploringRefunds)
 
 	return &ExploreRefundsAssembly{
-		opHTTPData: opd,
+		ExploreTransactionAssembly{opHTTPData: opd},
 	}
 }
 
