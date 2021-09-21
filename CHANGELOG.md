@@ -1,3 +1,8 @@
+##### Version v1.7.5 (2021-09-21)
+
+	Added card type and card mask fields to parsed status response; fixed
+	exploring requests.
+
 ##### Version v1.7.4 (2021-09-06)
 
 	Added fields for recurring payments: recurring-frequency and recurring-expiry.
