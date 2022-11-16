@@ -103,6 +103,21 @@ type (
 		Cvv string `json:"cvv,omitempty"`
 		// Cardholder Name and Surname (Name and Surname on credit card)
 		CardholderName string `json:"cardholder-name,omitempty"`
+		// External 3-D Secure data for an acquirer
+		ExternalMpiData *ExternalMpiData `json:"external-mpi-data,omitempty"`
+	}
+
+	ExternalMpiData struct {
+		// protocolVersion received from 3-D Secure
+		ProtocolVersion string `json:"protocolVersion,omitempty"`
+		// dsTransID received from 3-D Secure
+		DsTransID string `json:"dsTransID,omitempty"`
+		// xid used for 3-D Secure
+		XID string `json:"xid,omitempty"`
+		// cavv received from 3-D Secure
+		CAVV string `json:"cavv,omitempty"`
+		// transStatus received from 3-D Secure
+		TransStatus string `json:"transStatus,omitempty"`
 	}
 
 	// MoneyData structure with detailed fields about transactions amount and currency
