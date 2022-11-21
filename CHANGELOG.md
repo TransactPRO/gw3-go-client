@@ -1,3 +1,12 @@
+##### Version v1.7.6 (2022-11-21)
+
+	Added support for external 3-D Secure. Added struct ExternalMpiData for PaymentMethodData (when 3-D Secure was completed before the Gateway call) with following fields:
+	 - ProtocolVersion
+	 - DsTransID
+	 - XID
+	 - CAVV
+	 - TransStatus
+
 ##### Version v1.7.5 (2021-09-21)
 
 	Added card type and card mask fields to parsed status response; fixed
