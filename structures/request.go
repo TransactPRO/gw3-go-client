@@ -107,6 +107,7 @@ type (
 		ExternalMpiData *ExternalMpiData `json:"external-mpi-data,omitempty"`
 	}
 
+	// ExternalMpiData is a structure for 3-D Secure data required for an acquirer
 	ExternalMpiData struct {
 		// protocolVersion received from 3-D Secure
 		ProtocolVersion string `json:"protocolVersion,omitempty"`
