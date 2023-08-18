@@ -73,6 +73,10 @@ type (
 		RecurringExpiry string `json:"recurring-expiry,omitempty"`
 		// The minimum number of days between authorizations (for variable frequency use 1)
 		RecurringFrequency string `json:"recurring-frequency,omitempty"`
+		// Must be set to true for UCOF initialization if any subsequent MIT transactions are supposed to be
+		MITsExpected bool `json:"mits-expected,omitempty"`
+		// Must be set to true for initial recurring transaction if amount will not be fixed for subsequent transactions
+		VariableAmountRecurring bool `json:"variable-amount-recurring,omitempty"`
 	}
 
 	// Address structure with detailed fields of customer(cardholder) place
