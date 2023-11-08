@@ -1,3 +1,9 @@
+##### Version v1.7.7 (2023-11-08)
+
+	Added new fields for order data to satisfy AN5524 requirements:
+	 - mits-expected: must be set to true for UCOF initialization if any subsequent MIT transactions are supposed to be
+	 - variable-amount-recurring: must be set to true for initial recurring transaction if amount will not be fixed for subsequent transactions
+
 ##### Version v1.7.6 (2022-11-21)
 
 	Added support for external 3-D Secure. Added struct ExternalMpiData for PaymentMethodData (when 3-D Secure was completed before the Gateway call) with following fields:
