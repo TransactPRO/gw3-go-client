@@ -74,6 +74,7 @@ const (
 	EecTerminalGroupCountersExceeded ErrorCode = 1013
 	EecTerminalCountersExceeded      ErrorCode = 1014
 	EecHsmToken                      ErrorCode = 1015
+	EecHsmDataExpired                ErrorCode = 1016
 
 	EecInputValidationFailed ErrorCode = 1100
 	EecFailedBusinessRules   ErrorCode = 1101
