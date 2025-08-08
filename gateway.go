@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -130,7 +130,7 @@ func (gc *GatewayClient) NewRequest(opData structures.OperationRequestInterface)
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	content, payloadErr := ioutil.ReadAll(resp.Body)
+	content, payloadErr := io.ReadAll(resp.Body)
 	if payloadErr != nil {
 		return nil, payloadErr
 	}

@@ -17,6 +17,16 @@ const (
 	DataSourceUseMerchantSavedMerchantInitiated
 )
 
+type PaymentMethodType string
+
+// Payment method type allowed values
+const (
+	PaymentMethodTypeCard      PaymentMethodType = "cc"
+	PaymentMethodTypeGooglePay PaymentMethodType = "google_pay"
+	PaymentMethodTypeApplePay  PaymentMethodType = "apple_pay"
+	PaymentMethodTypeClick2Pay PaymentMethodType = "click2pay"
+)
+
 // Transact Pro Gateway's request parameters data structures
 type (
 	// RequestHTTPData contains HTTP request method and operationType to append in URL path
@@ -107,8 +117,12 @@ type (
 		Cvv string `json:"cvv,omitempty"`
 		// Cardholder Name and Surname (Name and Surname on credit card)
 		CardholderName string `json:"cardholder-name,omitempty"`
+		// Token (like Google Pay's) AS-IS
+		Token string `json:"token,omitempty"`
 		// External 3-D Secure data for an acquirer
 		ExternalMpiData *ExternalMpiData `json:"external-mpi-data,omitempty"`
+		// External 3-D Secure data for an acquirer
+		ExternalTokenData *ExternalTokenData `json:"external-token-data,omitempty"`
 	}
 
 	// ExternalMpiData is a structure for 3-D Secure data required for an acquirer
@@ -123,6 +137,22 @@ type (
 		CAVV string `json:"cavv,omitempty"`
 		// transStatus received from 3-D Secure
 		TransStatus string `json:"transStatus,omitempty"`
+	}
+
+	// ExternalTokenData is a structure for decrypted token data
+	ExternalTokenData struct {
+		// TAVV etc.
+		Cryptogram string `json:"cryptogram,omitempty"`
+		// Electronic commerce indicator
+		Eci string `json:"eci,omitempty"`
+		// 3-D Secure transStatus
+		TransStatus string `json:"transStatus,omitempty"`
+		// 3-D Secure dsTransID
+		DsTransID string `json:"dsTransID,omitempty"`
+		// 3-D Secure acsTransID
+		AcsTransID string `json:"acsTransID,omitempty"`
+		// for Google Pay: value of assuranceDetails.cardHolderAuthenticated
+		CardHolderAuthenticated bool `json:"cardHolderAuthenticated"`
 	}
 
 	// MoneyData structure with detailed fields about transactions amount and currency
@@ -153,9 +183,10 @@ type (
 
 	// CommandData structure with fields to set various payment processing modes
 	CommandData struct {
-		CardVerificationMode    uint   `json:"card-verification,omitempty"`
-		PaymentMethodDataSource uint   `json:"payment-method-data-source"`
-		PaymentMethodDataToken  string `json:"payment-method-data-token,omitempty"`
+		CardVerificationMode    uint              `json:"card-verification,omitempty"`
+		PaymentMethodDataSource uint              `json:"payment-method-data-source"`
+		PaymentMethodDataToken  string            `json:"payment-method-data-token,omitempty"`
+		PaymentMethodType       PaymentMethodType `json:"payment-method-type,omitempty"`
 	}
 
 	// CommandDataGWTransactionID is single structures fields for CommandData, it's used not for any operation
