@@ -142,6 +142,31 @@ if parsedResponse.Error.Code == structures.EecAcquirerSoftDecline && parsedRespo
 }
 ```
 
+### Using alternative payment methods
+
+To use an alternative payment method (like Google Pay), send a received token AS-IS or data from a decrypted token.
+
+```go
+// set a corresponding flag that indicates a token provider
+order.CommandData.PaymentMethodType = structures.PaymentMethodTypeGooglePay
+
+// option 1: send received token AS-IS
+order.PaymentMethod.Token = "<token>";
+
+// option 2: send data from decrypted token
+order.PaymentMethod.Pan = "1111111111111111"
+order.PaymentMethod.ExpMmYy = "10/60"
+order.PaymentMethod.CardholderName = "John Doe" // if available
+order.PaymentMethod.ExternalTokenData = &structures.ExternalTokenData{
+    Cryptogram: "<cryptogram from token>", // if available
+    Eci: "<ECI from token>", // if available
+	TransStatus: "<transStatus from token>", // available for Click to Pay
+    DsTransID: "<dsTransID from token>", // available for Click to Pay
+    AcsTransID: "<acsTransID from token>", // available for Click to Pay
+    CardHolderAuthenticated: decryptedToken["paymentMethodDetails"]["assuranceDetails"]["cardHolderAuthenticated"], // for Google Pay
+}
+```
+
 ### Callback validation
 
 ```go
