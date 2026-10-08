@@ -109,6 +109,7 @@ const (
 
 	EecTerminalNotSupportingMOTO                  ErrorCode = 1204
 	EecTerminalNotSupportingRecurringTransactions ErrorCode = 1205
+	EecTerminalLocked                             ErrorCode = 1206
 
 	EecDeclinedByAcquirer  ErrorCode = 1301
 	EecAcquirerError       ErrorCode = 1302
