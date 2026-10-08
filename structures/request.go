@@ -145,6 +145,8 @@ type (
 		Cryptogram string `json:"cryptogram,omitempty"`
 		// Electronic commerce indicator
 		Eci string `json:"eci,omitempty"`
+		// CAVV from decrypted token data
+		CAVV string `json:"cavv,omitempty"`
 		// 3-D Secure transStatus
 		TransStatus string `json:"transStatus,omitempty"`
 		// 3-D Secure dsTransID
