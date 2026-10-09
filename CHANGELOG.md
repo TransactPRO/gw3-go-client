@@ -1,3 +1,8 @@
+##### Version v1.7.10 (2026-10-09)
+
+	Add CAVV to external token fields
+	Add new error code 1206
+
 ##### Version v1.7.9 (2025-11-24)
 
 	Add alternative payment methods support (like Google Pay)
